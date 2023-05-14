@@ -1,0 +1,42 @@
+.playlist-tile {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .playlist-tile-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .playlist-tile-details {
+    flex-grow: 1;
+  }
+  
+  .playlist-tile-title {
+    margin: 0;
+  }
+  
+  .playlist-tile-location {
+    font-size: 14px;
+    color: #999;
+  }
+  
+  .playlist-tile-actions {
+    display: flex;
+  }
+  
+  .playlist-tile-edit {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

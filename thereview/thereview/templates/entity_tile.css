@@ -1,0 +1,78 @@
+.tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    width: 200px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .tile img {
+    width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .title-rating-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .title {
+    margin: 0;
+  }
+  
+  .rating-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .rating {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .out-of-ten {
+    font-size: 14px;
+    margin-left: 5px;
+  }
+  
+  .friends-container {
+    width: 100%;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  .friends-rated {
+    font-size: 14px;
+  }
+  
+  .location-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+  
+  .playlist-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .playlist-container img {
+    width: 30px;
+    cursor: pointer;
+  }
+  

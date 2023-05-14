@@ -1,0 +1,30 @@
+.playlist-manager {
+    padding: 20px;
+  }
+  
+  .playlist-manager-title {
+    margin-top: 0;
+  }
+  
+  .playlist-manager-add {
+    padding: 5px 10px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .playlist-tiles-container {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+  
+  .playlist-tiles {
+    display: flex;
+  }
+  
+  @media (max-width: 480px) {
+    .playlist-tiles {
+      flex-wrap: wrap;
+    }
+  }
