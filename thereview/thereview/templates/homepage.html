@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>The Review</title>
-    <link rel="stylesheet" href="homepage.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage.css' %}">
   </head>
   <body>
     <header>
@@ -18,18 +19,20 @@
         </ul>
       </nav>
       <div class="search-box">
-        <form>
-          <input type="text" placeholder="Search...">
-          <button type="submit">Search</button>
+        <form method=POST action="{% url 'search_entities' %}">
+          {% csrf_token %}
+
+          <input class="form-control me-2" type="text" placeholder="Search Entities..." name="searched">
+          <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
       </div>
     </header> 
     <main>
       <section class="home-section">
         <div class="hero-section">
-          <h2>Discover the Best Reviews</h2>
-          <p>Find and share your favorite reviews for movies, books, music, and more!</p>
-          <a href="#" class="cta-button">Get Started</a>
+          <h2>Having trouble deciding what to do?</h2>
+          <h2>We'll make sure everyone is heard</h2>
+          <a href="#" class="cta-button">Start a Watch Party</a>
         </div>
         <div class="featured-section">
           <h3>Featured Reviews</h3>
