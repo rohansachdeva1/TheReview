@@ -16,6 +16,8 @@ class Genre(models.Model):
         return self.name
     
 class Entity(models.Model):
+    api_id = models.CharField(max_length=500, null=True, blank=True)
+    slug_field = models.CharField(max_length=500, null=True, blank=True)
     image = models.CharField(max_length=500, null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=500, null=True, blank=True)

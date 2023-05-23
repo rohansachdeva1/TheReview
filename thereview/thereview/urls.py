@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^$', views.homepage),
-    re_path(r'^searchmovie', views.search_movie),
     re_path(r'^search/', include('content.urls')),
+    re_path(r'^profile/', include('users.urls')),
     # re_path(r'^reviews', include('reviews.url')),
 ]

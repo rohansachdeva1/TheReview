@@ -13,14 +13,15 @@ def search_entities(request):
         user_input = request.POST['searched']
         results = Entity.objects.filter(title__icontains=user_input)[:10]
 
-        # use api if not enough objects in database (5)
-        if results.count() < 5:
-            response = requests.get('https://imdb-api.com/en/API/SearchMovie/k_28nyce3o/' + user_input)
-            data = response.json()
+        # use api if not enough objects in database (10)
+        if results.count() < 10:
+            data = requests.get('https://imdb-api.com/en/API/SearchMovie/k_28nyce3o/' + user_input).json()
 
-            #Loop through json object and create variables for needed fields
+            # loop through json object and create variables for needed fields
             for item in data['results']:
+                id = item['id']
                 title = item['title']
+                slug = title.replace(' ', '-').lower()
                 image = item['image']
                 description = item['description']
 
@@ -30,13 +31,12 @@ def search_entities(request):
                 
                 # prevent duplicates by checking if description is different, create new entity object and save
                 if (not Entity.objects.filter(description=description)):
-                    entity_obj = Entity.objects.create(title=title, image=image, description=description, medium=medium)
-                    entity_obj.save()    
+                    entity_obj = Entity.objects.create(api_id=id, slug_field=slug, title=title, image=image, description=description, medium=medium)   
 
             # now query the updated database and return new results in search results template
             new_results = Entity.objects.filter(title__icontains=user_input)[:10]
             return render(request, 'content/search_results.html', {'results': new_results})
         
-        # return original list from database if results more than 5
+        # return original list from database if results more than 10
         else:
             return render(request, 'content/search_results.html', {'results': results})
