@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
+app_name = 'core'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^$', views.homepage),
+    re_path(r'^$', views.homepage, name="homepage"),
     re_path(r'^search/', include('content.urls')),
-    re_path(r'^profile/', include('users.urls')),
-    # re_path(r'^reviews', include('reviews.url')),
-]
+    re_path(r'^users/', include('users.urls')),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -26,16 +26,28 @@
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
       </div>
+
+      {% if user.is_authenticated %}
+      <div class="view-profile">
+        <form class="profile-link" action="{% url 'view_profile' %}" method="post">
+          {% csrf_token %}
+          <button type="submit">View Profile</button>
+        </form>
+      </div>
+      <div class="log-out">
+        <form class="logout-link" action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Log Out</button>
+        </form>
+      </div>
+      {% else %}
       <div class="log-in">
         <form action="{% url 'login' %}">
-          <button class="btn btn-outline-success" type="submit">Log In</button>
+          <button type="submit">Log In</button>
         </form>
       </div>
-      <div class="search-box">
-        <form>
-          <button class="btn btn-outline-success" type="submit">Create Account</button>
-        </form>
-      </div>
+      {% endif %}
+
     </header> 
     <main>
       <section class="home-section">
