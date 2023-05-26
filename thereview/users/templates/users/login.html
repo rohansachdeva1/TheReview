@@ -21,10 +21,10 @@
   </form>
 
   </br>
-  <div class="sign-up">
+  <div class="d-flex align-items-center">
       <form action="{% url 'register' %}">
-          <p>Don't have an account?</p>
-        <button type="submit">Sign Up</button>
+          <span style="vertical-align: middle;">Don't have an account?</span>
+          <a href="{% url 'register' %}" class="btn btn-link" style="vertical-align: middle;">Register Here</a>
       </form>
   </div>
 </div>
