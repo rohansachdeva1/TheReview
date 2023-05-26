@@ -1,3 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+  <title>The Review</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'homepage.css' %}">
+</head>
+<footer>
+  <div class="footer-logo">
+  </div>
+  <div class="footer-links">
+    <ul>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+    </br>
+    </ul>
+  </div>
+  <div class="social-links">
+    <ul>
+      <li><a href="#">Facebook</a></li>
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Instagram</a></li>
+    </ul>
+  </div>
+</footer> 
+{% endblock %}
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,110 +36,12 @@
   </head>
   <body>
     <header>
-      <div class="logo">
-        <h1>The Review</h1>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Playlists</a></li>
-          <li><a href="#">Group Decision Feature</a></li>
-          <li><a href="#">Profile</a></li>
-        </ul>
-      </nav>
-      <div class="search-box">
-        <form method=POST action="{% url 'search_entities' %}">
-          {% csrf_token %}
 
-          <input class="form-control me-2" type="text" placeholder="Search Entities..." name="searched">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
+    </header>
 
-      {% if user.is_authenticated %}
-      <div class="view-profile">
-        <form class="profile-link" action="{% url 'view_profile' %}" method="post">
-          {% csrf_token %}
-          <button type="submit">View Profile</button>
-        </form>
-      </div>
-      <div class="log-out">
-        <form class="logout-link" action="{% url 'logout' %}" method="post">
-          {% csrf_token %}
-          <button type="submit">Log Out</button>
-        </form>
-      </div>
-      {% else %}
-      <div class="log-in">
-        <form action="{% url 'login' %}">
-          <button type="submit">Log In</button>
-        </form>
-      </div>
-      {% endif %}
-
-    </header> 
     <main>
-      <section class="home-section">
-        <div class="hero-section">
-          <h2>Having trouble deciding what to do?</h2>
-          <h2>We'll make sure everyone is heard</h2>
-          <a href="#" class="cta-button">Start a Watch Party</a>
-        </div>
-        <div class="featured-section">
-          <h3>Featured Reviews</h3>
-          <div class="review-cards">
-            <!-- Insert featured review cards here -->
-          </div>
-        </div>
-      </section>
-      <section class="playlists-section">
-        <h2>Playlists</h2>
-        <div class="playlists-grid">
-          <!-- Insert playlists here -->
-        </div>
-      </section>
-      <section class="group-decision-section">
-        <h2>Group Decision Feature</h2>
-        <p>Make group decisions on what to watch or read next with this feature. Simply create a poll and let your friends vote.</p>
-        <a href="#" class="cta-button">Create Poll</a>
-      </section>
-      <section class="profile-section">
-        <h2>Profile</h2>
-        <div class="profile-info">
-          <div class="profile-image">
-            <!-- Insert profile image here -->
-          </div>
-          <div class="profile-details">
-            <h3>Your Name</h3>
-            <p>Your Bio</p>
-          </div>
-        </div>
-        <div class="reviews-section">
-          <h3>Your Reviews</h3>
-          <div class="review-cards">
-            <!-- Insert your review cards here -->
-          </div>
-        </div>
-      </section>
     </main>
-    <footer>
-      <div class="footer-logo">
-        <h2>The Review</h2>
-      </div>
-      <div class="footer-links">
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-        </ul>
-      </div>
-      <div class="social-links">
-        <ul>
-          <li><a href="#">Facebook</a></li>
-          <li><a href="#">Twitter</a></li>
-          <li><a href="#">Instagram</a></li>
-        </ul>
-      </div>
-    </footer> 
+
+    
   </body>
 </html>

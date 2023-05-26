@@ -1,12 +1,26 @@
-<h1>User Profile</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="profile-heading">User Profile</h1>
 {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'view_profile.css' %}">
 <style>
     
 </style>
-<div>
-    <p>Welcome, {{ user.username }}!</p>
-    <img src="{{ user.profile.pic.url }}" width="100" height="100" class="custom-circle">
-    
-    <p>Email: {{ user.profile.bio }}</p>
+<div class="profile-container">
+    <div class="profile-details">
+        <p>Welcome, {{ user.username }}!</p>
+        <img src="{{ user.profile.profile_image.url }}" width="100" height="100" class="custom-circle">
+        <div class="profile-message">
+            <p>Bio: {{ user.profile.bio }}</p>
+        </div>
+    </div>
+    <div>
+        <form action="{% url 'update_profile' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-outline-secondary" type="submit">Update Profile</button>
+          </form>
+    </div>
 </div>
+{% endblock %}

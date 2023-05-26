@@ -4,3 +4,25 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+.profile-heading {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.profile-container {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.profile-details {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.profile-message {
+    margin-top: 20px;
+    font-style: italic;
+    color: #888;
+}

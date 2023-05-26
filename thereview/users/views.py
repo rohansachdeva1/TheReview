@@ -1,21 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.contrib.auth import login, logout
-from .forms import SignUpForm
+from django.contrib.auth.models import User
+from .forms import UpdateForm
+from .models import Profile
+from django.contrib import messages
 
 # Create your views here.
-def sign_up(request):
+def register(request):
     if request.method == 'POST':
-        # form = UserCreationForm(request.POST)
-        form = SignUpForm(request.POST, request.FILES)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            #create a user object from the user model - input all the data
             login(request, user)
             return redirect('homepage')
-    # if post request - create this user, save em in the database, log them in, redirect them to the homewage
     else:
-        form = SignUpForm() # user creation form og
+        form = UserCreationForm() # user creation form og
 
     return render(request, 'users/signup.html', {'form': form})
 
@@ -25,6 +25,7 @@ def log_in(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            # messages.success(request, 'You have been successfully logged in.')
             return redirect('homepage')
     else:
         form = AuthenticationForm()
@@ -38,3 +39,9 @@ def log_out(request):
     
 def view_profile(request):
     return render(request, 'users/view_profile.html', {'user':request.user})
+
+def update_profile(request):
+    current_user = User.objects.get(id=request.user.id)
+    form = UpdateForm(request.POST or None, instance=current_user)
+
+    return render(request, 'users/update_profile.html', {'form':form})

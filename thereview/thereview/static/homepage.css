@@ -67,6 +67,17 @@ body {
     font-size: 16px;
     cursor: pointer;
   }
+
+  .des1 button[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    margin-left: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
   
   /* Hero section styles */
   

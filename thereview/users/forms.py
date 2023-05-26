@@ -1,10 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Profile
+from django.db import models
 
-class SignUpForm(UserCreationForm):
-    profile_picture = forms.ImageField(required=False)
 
-    class Meta:
+class UpdateForm(UserCreationForm):
+    picture = forms.ImageField(required=False)
+    bio = forms.CharField(required=False)
+
+    class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'password1', 'password2', 'profile_picture')
+        fields = UserCreationForm.Meta.fields + ('picture', 'bio')

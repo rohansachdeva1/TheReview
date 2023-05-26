@@ -2,13 +2,13 @@
 
 {% block content %}
 <head>
-    <title>Register</title>
+    <title>Update Profile</title>
     {% load static %}
       <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
   </head>
 <body>
     <div class="container">
-      <h2>Create an Account</h2>
+      <h2>Update User</h2>
       <form class="site-form" action ="/users/register/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
