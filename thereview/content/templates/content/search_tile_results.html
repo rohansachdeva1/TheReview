@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h2>Search Results</h2>
+    {% if results %}
+    <div class="row">
+        {% for entity in results %}
+          <div class="col-md-3">
+            {% include 'content/entity_tile.html' with entity=entity %}
+          </div>
+          {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            </div><div class="row">
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+        <h1>no results found</h1>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

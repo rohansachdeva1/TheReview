@@ -27,7 +27,6 @@ def register(request):
             user.profile.bio = bio
             user.profile.save()
             
-            
             login(request, user)
             return redirect('homepage')
     else:

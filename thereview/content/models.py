@@ -31,12 +31,32 @@ class Entity(models.Model):
     genre = models.ManyToManyField(Genre, related_name='GenreEntityLinker')
     medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
 
+    # metrics
+    searched = models.IntegerField(null=True, blank=True)
+    
+
     def __str__(self):
         return self.title
     
 class Category(models.Model):
     name = models.CharField(max_length=255)
     medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+class Actor(models.Model):
+    api_id = models.CharField(max_length=500, null=True, blank=True)
+    name = models.CharField(max_length=255)
+    image = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class EntityActor(models.Model):
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
+    as_character = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.name

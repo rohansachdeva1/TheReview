@@ -5,16 +5,14 @@ import requests
 from content.models import Medium
 
 # Create your views here.
-def search_query(request):
-    return render(request, 'content/search_bar.html')
 
 def search_entities(request):
     if request.method == "POST":
         user_input = request.POST['searched']
-        results = Entity.objects.filter(title__icontains=user_input)[:10]
+        results = Entity.objects.filter(title__icontains=user_input)[:12]
 
         # use api if not enough objects in database (10)
-        if results.count() < 10:
+        if results.count() < 12:
             data = requests.get('https://imdb-api.com/en/API/SearchMovie/k_28nyce3o/' + user_input).json()
 
             # loop through json object and create variables for needed fields
@@ -34,9 +32,9 @@ def search_entities(request):
                     entity_obj = Entity.objects.create(api_id=id, slug_field=slug, title=title, image=image, description=description, medium=medium)   
 
             # now query the updated database and return new results in search results template
-            new_results = Entity.objects.filter(title__icontains=user_input)[:10]
-            return render(request, 'content/search_results.html', {'results': new_results})
+            new_results = Entity.objects.filter(title__icontains=user_input)[:12]
+            return render(request, 'content/search_tile_results.html', {'results': new_results})
         
         # return original list from database if results more than 10
         else:
-            return render(request, 'content/search_results.html', {'results': results})
+            return render(request, 'content/search_tile_results.html', {'results': results})
