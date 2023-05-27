@@ -8,6 +8,5 @@ urlpatterns = [
     re_path(r'^login/$', views.log_in, name="login"),
     re_path(r'^logout/$', views.log_out, name="logout"),
     re_path(r'^profile/$', views.view_profile, name="view_profile"),
-    re_path(r'^update/$', views.update_profile, name="update_profile")
     # create account
 ]

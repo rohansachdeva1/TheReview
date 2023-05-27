@@ -4,20 +4,21 @@ from django.contrib.auth.models import User
 from .models import Profile
 from django.db import models
 
-class ProfilePicForm(forms.ModelForm):
-    profile_picture = forms.ImageField(label="Profile Picture", required=False, widget=forms.ClearableFileInput(attrs={'class':'form-control'}))
+class UpdateForm(forms.ModelForm):
+    bio = forms.CharField(label="", required=False, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter your bio'}))
      
     class Meta:
        model = Profile
-       fields = ('profile_picture', )
+       fields = ('bio', )
 
 class RegisterForm(UserCreationForm):
     email = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter your email'}))
     profile_picture = forms.ImageField(label="Profile Picture", required=False, widget=forms.ClearableFileInput(attrs={'class':'form-control'}))
+    bio = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter your bio'}))
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'password1', 'password2', 'email', 'profile_picture')
+        fields = ('username', 'password1', 'password2', 'email', 'profile_picture', 'bio')
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)

@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django import forms
-from .forms import RegisterForm, ProfilePicForm
+from .forms import RegisterForm, UpdateForm
 from .models import Profile
 from django.contrib import messages
 
@@ -18,11 +18,13 @@ def register(request):
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
             pic = form.cleaned_data['profile_picture']
+            bio = form.cleaned_data['bio']
 
             user = authenticate(username=username, password=password)
             
             user.profile.email = email
             user.profile.profile_image = pic
+            user.profile.bio = bio
             user.profile.save()
             
             
@@ -38,7 +40,7 @@ def log_in(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-
+        
         if user is not None:
             login(request, user)
             return redirect('homepage')
@@ -53,7 +55,4 @@ def log_out(request):
         return redirect('homepage')
     
 def view_profile(request):
-    return render(request, 'users/view_profile.html', {'user':request.user})
-
-def update_profile(request):
     return render(request, 'users/view_profile.html', {'user':request.user})

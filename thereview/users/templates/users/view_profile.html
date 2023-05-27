@@ -16,11 +16,5 @@
             <p>Bio: {{ user.profile.bio }}</p>
         </div>
     </div>
-    <div>
-        <form action="{% url 'update_profile' %}" method="post">
-            {% csrf_token %}
-            <button class="btn btn-outline-secondary" type="submit">Update Profile</button>
-          </form>
-    </div>
 </div>
 {% endblock %}

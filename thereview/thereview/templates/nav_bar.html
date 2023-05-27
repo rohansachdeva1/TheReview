@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #141A20;">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'homepage' %}">The Review</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,16 +16,12 @@
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 </a>
                 <ul class="dropdown-menu">
-                    <!-- <li>
-                        
-                    </li> -->
-                  <!-- <li><hr class="dropdown-divider"></li> -->
                     <li>
                         <form action="{% url 'logout' %}" method="post">
                             {% csrf_token %}
                             <button class="dropdown-item" type="submit">Log Out</button>
                           </form>
-                    </li>
+                    </li> 
                 </ul>
               </li>
             {% else %}
@@ -44,7 +40,7 @@
         <form class="d-flex" role="search" method=POST action="{% url 'search_entities' %}">
             {% csrf_token %}
           <input class="form-control me-2" type="search" placeholder="Search Entities" name="searched" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <button class="btn btn-outline-light" style="outline-color: #E8F1F2;" type="submit">Search</button>
         </form>
       </div>
     </div>
