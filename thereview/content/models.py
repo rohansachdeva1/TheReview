@@ -32,8 +32,11 @@ class Entity(models.Model):
     medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
 
     # metrics
-    searched = models.IntegerField(null=True, blank=True)
-    
+    clean = models.BooleanField(null=True, blank=True) # if entity is considered clean or unsure (our definition)
+    searched = models.IntegerField(null=True, blank=True) # number of times appeared in search
+    clicked = models.IntegerField(null=True, blank=True) # number of times user clicked into detail page
+    added_to_playlist = models.IntegerField(null=True, blank=True) # number of times user added to playlist
+    reviewed = models.IntegerField(null=True, blank=True) # number of times user reviewed
 
     def __str__(self):
         return self.title
