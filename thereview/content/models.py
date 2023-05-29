@@ -21,15 +21,17 @@ class Entity(models.Model):
     slug_field = models.CharField(max_length=500, null=True, blank=True)
     image = models.CharField(max_length=500, null=True, blank=True)
     title = models.CharField(max_length=255)
-    description = models.CharField(max_length=500, null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True)
+    description_full = models.CharField(max_length=500, null=True, blank=True)
     overall_score = models.IntegerField(null=True, blank=True)
-    overall_rating1 = models.FloatField(null=True, blank=True)
-    overall_rating2 = models.FloatField(null=True, blank=True)
-    overall_rating3 = models.FloatField(null=True, blank=True)
-    overall_rating4 = models.FloatField(null=True, blank=True)
-    overall_rating5 = models.FloatField(null=True, blank=True)
+    overall_rating1 = models.BooleanField(null=True, blank=True)
+    overall_rating2 = models.BooleanField(null=True, blank=True)
+    overall_rating3 = models.BooleanField(null=True, blank=True)
+    overall_rating4 = models.BooleanField(null=True, blank=True)
+    overall_rating5 = models.BooleanField(null=True, blank=True)
     genre = models.ManyToManyField(Genre, related_name='GenreEntityLinker')
-    medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
+    medium = models.ForeignKey(Medium, on_delete=models.DO_NOTHING)
+    tag = models.ManyToManyField('Tag', through='EntityTag')
 
     # metrics
     clean = models.BooleanField(null=True, blank=True) # if entity is considered clean or unsure (our definition)
@@ -48,6 +50,30 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+class Tag(models.Model):
+    medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
+    icon = models.ImageField(null=True, blank=True, upload_to="icons/")
+    name = models.CharField(max_length=100)
+    emotion = models.ForeignKey('Emotion', null=True, blank=True, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return self.name
+    
+class Emotion(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class EntityTag(models.Model):
+    entity = models.ForeignKey(Entity, on_delete=models.DO_NOTHING)
+    tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)
+    count = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.entity} - {self.tag}'
+
+
 class Actor(models.Model):
     api_id = models.CharField(max_length=500, null=True, blank=True)
     name = models.CharField(max_length=255)
@@ -62,4 +88,4 @@ class EntityActor(models.Model):
     as_character = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.actor} in {self.entity}'
