@@ -45,6 +45,7 @@ class Entity(models.Model):
     
 class Category(models.Model):
     name = models.CharField(max_length=255)
+    order = models.IntegerField(null=True)
     medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -54,12 +55,20 @@ class Tag(models.Model):
     medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
     icon = models.ImageField(null=True, blank=True, upload_to="icons/")
     name = models.CharField(max_length=100)
-    emotion = models.ForeignKey('Emotion', null=True, blank=True, on_delete=models.DO_NOTHING)
+    base_emotion = models.ForeignKey('BaseEmotion', null=True, blank=True, on_delete=models.DO_NOTHING)
+    derived_emotion = models.ForeignKey('DerivedEmotion', null=True, blank=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.name
     
-class Emotion(models.Model):
+class BaseEmotion(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class DerivedEmotion(models.Model):
+    base_emotion = models.ForeignKey(BaseEmotion, null=True, blank=True, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=100)
 
     def __str__(self):
