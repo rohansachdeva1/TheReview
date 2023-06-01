@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-md-6 offset-md-3">
+  <h2>Write a Review</h2>
+</br>
+  <!-- <form action ="{% url 'register' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-secondary">Register</button>
+    </form> -->
+  </br>
+
+    <div class="d-flex align-items-center">
+      <form action="{% url 'login' %}">
+          <span style="vertical-align: middle;">Already have an account?</span>
+          <a href="{% url 'login' %}" class="btn btn-link" style="vertical-align: middle;">Log In Here</a>
+      </form>
+  </div>
+</div>
+
+{% endblock %}

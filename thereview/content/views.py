@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Entity
 import requests
 from content.models import Medium
@@ -8,6 +8,7 @@ from content.models import Medium
 
 def search_entities(request):
     if request.method == "POST":
+        request.session['search_page_url'] = request.get_full_path()
         user_input = request.POST['searched']
         results = Entity.objects.filter(title__icontains=user_input)[:12]
 

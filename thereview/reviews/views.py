@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 # Create your views here.
-def review_builder(request):
-    return render(request, 'reviews/review_builder.html')
+def write_review(request):
+    return render(request, 'reviews/write_review.html')
 
 # we know the user because their signed in
 # we'll know the entity, because the user clicked on that to get here

@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reviews")
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='reviews')
     tags = models.ManyToManyField(Tag, related_name='reviews')
     category_rating1 = models.IntegerField(default=0, validators=[MinValueValidator(-1), MaxValueValidator(1)])

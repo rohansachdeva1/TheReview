@@ -27,4 +27,5 @@ urlpatterns = [
     re_path(r'^$', views.homepage, name="homepage"),
     re_path(r'^search/', include('content.urls')),
     re_path(r'^users/', include('users.urls')),
+    re_path(r'^review/', include('reviews.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,8 +9,7 @@
         <p class="card-text">{{ entity.description }}</p>
       </div>
       <div class="card-links">
-        <a href="#" class="card-link card-link-left">Location Tag</a>
-        <a href="#" class="card-link card-link-right">Review</a>
+        <a href="{% url 'write_review' %}?entity_id={{ entity.id }}" class="card-link card-link-left">Write a Review</a>
       </div>
     </div>
   </div>
