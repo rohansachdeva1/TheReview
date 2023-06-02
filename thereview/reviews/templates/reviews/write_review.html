@@ -2,23 +2,21 @@
 
 {% block content %}
 
-<div class="col-md-6 offset-md-3">
-  <h2>Write a Review</h2>
-</br>
-  <!-- <form action ="{% url 'register' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit" class="btn btn-secondary">Register</button>
-    </form> -->
-  </br>
-
-    <div class="d-flex align-items-center">
-      <form action="{% url 'login' %}">
-          <span style="vertical-align: middle;">Already have an account?</span>
-          <a href="{% url 'login' %}" class="btn btn-link" style="vertical-align: middle;">Log In Here</a>
-      </form>
-  </div>
+<h2>Write a Review</h2>
+<form>
+<div class="mb-3">
+    <label for="final_score" class="form-label">How many stars</label>
+    <input type="range" min="0" max="5" step="0.1" class="form-range" id="customRange1">
 </div>
+<div class="mb-3">
+    <label for="blurb" class="form-label">Blurb</label>
+    <input type="text" class="form-control" id="blurb">
+</div>
+<div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="private">
+    <label class="form-check-label" for="make_private">Make this review private.</label>
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
 {% endblock %}

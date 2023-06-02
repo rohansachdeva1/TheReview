@@ -53,7 +53,7 @@ def log_out(request):
 def view_profile(request):
     user = get_object_or_404(User, id=request.user.id)
     try:
-        reviews = Review.objects.filter(user=user)
+        reviews = Review.objects.filter(user=user).order_by("-created_at")
     except Review.DoesNotExist:
         reviews = None
 

@@ -1,0 +1,35 @@
+.navbar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px; /* Adjust the height as needed */
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar-right {
+    margin-left: auto;
+}
+
+.outline-input {
+    background-color: transparent;
+    border: 1px solid #ced4da; /* Add a 1px solid border */
+    border-radius: 4px; /* Optional: Add border radius for rounded corners */
+    padding: 6px 10px; /* Optional: Adjust padding as needed */
+    color: #fff; /* Optional: Set the text color */
+    outline: none; /* Remove the default focus outline */
+  }
+  
+  .outline-input:focus {
+    border-color: #80bdff; /* Change the border color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Optional: Add a focus box shadow */
+  }
+
+  .outline-input::placeholder {
+    color: #fff; /* Set the placeholder text color to white */
+  }

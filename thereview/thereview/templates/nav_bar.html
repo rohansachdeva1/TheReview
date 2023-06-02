@@ -1,29 +1,36 @@
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'nav_bar.css' %}">
+<style>
+    
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #141A20;">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'homepage' %}">The Review</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    
+        <ul class="navbar-nav ">
+            <div class="navbar-center">
+            <form class="d-flex" role="search" method=POST action="{% url 'search_entities' %}">
+                {% csrf_token %}
+                <input class="form-control me-2 outline-input" type="search" placeholder="Search Entities" name="searched" aria-label="Search">
+                <button class="btn btn-outline-light" style="outline-color: #E8F1F2;" type="submit">Search</button>
+            </form>
+        </div>
             {% if user.is_authenticated %}
             <div>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'view_profile' %}">Profile</a>
                 </li>
             </div>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <form action="{% url 'logout' %}" method="post">
-                            {% csrf_token %}
-                            <button class="dropdown-item" type="submit">Log Out</button>
-                          </form>
-                    </li> 
-                </ul>
-              </li>
+            <div>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="nav-link" type="submit">Log Out</button>
+                    </form>
+                    
+                </li>
+            </div>
             {% else %}
             <div>
                 <li class="nav-item">
@@ -37,11 +44,5 @@
             </div>
             {% endif %}
         </ul>
-        <form class="d-flex" role="search" method=POST action="{% url 'search_entities' %}">
-            {% csrf_token %}
-          <input class="form-control me-2" type="search" placeholder="Search Entities" name="searched" aria-label="Search">
-          <button class="btn btn-outline-light" style="outline-color: #E8F1F2;" type="submit">Search</button>
-        </form>
-      </div>
     </div>
   </nav>
