@@ -1,11 +1,8 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from django import forms
 from .forms import RegisterForm
-from .models import Profile
-from django.contrib import messages
+from reviews.models import Review
 
 # Create your views here.
 def register(request):
@@ -54,4 +51,10 @@ def log_out(request):
         return redirect('homepage')
     
 def view_profile(request):
-    return render(request, 'users/view_profile.html', {'user':request.user})
+    user = get_object_or_404(User, id=request.user.id)
+    try:
+        reviews = Review.objects.filter(user=user)
+    except Review.DoesNotExist:
+        reviews = None
+
+    return render(request, 'users/view_profile.html', {'user':user, 'reviews':reviews})

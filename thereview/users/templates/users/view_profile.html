@@ -16,5 +16,24 @@
             <p>Bio: {{ user.profile.bio }}</p>
         </div>
     </div>
+    <div>
+        <body>
+            <h2>Reviews</h2>
+            {% if user.reviews.exists %}
+            <div class="row">
+                {% for review in reviews %}
+                  <div class="col-md-3">
+                    {% include 'reviews/review_tile.html' with review=review %}
+                  </div>
+                  {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                    </div><div class="row">
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% else %}
+                <h2>No Reviews Available</h2>
+            {% endif %}
+        </body>
+    </div>
 </div>
 {% endblock %}
