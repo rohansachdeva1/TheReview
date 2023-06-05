@@ -9,7 +9,7 @@ from django.utils import timezone
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reviews")
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='reviews')
-    tags = models.ManyToManyField(Tag, related_name='reviews')
+    tags = models.ManyToManyField(Tag, blank=True, limit_choices_to={'id__lte': 5}, related_name='reviews')
     category_rating1 = models.IntegerField(default=0, validators=[MinValueValidator(-1), MaxValueValidator(1)])
     category_rating2 = models.IntegerField(default=0, validators=[MinValueValidator(-1), MaxValueValidator(1)])
     category_rating3 = models.IntegerField(default=0, validators=[MinValueValidator(-1), MaxValueValidator(1)])

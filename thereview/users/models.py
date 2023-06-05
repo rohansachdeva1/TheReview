@@ -14,10 +14,10 @@ class Profile(models.Model):
         return str(self.user)
     
 def create_profile(sender, instance, created, **kwargs):
-        if created:
-            user_profile = Profile(user=instance)
-            # add defaults (profile pic, bio)
-            user_profile.save()
+            if created:
+                user_profile = Profile(user=instance)
+                # add defaults (profile pic, bio)
+                user_profile.save()
 
 post_save.connect(create_profile, sender=User)
 

@@ -6,51 +6,59 @@ from reviews.models import Review
 
 # Create your views here.
 def register(request):
-    if request.method == 'POST':
+    if request.method == 'POST': # once user has filled out form
         form = RegisterForm(request.POST, request.FILES)
-        if form.is_valid():
+        
+        if form.is_valid(): # validate that form has been filled out correctly
             form.save()
 
+            # take user entered data from the form and store it variables
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
             pic = form.cleaned_data['profile_picture']
             bio = form.cleaned_data['bio']
 
+            # authenticate form using django contrib auth
             user = authenticate(username=username, password=password)
             
+            # save non-required fields to user's profile
             user.profile.email = email
             user.profile.profile_image = pic
             user.profile.bio = bio
             user.profile.save()
             
-            login(request, user)
-            return redirect('homepage')
+            login(request, user) # log user in using django contrib auth
+            return redirect('homepage') # redirect back to homepage (now signed in)
     else:
-        form = RegisterForm() # user creation form og
+        form = RegisterForm() # send empty custom register form
 
-    return render(request, 'users/register.html', {'form': form})
+    return render(request, 'users/register.html', {'form': form}) # render register form
 
 def log_in(request):
-    if request.method == 'POST':
-        username = request.POST['username']
+    if request.method == 'POST': # once user has filled our form
+        username = request.POST['username'] # get username and password from request object
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password) # authenticate user
         
+        # if the user exists, log them in and redirect to homepage
         if user is not None:
             login(request, user)
             return redirect('homepage')
+        # if not, prompt them to log in again
         else:
             return redirect('login')
     
-    return render(request, 'users/login.html')
+    return render(request, 'users/login.html') # render the login template
 
 def log_out(request):
     if request.method == 'POST':
-        logout(request)
-        return redirect('homepage')
+        logout(request) # log current user out from request object
+        return redirect('homepage') # redirect to homepage
     
 def view_profile(request):
+
+    # get user from request object and send review data to template
     user = get_object_or_404(User, id=request.user.id)
     try:
         reviews = Review.objects.filter(user=user).order_by("-created_at")
