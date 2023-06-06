@@ -7,9 +7,30 @@
 <form method="POST" action="{% url 'write_review' entity.id %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div>
+        <label for="score_slider" class="form-label">Rate 1-5</label>
+        <span id="sliderValue">0</span>
+        <input type="range" class="form-range" step="0.1" min="0" max="5" id="final_score" name="final_score">
+    </div>
+    {% if categories %}
+    <div>
+         <!-- loop and print out categories
+         create category tile and feed data in -->
+        {% for category in categories %}
+            <h2>{{ category.name }}</h2>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div>
         <label for="blurb" class="form-label">Blurb</label>
         <input type="text" name="blurb" class="form-control" id="blurb">
     </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="private" name="make_private" id="make_private">
+        <label class="form-check-label" for="flexCheckDefault">
+          Private
+        </label>
+      </div>
+    </br>
     <button type="submit" class="btn btn-secondary">Submit</button>
   </form>
 

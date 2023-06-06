@@ -27,10 +27,10 @@ def search_entities(request):
                 medium = Medium.objects.get(name='Other')  # Default medium value for cases without resultType
                 if 'resultType' in item and item['resultType'] == "Movie":
                     medium = Medium.objects.get(name='Movies')
-                
+
                 # prevent duplicates by checking if description is different, create new entity object and save
                 if (not Entity.objects.filter(description=description)):
-                    entity_obj = Entity.objects.create(api_id=id, slug_field=slug, title=title, image=image, description=description, medium=medium)   
+                    entity_obj = Entity.objects.create(api_id=id, slug_field=slug, title=title, image=image, description=description, medium=medium)
 
             # now query the updated database and return new results in search results template
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
