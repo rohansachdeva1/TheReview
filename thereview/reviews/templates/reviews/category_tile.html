@@ -1,0 +1,32 @@
+
+
+
+<div class="card">
+    <div class="card-body">
+      <div class="btn-group" role="group" aria-label="Category Feedback">
+        <h5 class="card-title">{{ category.name }}</h5>
+        <button type="button" class="btn btn-toggle" data-tile="{{ forloop.counter }}" data-value="like">Like</button>
+        <button type="button" class="btn btn-toggle" data-tile="{{ forloop.counter }}" data-value="dislike">Dislike</button>
+      </div>
+      <input type="hidden" id="feedback-input-{{ forloop.counter }}" name="feedback" value="">
+    </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('.btn-toggle').click(function() {
+      var tileId = $(this).data('tile');
+      var selectedValue = $(this).data('value');
+      var isActive = $(this).hasClass('active');
+      $('.btn-toggle[data-tile="' + tileId + '"]').removeClass('active');
+      if (!isActive) {
+        $(this).addClass('active');
+        $('#feedback-input-' + tileId).val(selectedValue);
+      } else {
+        $('#feedback-input-' + tileId).val('');
+      }
+    });
+  });
+  </script>
+  

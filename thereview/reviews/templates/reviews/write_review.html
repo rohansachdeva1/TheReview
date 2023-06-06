@@ -11,15 +11,17 @@
         <span id="sliderValue">0</span>
         <input type="range" class="form-range" step="0.1" min="0" max="5" id="final_score" name="final_score">
     </div>
+    </br>
     {% if categories %}
     <div>
          <!-- loop and print out categories
          create category tile and feed data in -->
         {% for category in categories %}
-            <h2>{{ category.name }}</h2>
+            {% include 'reviews/category_tile.html' with category=category %}
         {% endfor %}
     </div>
     {% endif %}
+    </br>
     <div>
         <label for="blurb" class="form-label">Blurb</label>
         <input type="text" name="blurb" class="form-control" id="blurb">

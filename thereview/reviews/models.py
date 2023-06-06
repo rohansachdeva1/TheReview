@@ -13,7 +13,6 @@ class Review(models.Model):
     category_rating1 = models.IntegerField(default=0, blank=True, null=True, validators=[MinValueValidator(-1), MaxValueValidator(1)])
     category_rating2 = models.IntegerField(default=0, blank=True, null=True, validators=[MinValueValidator(-1), MaxValueValidator(1)])
     category_rating3 = models.IntegerField(default=0, blank=True, null=True, validators=[MinValueValidator(-1), MaxValueValidator(1)])
-    category_rating4 = models.IntegerField(default=0, blank=True, null=True, validators=[MinValueValidator(-1), MaxValueValidator(1)])
     final_score = models.DecimalField(
         max_digits=2,
         decimal_places=1,
