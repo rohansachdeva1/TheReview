@@ -2,21 +2,25 @@
 
 {% block content %}
 
-<h2>Write a Review</h2>
-<form>
-<div class="mb-3">
-    <label for="final_score" class="form-label">How many stars</label>
-    <input type="range" min="0" max="5" step="0.1" class="form-range" id="customRange1">
-</div>
-<div class="mb-3">
-    <label for="blurb" class="form-label">Blurb</label>
-    <input type="text" class="form-control" id="blurb">
-</div>
-<div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="private">
-    <label class="form-check-label" for="make_private">Make this review private.</label>
-</div>
-<button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<h2>Write a Review for {{ entity.title }}</h2>
+
+<form method="POST" action="{% url 'write_review' entity.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label for="blurb" class="form-label">Blurb</label>
+        <input type="text" name="blurb" class="form-control" id="blurb">
+    </div>
+    <button type="submit" class="btn btn-secondary">Submit</button>
+  </form>
+
+  <script>
+        const slider = document.getElementById("final_score");
+        const sliderValue = document.getElementById("sliderValue");
+
+        slider.addEventListener("input", function() {
+            sliderValue.textContent = slider.value;
+        });
+    </script>
 
 {% endblock %}
+
