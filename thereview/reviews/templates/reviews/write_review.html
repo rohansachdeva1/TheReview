@@ -3,21 +3,31 @@
 {% block content %}
 
 <h2>Write a Review for {{ entity.title }}</h2>
+</br>
+
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'write_review.css' %}">
+<style>
+    
+</style>
 
 <!-- Review Form -->
 <form method="POST" action="{% url 'write_review' entity.id %}" enctype="multipart/form-data">
     {% csrf_token %}
 
     <!-- Final Score Input -->
-    <div>
-        <label for="score_slider" class="form-label">Rate 1-5</label>
-        <span id="sliderValue">0</span>
+    <div class="form-input-container">
+        <div class="form-label-container">
+          <h4 class="form-label">How many stars do you give it?</h4>
+          <span id="sliderValue">0</span>
+        </div>
         <input type="range" class="form-range" step="0.1" min="0" max="5" id="final_score" name="final_score">
     </div>
     </br>
 
     <!-- Category Input -->
     {% if categories %}
+    <h4 class="form-label">Did you like these categories?</h4>
     <div>
          {% for category in categories %}
          <div class="card">
@@ -33,6 +43,26 @@
            </div>
            {% endfor %}
     </div>
+    {% endif %}
+    </br>
+
+    <!-- Tag Input -->
+    {% if tags %}
+    <div>
+        <div style="display: flex; align-items: center;">
+          <h4 class="form-label" style="display: inline;">How did you feel? <span class="subtext">(Choose up to 5)</span></h4>
+          <p style="text-align: right; margin-left: auto;">Selected Count: <span id="selected-count">0</span></p>
+        </div>
+    </div>
+    <div class="tag-grid">
+        
+        {% for tag in tags %}
+        <button type="button" class="tag-tile btn {% if tag.selected %}selected{% endif %}" data-tag-id="{{ tag.id }}">
+            <p>{{ tag.name }}</p>
+        </button>
+        {% endfor %}
+    </div>
+    <button id="see-all-button">See All</button>
     {% endif %}
     </br>
 
@@ -79,6 +109,67 @@ $(document).ready(function() {
     }
     });
 });
+</script>
+
+<!-- Tag Selector Script -->
+<script>
+    $(document).ready(function() {
+  var selectedTags = [];
+
+  // Add click event handler to the tile elements
+  $('.tag-tile').click(function() {
+    var tagID = $(this).data('tag-id');
+
+    // Check if the tag is already selected
+    if (selectedTags.includes(tagID)) {
+      // Tag is already selected, remove it from the selectedTags array
+      selectedTags = selectedTags.filter(function(id) {
+        return id !== tagID;
+      });
+    } else {
+      // Tag is not selected, add it to the selectedTags array
+      if (selectedTags.length >= 5) {
+        // If already selected 5 tags, don't allow selecting more
+        return;
+      }
+      selectedTags.push(tagID);
+    }
+
+    // Update the counter
+    var selectedCount = selectedTags.length;
+    $('#selected-count').text(selectedCount);
+
+    // Toggle the 'selected' class on the clicked tag tile
+    $(this).toggleClass('selected');
+
+    // Uncomment the following line to see the selected tags IDs in the console
+    // console.log(selectedTags);
+  });
+
+  // Handle the "Submit" button click
+  $('#submit-button').click(function() {
+    // Prepare the data to be sent to the server
+    var postData = {
+      'selected_tags': selectedTags
+    };
+
+    // Make the AJAX request to the server
+    $.ajax({
+      url: "{% url 'write_review' entity.id %}",
+      type: 'POST',
+      data: postData,
+      success: function(response) {
+        // Handle the response from the server
+        console.log(response);
+      },
+      error: function(xhr, textStatus, error) {
+        // Handle any error that occurred during the AJAX request
+        console.log(error);
+      }
+    });
+  });
+});
+
 </script>
 
 {% endblock %}

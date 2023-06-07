@@ -1,0 +1,41 @@
+.tag-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+  }
+  
+  .tag-tile {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .tag-tile.selected {
+    border: 2px solid #000;
+  }
+  
+  #see-all-button {
+    display: none;
+  }
+
+  .form-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .form-label-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  #sliderValue {
+    margin-left: auto;
+  }
+
+  .subtext {
+    font-size: 14px;
+    margin-left: 10px;
+  }
