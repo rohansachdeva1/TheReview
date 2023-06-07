@@ -6,12 +6,15 @@ from .models import Review
 
 # Create your views here.
 def write_review(request, entity_id):
+    
+    # Store core data in local variables from request object
     entity = get_object_or_404(Entity, id=entity_id)
     medium = entity.medium
     tags = Tag.objects.filter(medium=medium)
     categories = Category.objects.filter(medium=medium)
     user = get_object_or_404(User, id=request.user.id)
 
+    # store data to be used in write_review template in context
     context = {
         'entity': entity,
         'tags': tags,
@@ -21,22 +24,37 @@ def write_review(request, entity_id):
 
     if request.user.is_authenticated:
         if request.method == "POST":
-            #final_score = float(request.POST.get['final_score'])
-            final_score = request.POST.get('final_score')
-            print(final_score)
-            blurb = request.POST.get('blurb')
-
-            # create new review
+            final_score = request.POST.get('final_score') # get final_score from form
+            blurb = request.POST.get('blurb') # get blurb from form
+            
+            # create new review and populate it with required data
             review = Review(user=user, entity=entity, final_score=final_score, blurb=blurb)
 
+            # get privacy toggle from form
             if request.POST.get("make_private") == "private":
                 review.private = True
             else:
                 review.private = False
+
+            # get categories data from form
+            i = 1
+            while f'feedback_{i}' in request.POST:
+                category_name = request.POST[f'category_{i}']
+                feedback = request.POST.get(f'feedback_{i}', '')
+                
+                # update review object
+                category_rating = f'category_rating{i}'
+                if feedback == 'like':
+                    setattr(review, category_rating, 1)
+                elif feedback == 'dislike':
+                    setattr(review, category_rating, -1)
+
+                i += 1
+
+            # get tags data from form
             
             review.save() # save new review
             return redirect('view_profile')
-
         else:
             return render(request, 'reviews/write_review.html', context)
     else:

@@ -4,46 +4,82 @@
 
 <h2>Write a Review for {{ entity.title }}</h2>
 
+<!-- Review Form -->
 <form method="POST" action="{% url 'write_review' entity.id %}" enctype="multipart/form-data">
     {% csrf_token %}
+
+    <!-- Final Score Input -->
     <div>
         <label for="score_slider" class="form-label">Rate 1-5</label>
         <span id="sliderValue">0</span>
         <input type="range" class="form-range" step="0.1" min="0" max="5" id="final_score" name="final_score">
     </div>
     </br>
+
+    <!-- Category Input -->
     {% if categories %}
     <div>
-         <!-- loop and print out categories
-         create category tile and feed data in -->
-        {% for category in categories %}
-            {% include 'reviews/category_tile.html' with category=category %}
-        {% endfor %}
+         {% for category in categories %}
+         <div class="card">
+             <div class="card-body">
+               <div class="btn-group" role="group" aria-label="Category Feedback">
+                 <h5 class="card-title">{{ category.name }}</h5>
+                 <button type="button" class="btn btn-toggle" data-tile="{{ forloop.counter }}" data-value="like">Like</button>
+                 <button type="button" class="btn btn-toggle" data-tile="{{ forloop.counter }}" data-value="dislike">Dislike</button>
+               </div>
+               <input type="hidden" id="feedback-input-{{ forloop.counter }}" name="feedback_{{ forloop.counter }}" value="">
+               <input type="hidden" name="category_{{ forloop.counter }}" value="{{ category.name }}">
+             </div>
+           </div>
+           {% endfor %}
     </div>
     {% endif %}
     </br>
+
+    <!-- Blurb Input -->
     <div>
         <label for="blurb" class="form-label">Blurb</label>
         <input type="text" name="blurb" class="form-control" id="blurb">
     </div>
+
+    <!-- Privacy Input -->
     <div class="form-check">
         <input class="form-check-input" type="checkbox" value="private" name="make_private" id="make_private">
-        <label class="form-check-label" for="flexCheckDefault">
-          Private
-        </label>
-      </div>
+        <label class="form-check-label" for="flexCheckDefault">Private</label>
+    </div>
     </br>
+
     <button type="submit" class="btn btn-secondary">Submit</button>
-  </form>
+</form>
 
-  <script>
-        const slider = document.getElementById("final_score");
-        const sliderValue = document.getElementById("sliderValue");
+<!-- Slider Value Script -->
+<script>
+    const slider = document.getElementById("final_score");
+    const sliderValue = document.getElementById("sliderValue");
 
-        slider.addEventListener("input", function() {
-            sliderValue.textContent = slider.value;
-        });
-    </script>
+    slider.addEventListener("input", function() {
+        sliderValue.textContent = slider.value;
+    });
+</script>
+
+<!-- Category Selector Script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.btn-toggle').click(function() {
+    var tileId = $(this).data('tile');
+    var selectedValue = $(this).data('value');
+    var isActive = $(this).hasClass('active');
+    $('.btn-toggle[data-tile="' + tileId + '"]').removeClass('active');
+    if (!isActive) {
+        $(this).addClass('active');
+        $('#feedback-input-' + tileId).val(selectedValue);
+    } else {
+        $('#feedback-input-' + tileId).val('');
+    }
+    });
+});
+</script>
 
 {% endblock %}
 
