@@ -3,6 +3,8 @@ from .forms import ReviewForm
 from django.contrib.auth.models import User
 from content.models import Entity, Tag, Category
 from .models import Review
+from django.core.exceptions import ObjectDoesNotExist
+import json
 
 # Create your views here.
 def write_review(request, entity_id):
@@ -29,6 +31,7 @@ def write_review(request, entity_id):
             
             # create new review and populate it with required data
             review = Review(user=user, entity=entity, final_score=final_score, blurb=blurb)
+            review.save()
 
             # get privacy toggle from form
             if request.POST.get("make_private") == "private":
@@ -49,10 +52,17 @@ def write_review(request, entity_id):
                 elif feedback == 'dislike':
                     setattr(review, category_rating, -1)
 
-                i += 1
+                i += 1 # increment counter
 
-            # get tags data from form
-            
+            # get tag data from form
+            # Loop through the form data and retrieve the values of the selected tags
+            for key in request.POST.keys():
+                if key.startswith('tag_'):
+                    tag_id = request.POST[key]
+                    if tag_id.isdigit():
+                        tag = Tag.objects.get(id=int(tag_id))
+                        review.tags.add(tag) # added tags to review object
+
             review.save() # save new review
             return redirect('view_profile')
         else:

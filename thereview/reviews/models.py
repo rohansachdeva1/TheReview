@@ -24,4 +24,4 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return f'{self.entity} review by {self.user} at {self.created_at:%D %H:%M}'
+        return f'{self.entity} review by {self.user}'

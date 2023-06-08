@@ -12,6 +12,7 @@
         <ul>
             {% for result in results %}
                 <li>{{ result.title }} {{ result.description }}</li>
+                <a href="{% url 'write_review' result.id %}" class="card-link card-link-left">Write a Review</a>
             {% endfor %}
         </ul>
     {% else %}

@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
 
 {% block content %}
 
@@ -60,6 +63,7 @@
         <button type="button" class="tag-tile btn {% if tag.selected %}selected{% endif %}" data-tag-id="{{ tag.id }}">
             <p>{{ tag.name }}</p>
         </button>
+        <input type="hidden" id="tag-input-{{ tag.id }}" name="tag_{{ tag.id }}" value="">
         {% endfor %}
     </div>
     <button id="see-all-button">See All</button>
@@ -79,7 +83,7 @@
     </div>
     </br>
 
-    <button type="submit" class="btn btn-secondary">Submit</button>
+    <button type="submit" class="btn btn-secondary" id="submit-button">Submit</button>
 </form>
 
 <!-- Slider Value Script -->
@@ -119,20 +123,26 @@ $(document).ready(function() {
   // Add click event handler to the tile elements
   $('.tag-tile').click(function() {
     var tagID = $(this).data('tag-id');
+    var hiddenInput = $('#tag-input-' + tagID);
 
     // Check if the tag is already selected
     if (selectedTags.includes(tagID)) {
       // Tag is already selected, remove it from the selectedTags array
       selectedTags = selectedTags.filter(function(id) {
+        //$('#tag-input-' + tagID).val('');
         return id !== tagID;
       });
+      hiddenInput.val('');
     } else {
       // Tag is not selected, add it to the selectedTags array
       if (selectedTags.length >= 5) {
         // If already selected 5 tags, don't allow selecting more
         return;
       }
+      
       selectedTags.push(tagID);
+      //$('#tag-input-' + tagID).val(tagID);
+      hiddenInput.val(tagID);
     }
 
     // Update the counter
@@ -143,33 +153,9 @@ $(document).ready(function() {
     $(this).toggleClass('selected');
 
     // Uncomment the following line to see the selected tags IDs in the console
-    // console.log(selectedTags);
-  });
-
-  // Handle the "Submit" button click
-  $('#submit-button').click(function() {
-    // Prepare the data to be sent to the server
-    var postData = {
-      'selected_tags': selectedTags
-    };
-
-    // Make the AJAX request to the server
-    $.ajax({
-      url: "{% url 'write_review' entity.id %}",
-      type: 'POST',
-      data: postData,
-      success: function(response) {
-        // Handle the response from the server
-        console.log(response);
-      },
-      error: function(xhr, textStatus, error) {
-        // Handle any error that occurred during the AJAX request
-        console.log(error);
-      }
-    });
+    console.log(selectedTags);
   });
 });
-
 </script>
 
 {% endblock %}

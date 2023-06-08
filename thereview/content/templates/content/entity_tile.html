@@ -1,6 +1,7 @@
 {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
 
+<!-- Display Search Results -->
 <div class="entity-tile">
     <div class="card h-100">
       <img src="{{ entity.image }}" class="card-img-top" alt="Entity Image">
@@ -12,5 +13,5 @@
         <a href="{% url 'write_review' entity.id %}" class="card-link card-link-left">Write a Review</a>
       </div>
     </div>
-  </div>
+</div>
   
