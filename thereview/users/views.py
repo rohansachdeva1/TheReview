@@ -56,7 +56,7 @@ def log_out(request):
         logout(request) # log current user out from request object
         return redirect('homepage') # redirect to homepage
     
-def view_profile(request):
+def view_profile(request, username):
 
     # get user from request object and send review data to template
     user = get_object_or_404(User, id=request.user.id)

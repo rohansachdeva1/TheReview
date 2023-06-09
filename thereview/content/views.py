@@ -10,6 +10,7 @@ def search_entities(request):
     if request.method == "POST":
         request.session['search_page_url'] = request.get_full_path()
         user_input = request.POST['searched']
+        
         results = Entity.objects.filter(title__icontains=user_input)[:12]
 
         # use api if not enough objects in database (10)
@@ -39,3 +40,5 @@ def search_entities(request):
         # return original list from database if results more than 10
         else:
             return render(request, 'content/search_tile_results.html', {'results': results})
+    else:
+        return redirect('homepage')

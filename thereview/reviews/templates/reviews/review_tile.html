@@ -1,16 +1,18 @@
 {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'review_tile.css' %}">
 
-<div class="card h-90">
-    <div class="card-body">
-    <h5 class="card-title">{{ review.entity.title|slice:":24" }}{% if review.entity.title|length > 24 %}...{% endif %}</h5>
-    <h6 class="card-subtitle mb-2 text-body-secondary">
-        By @{{ review.user }}
-        {% if review.private %}
-            <span style="color: red;">(private)</span>
-        {% endif %}
-    </h6>
-    <p class="card-text">"{{ review.blurb|slice:":90" }}{% if review.blurb|length > 90 %}{% endif %}..."</p>
-    <h6 class="card-subtitle mb-2 text-body-secondary bottom-left">at {{ review.created_at }}</h6>
+<a href="{% url 'view_review' review.id %}" style="text-decoration: none;">
+    <div class="card h-90">
+        <div class="card-body">
+        <h5 class="card-title">{{ review.final_score }} {{ review.entity.title|slice:":22" }}{% if review.entity.title|length > 22 %}...{% endif %}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">
+            By @{{ review.user }}
+            {% if review.private %}
+                <span style="color: red;">(private)</span>
+            {% endif %}
+        </h6>
+        <p class="card-text">"{{ review.blurb|slice:":90" }}{% if review.blurb|length > 90 %}{% endif %}..."</p>
+        <h6 class="card-subtitle mb-2 text-body-secondary bottom-left">at {{ review.created_at }}</h6>
+        </div>
     </div>
-</div>
+</a>

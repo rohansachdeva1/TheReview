@@ -5,6 +5,7 @@ from content.models import Entity, Tag, Category
 from .models import Review
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from django.urls import reverse
 
 # Create your views here.
 def write_review(request, entity_id):
@@ -64,15 +65,31 @@ def write_review(request, entity_id):
                         review.tags.add(tag) # added tags to review object
 
             review.save() # save new review
-            return redirect('view_profile')
+            
+            view_profile_url = reverse('view_profile', args=[user.username])
+            return redirect(view_profile_url)
+        
         else:
             return render(request, 'reviews/write_review.html', context)
+        
     else:
         redirect('login')
 
-# we know the user because their signed in
-# we'll know the entity, because the user clicked on that to get here
-# send the user a review form, link to currently signed in user and
-# to the entity they clicked on. When they submit -> entity needs to
-# be updated, profile preferences need to be updated, review needs to
-# be saved to the profile
+def view_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    # store data to be used in view_review template in context
+    context = {
+        'review': review,
+        # ... other context data ...
+    }
+
+    return render(request, 'reviews/review_detail.html', context)
+
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    review.delete()
+    user = get_object_or_404(User, id=request.user.id)
+
+    view_profile_url = reverse('view_profile', args=[user.username])
+    return redirect(view_profile_url)

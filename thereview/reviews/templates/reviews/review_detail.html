@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ review }}</h2>
+
+<!-- Display the final rating -->
+<h4>Final Rating: {{ review.final_rating }}</h4>
+
+<!-- Loop through tags -->
+<h4>Tags</h4>
+{% for tag in review.tags.all %}
+    <p>{{ tag.name }}</p>
+{% endfor %}
+
+<!-- Display the blurb -->
+<h4>Blurb</h4>
+<p>{{ review.blurb }}</p>
+
+{% if review.user == request.user %}
+    <a href="{% url 'delete_review' review.id %}" class="card-link card-link-left">Delete Review</a>
+{% endif %}
+
+{% endblock %}
