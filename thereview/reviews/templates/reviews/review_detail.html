@@ -17,7 +17,7 @@
 <p>{{ review.blurb }}</p>
 
 {% if review.user == request.user %}
-    <a href="{% url 'delete_review' review.id %}" class="card-link card-link-left">Delete Review</a>
+    <a href="{% url 'delete_review' review.id %}" class="btn btn-outline-danger">Delete Review</a>
 {% endif %}
 
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'entity_detail.css' %}">
+
+
+<div class="entity-details">
+    <img src="{{ entity.image }}" width="400" height="600" alt="{{ entity.name }} Image">
+    <div class="entity-info">
+        <h1>{{ entity.title }}</h1>
+        <h3>{{ entity.description }}</h3>
+        <h4>Overall Score: {{ entity.overall_score }}</h4>
+        <h4>Medium: {{ entity.medium }}</h4>
+    </div>
+</div>
+
+{% if entity.tags %}
+    <h2>Tags:</h2>
+    <ul>
+    {% for tag in entity.tags.all %}
+        <li>{{ tag.name }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+</br>
+
+<a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
+
+{% endblock %}

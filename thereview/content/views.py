@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import Entity
 import requests
 from content.models import Medium
@@ -42,3 +42,13 @@ def search_entities(request):
             return render(request, 'content/search_tile_results.html', {'results': results})
     else:
         return redirect('homepage')
+
+def view_entity(request, entity_id):
+    entity = get_object_or_404(Entity, id=entity_id)
+
+    context = {
+        'entity': entity,
+        # ... other context data ...
+    }
+    
+    return render(request, 'content/entity_detail.html', context)

@@ -43,15 +43,14 @@
             {% endif %}
         </div>
     </div>
+    </br>
 
     <!-- Log Out Functionality -->
     <div>
-        <li class="nav-item">
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-link" type="submit">Log Out</button>
-            </form>
-        </li>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">Log Out</a>
     </div>
+
+</br>
+</br>
 </div>
 {% endblock %}

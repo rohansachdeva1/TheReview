@@ -52,9 +52,8 @@ def log_in(request):
     return render(request, 'users/login.html') # render the login template
 
 def log_out(request):
-    if request.method == 'POST':
-        logout(request) # log current user out from request object
-        return redirect('homepage') # redirect to homepage
+    logout(request) # log current user out from request object
+    return redirect('homepage') # redirect to homepage
     
 def view_profile(request, username):
 

@@ -1,0 +1,7 @@
+.entity-details {
+    display: flex;
+  }
+  
+  .entity-info {
+    margin-left: 20px; /* Adjust the margin as needed */
+  }
