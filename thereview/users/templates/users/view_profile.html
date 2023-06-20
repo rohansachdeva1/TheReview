@@ -21,6 +21,10 @@
             <p>Bio: {{ user.profile.bio }}</p>
         </div>
         {% endif %}
+        <div class="profile-stats">
+            <h4>Reviewed: {{ user.profile.reviewed }}</h4>
+            <h4>Avg Rating: {{ user.profile.avg_rating }}</h4>
+        </div>
     </div>
 
     <!-- User Reviews -->

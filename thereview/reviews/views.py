@@ -8,6 +8,7 @@ import json
 from django.urls import reverse
 from django.db import models
 from content.views import update_entity
+from users.views import update_user
 
 # Create your views here.
 def write_review(request, entity_id):
@@ -68,6 +69,7 @@ def write_review(request, entity_id):
             
             # Update Entity
             update_entity(entity.id)
+            update_user(user.id)
 
             review.save() # save new review
             
@@ -93,7 +95,6 @@ def view_review(request, review_id):
 
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-
 
     review.delete()
     user = get_object_or_404(User, id=request.user.id)

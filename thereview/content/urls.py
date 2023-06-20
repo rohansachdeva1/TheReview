@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     #re_path(r'^', views.search_entities, name="search_entities"),
     path('', views.search_entities, name="search_entities"),
+    path('', views.search_entities2, name="search_entities2"),
     path('view_entity/<int:entity_id>/', views.view_entity, name="view_entity"),
 ]

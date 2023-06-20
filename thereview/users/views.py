@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from .forms import RegisterForm
 from reviews.models import Review
+from django.db import models
 
 # Create your views here.
 def register(request):
@@ -56,12 +57,19 @@ def log_out(request):
     return redirect('homepage') # redirect to homepage
     
 def view_profile(request, username):
-
     # get user from request object and send review data to template
     user = get_object_or_404(User, id=request.user.id)
+    update_user(user.id)
     try:
         reviews = Review.objects.filter(user=user).order_by("-created_at")
     except Review.DoesNotExist:
         reviews = None
 
     return render(request, 'users/view_profile.html', {'user':user, 'reviews':reviews})
+
+def update_user(user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    user.profile.reviewed = Review.objects.filter(user=user).count() # update number of reviews
+    user.profile.avg_rating = Review.objects.filter(user=user).aggregate(models.Avg('final_score')).get('final_score__avg')
+    user.profile.save()
