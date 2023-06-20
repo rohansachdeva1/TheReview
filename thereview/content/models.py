@@ -24,7 +24,7 @@ class Entity(models.Model):
     image = models.CharField(max_length=500, null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=100, null=True, blank=True)
-    description_full = models.CharField(max_length=500, null=True, blank=True)
+    plot = models.CharField(max_length=500, null=True, blank=True)
     overall_score = models.DecimalField(
         default=0.0,
         null=True,
