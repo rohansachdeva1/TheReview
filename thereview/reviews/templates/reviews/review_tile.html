@@ -2,17 +2,24 @@
     <link rel="stylesheet" type="text/css" href="{% static 'review_tile.css' %}">
 
 <a href="{% url 'view_review' review.id %}" style="text-decoration: none;">
-    <div class="card h-90">
+    <div class="card h-90 shadow-sm">
         <div class="card-body">
-        <h5 class="card-title">{{ review.final_score }} {{ review.entity.title|slice:":22" }}{% if review.entity.title|length > 22 %}...{% endif %}</h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">
-            By @{{ review.user }}
-            {% if review.private %}
-                <span style="color: red;">(private)</span>
-            {% endif %}
-        </h6>
-        <p class="card-text">"{{ review.blurb|slice:":90" }}{% if review.blurb|length > 90 %}{% endif %}..."</p>
-        <h6 class="card-subtitle mb-2 text-body-secondary bottom-left">at {{ review.created_at }}</h6>
+            <!-- <div class="image-container">
+                <img src="{{ review.entity.image }}" alt="Image" class="image-icon">
+            </div> -->
+            <div class="content-container">
+                <h5 class="card-title">
+                    {{ review.final_score }} {{ review.entity.title|slice:":22" }}{% if review.entity.title|length > 22 %}...{% endif %}
+                </h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                    By @{{ review.user }}
+                    {% if review.private %}
+                        <span style="color: red;">(private)</span>
+                    {% endif %}
+                </h6>
+            </div>
+            <p class="card-text">"{{ review.blurb|slice:":105" }}{% if review.blurb|length > 105 %}{% endif %}..."</p>
+            <h6 class="card-subtitle mb-2 text-body-secondary bottom-left">at {{ review.created_at }}</h6>
         </div>
     </div>
 </a>

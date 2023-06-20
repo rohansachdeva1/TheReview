@@ -1,0 +1,15 @@
+.review-details {
+    display: flex;
+  }
+  
+  .review-info {
+    margin-left: 20px; /* Adjust the margin as needed */
+  }
+
+  .tag-tile {
+    display: inline-block;
+    background-color: #f2f2f2;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border-radius: 4px;
+}

@@ -38,6 +38,7 @@ class Entity(models.Model):
     clicked = models.IntegerField(null=True, blank=True) # number of times user clicked into detail page
     added_to_playlist = models.IntegerField(null=True, blank=True) # number of times user added to playlist
     reviewed = models.IntegerField(null=True, blank=True) # number of times user reviewed
+    sum_scores = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -76,7 +77,7 @@ class DerivedEmotion(models.Model):
 class EntityTag(models.Model):
     entity = models.ForeignKey(Entity, on_delete=models.DO_NOTHING)
     tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)
-    count = models.IntegerField(null=True, blank=True)
+    count = models.IntegerField(default=1, null=True, blank=True)
 
     def __str__(self):
         return f'{self.entity} - {self.tag}'

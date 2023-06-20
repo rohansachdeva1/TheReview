@@ -1,20 +1,50 @@
 {% extends 'base.html' %}
 
+
+
 {% block content %}
-<h2>{{ review }}</h2>
+
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'review_detail.css' %}">
+
+<h2>Review Detail Page</h2>
+</br>
+
+<!-- Entity Details so you know which detail page it is -->
+<div class="review-details">
+    <a href="{% url 'view_entity' review.entity.id %}">
+        <img src="{{ review.entity.image }}" width="150" height="225" style="margin-right: 10px;" alt="{{ review.entity.name }} Image">
+    </a>
+    
+    <div class="entity-info">
+        <a href="{% url 'view_entity' review.entity.id %}" style="text-decoration: none; color: inherit;">
+        <h1>{{ review.entity.title }}</h1>
+        <h3>{{ review.entity.description }}</h3>
+        </a>
+        <h3>review by <a href="{% url 'view_profile' review.user.id %}" style="text-decoration: none;">@{{ review.user }}</a></h3>
+    </div>
+</div>
+</br>
 
 <!-- Display the final rating -->
-<h4>Final Rating: {{ review.final_rating }}</h4>
+<h4>Final Rating: {{ review.final_score }}</h4>
+</br>
 
-<!-- Loop through tags -->
+<!-- Loop through tags and display tags that user selected when reviewing -->
+<!-- * creating tag tile for each one and then looping and going to next line -->
 <h4>Tags</h4>
 {% for tag in review.tags.all %}
-    <p>{{ tag.name }}</p>
+    <div class="tag-tile">{{ tag.name }}</div> 
 {% endfor %}
+</br>
+</br>
 
 <!-- Display the blurb -->
 <h4>Blurb</h4>
 <p>{{ review.blurb }}</p>
+</br>
+
+<a href="" class="btn btn-outline-primary">Share Review</a>
 
 {% if review.user == request.user %}
     <a href="{% url 'delete_review' review.id %}" class="btn btn-outline-danger">Delete Review</a>

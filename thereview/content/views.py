@@ -1,8 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Entity
 import requests
-from content.models import Medium
+from content.models import Medium, Entity
+from users.models import User
+from reviews.models import Review
+from django.dispatch import receiver
+from reviews.signals import review_saved
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 # Create your views here.
 
@@ -33,7 +38,11 @@ def search_entities(request):
                 if (not Entity.objects.filter(description=description)):
                     entity_obj = Entity.objects.create(api_id=id, slug_field=slug, title=title, image=image, description=description, medium=medium)
 
-            # now query the updated database and return new results in search results template
+            # entities = Entity.objects.all()  # Retrieve all entities from the database
+            # matching_entities = process.extract(user_input, entities, scorer=fuzz.token_sort_ratio, limit=12)
+
+            # # now query the updated database and return new results in search results template
+            # new_results = [entity for entity, score in matching_entities]
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
             return render(request, 'content/search_tile_results.html', {'results': new_results})
         
@@ -50,5 +59,18 @@ def view_entity(request, entity_id):
         'entity': entity,
         # ... other context data ...
     }
-    
+
     return render(request, 'content/entity_detail.html', context)
+
+@receiver(review_saved)
+def update_entity(sender, instance, **kwargs):
+    entity = instance.entity
+    #user = get_object_or_404(User, id=instance.user.id)
+    #has_reviewed = Review.objects.filter(user=user, entity=entity).exists()
+    # add tags
+    # loop through available tags
+    # for each tag check if it has been created for this entity
+    # if it has then increment the counter
+    entity.reviewed = Review.objects.filter(entity=entity).count()
+
+    entity.save()

@@ -4,4 +4,34 @@
 
 .custom-card {
     width: 300px; /* Adjust the width as per your requirement */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
 }
+
+.image-icon {
+    width: 20px; /* Adjust the width as needed */
+    height: auto; /* The height will automatically adjust based on the image aspect ratio */
+    margin-right: 5px; /* Adjust the margin as needed */
+    /* Add any additional styling for the image icon */
+}
+
+
+.text-container {
+    flex-grow: 1;
+}
+
+  
+  .review-tile {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-container {
+    margin-right: 10px; /* Adjust as needed */
+  }
+  
+  .image-icon {
+    width: 20px;
+    height: auto;
+  }
+  
+  
+

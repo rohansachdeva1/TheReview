@@ -5,7 +5,23 @@
 
 {% block content %}
 
-<h2>Write a Review for {{ entity.title }}</h2>
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'review_detail.css' %}">
+
+<h2>Write a Review For ...</h2>
+<div class="review-details">
+  <a href="{% url 'view_entity' entity.id %}">
+      <img src="{{ entity.image }}" width="150" height="225" style="margin-right: 10px;" alt="{{ entity.name }} Image">
+  </a>
+  
+  <div class="entity-info">
+      <a href="{% url 'view_entity' entity.id %}" style="text-decoration: none; color: inherit;">
+      <h1>{{ entity.title }}</h1>
+      <h3>{{ entity.description }}</h3>
+      </a>
+  </div>
+</div>
+</br>
 </br>
 
 {% load static %}
@@ -30,7 +46,7 @@
 
     <!-- Category Input -->
     {% if categories %}
-    <h4 class="form-label">Did you like these categories?</h4>
+    <h4 class="form-label">Would you like to shout out any particular aspects?</h4>
     <div>
          {% for category in categories %}
          <div class="card">
@@ -72,9 +88,14 @@
 
     <!-- Blurb Input -->
     <div>
-        <label for="blurb" class="form-label">Blurb</label>
-        <input type="text" name="blurb" class="form-control" id="blurb">
+      <h4 class="form-label" style="display: inline;">Blurb <span class="subtext">Any additional thoughts?</span></h4>
+      <div class="input-group">
+        <textarea name="blurb" class="form-control" id="blurb"></textarea>
+      </div>
+      <span id="character-count" style="float: right;">0/255</span>
     </div>
+
+    
 
     <!-- Privacy Input -->
     <div class="form-check">
@@ -86,6 +107,7 @@
     <button type="submit" class="btn btn-secondary" id="submit-button">Submit</button>
 </form>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Slider Value Script -->
 <script>
     const slider = document.getElementById("final_score");
@@ -96,8 +118,21 @@
     });
 </script>
 
+<!-- Blurb Character Counter Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const blurbInput = document.getElementById('blurb');
+    const characterCount = document.getElementById('character-count');
+  
+    blurbInput.addEventListener('input', function() {
+      const count = blurbInput.value.length;
+      characterCount.textContent = count + '/255';
+    });
+  });
+  </script>
+
+
 <!-- Category Selector Script -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $('.btn-toggle').click(function() {

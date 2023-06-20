@@ -4,6 +4,7 @@ from users.models import User
 from content.models import Entity, Tag
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
+from .signals import review_saved
 
 # Create your models here.
 class Review(models.Model):
@@ -25,3 +26,7 @@ class Review(models.Model):
 
     def __str__(self):
         return f'{self.entity} review by {self.user}'
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        review_saved.send(sender=self.__class__, instance=self)

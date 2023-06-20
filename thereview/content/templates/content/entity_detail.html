@@ -5,6 +5,8 @@
 {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'entity_detail.css' %}">
 
+<h2>Entity Detail Page</h2>
+</br>
 
 <div class="entity-details">
     <img src="{{ entity.image }}" width="400" height="600" alt="{{ entity.name }} Image">
@@ -13,6 +15,7 @@
         <h3>{{ entity.description }}</h3>
         <h4>Overall Score: {{ entity.overall_score }}</h4>
         <h4>Medium: {{ entity.medium }}</h4>
+        <h4>Number of Reviews: {{ entity.reviewed }}</h4>
     </div>
 </div>
 
