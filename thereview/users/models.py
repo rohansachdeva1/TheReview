@@ -9,6 +9,7 @@ class Profile(models.Model):
     bio = models.CharField(max_length=255)
     profile_image = models.ImageField(null=True, blank=True, upload_to="profile/")
     email = models.EmailField(null=True, blank=True)
+    reviewed = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):
         return str(self.user)

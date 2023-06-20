@@ -38,11 +38,6 @@ def search_entities(request):
                 if (not Entity.objects.filter(description=description)):
                     entity_obj = Entity.objects.create(api_id=id, slug_field=slug, title=title, image=image, description=description, medium=medium)
 
-            # entities = Entity.objects.all()  # Retrieve all entities from the database
-            # matching_entities = process.extract(user_input, entities, scorer=fuzz.token_sort_ratio, limit=12)
-
-            # # now query the updated database and return new results in search results template
-            # new_results = [entity for entity, score in matching_entities]
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
             return render(request, 'content/search_tile_results.html', {'results': new_results})
         
@@ -55,12 +50,7 @@ def search_entities(request):
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
 
-    # update entity
-    entity.reviewed = Review.objects.filter(entity=entity).count()
-    sum_scores = Review.objects.filter(entity=entity).aggregate(models.Sum('final_score')).get('final_score__sum')
-    
-    entity.overall_score = sum_scores / entity.reviewed
-    entity.save()
+    update_entity(entity.id)
 
     context = {
         'entity': entity,
@@ -68,3 +58,12 @@ def view_entity(request, entity_id):
     }
 
     return render(request, 'content/entity_detail.html', context)
+
+def update_entity(entity_id):
+    entity = get_object_or_404(Entity, id=entity_id)
+
+    # update entity
+    entity.reviewed = Review.objects.filter(entity=entity).count()
+    sum_scores = Review.objects.filter(entity=entity).aggregate(models.Sum('final_score')).get('final_score__sum')
+    entity.overall_score = sum_scores / entity.reviewed
+    entity.save()

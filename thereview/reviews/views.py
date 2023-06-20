@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from django.urls import reverse
 from django.db import models
+from content.views import update_entity
 
 # Create your views here.
 def write_review(request, entity_id):
@@ -66,10 +67,7 @@ def write_review(request, entity_id):
                         review.tags.add(tag) # added tags to review object
             
             # Update Entity
-            entity.reviewed = Review.objects.filter(entity=entity).count()
-            sum_scores = Review.objects.filter(entity=entity).aggregate(models.Sum('final_score')).get('final_score__sum')
-            entity.overall_score = sum_scores / entity.reviewed
-            entity.save()
+            update_entity(entity.id)
 
             review.save() # save new review
             
@@ -95,11 +93,6 @@ def view_review(request, review_id):
 
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-    # entity = review.entity
-    # # update entity
-
-    # entity.sum_scores = (entity.sum_scores) - float(review.final_score)
-    # entity.overall_score = entity.sum_scores / (entity.reviewed)
 
 
     review.delete()
