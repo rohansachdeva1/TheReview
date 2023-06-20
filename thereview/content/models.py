@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save
+from decimal import Decimal
 
 # Create your models here.
 class Medium(models.Model):
@@ -24,7 +25,13 @@ class Entity(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=100, null=True, blank=True)
     description_full = models.CharField(max_length=500, null=True, blank=True)
-    overall_score = models.FloatField(null=True, blank=True)
+    overall_score = models.DecimalField(
+        default=0.0,
+        null=True,
+        blank=True,
+        max_digits=5,
+        decimal_places=2
+    )
     overall_category_rating1 = models.IntegerField(null=True, blank=True)
     overall_category_rating2 = models.IntegerField(null=True, blank=True)
     overall_category_rating3 = models.IntegerField(null=True, blank=True)
@@ -38,7 +45,6 @@ class Entity(models.Model):
     clicked = models.IntegerField(null=True, blank=True) # number of times user clicked into detail page
     added_to_playlist = models.IntegerField(null=True, blank=True) # number of times user added to playlist
     reviewed = models.IntegerField(null=True, blank=True) # number of times user reviewed
-    sum_scores = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.title

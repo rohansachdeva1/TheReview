@@ -2,12 +2,12 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
 from content.models import Medium, Entity
-from users.models import User
 from reviews.models import Review
 from django.dispatch import receiver
 from reviews.signals import review_saved
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
+from reviews.signals import review_deleted
+from django.db import models
+
 
 # Create your views here.
 
@@ -55,22 +55,16 @@ def search_entities(request):
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
 
+    # update entity
+    entity.reviewed = Review.objects.filter(entity=entity).count()
+    sum_scores = Review.objects.filter(entity=entity).aggregate(models.Sum('final_score')).get('final_score__sum')
+    
+    entity.overall_score = sum_scores / entity.reviewed
+    entity.save()
+
     context = {
         'entity': entity,
         # ... other context data ...
     }
 
     return render(request, 'content/entity_detail.html', context)
-
-@receiver(review_saved)
-def update_entity(sender, instance, **kwargs):
-    entity = instance.entity
-    #user = get_object_or_404(User, id=instance.user.id)
-    #has_reviewed = Review.objects.filter(user=user, entity=entity).exists()
-    # add tags
-    # loop through available tags
-    # for each tag check if it has been created for this entity
-    # if it has then increment the counter
-    entity.reviewed = Review.objects.filter(entity=entity).count()
-
-    entity.save()

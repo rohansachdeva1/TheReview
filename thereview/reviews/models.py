@@ -5,6 +5,7 @@ from content.models import Entity, Tag
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from .signals import review_saved
+from .signals import review_deleted
 
 # Create your models here.
 class Review(models.Model):
@@ -30,3 +31,7 @@ class Review(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         review_saved.send(sender=self.__class__, instance=self)
+    
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        review_deleted.send(sender=self.__class__, instance=self)
