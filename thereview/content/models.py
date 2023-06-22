@@ -32,9 +32,6 @@ class Entity(models.Model):
         max_digits=5,
         decimal_places=2
     )
-    overall_category_rating1 = models.IntegerField(null=True, blank=True)
-    overall_category_rating2 = models.IntegerField(null=True, blank=True)
-    overall_category_rating3 = models.IntegerField(null=True, blank=True)
     genre = models.ManyToManyField(Genre, related_name='GenreEntityLinker')
     medium = models.ForeignKey(Medium, on_delete=models.DO_NOTHING)
     tag = models.ManyToManyField('Tag', through='EntityTag')

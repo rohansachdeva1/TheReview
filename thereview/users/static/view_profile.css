@@ -16,21 +16,21 @@
     text-align: center;
 } */
 
-.profile-details {
+/* .profile-details {
     font-size: 16px;
     margin-top: 10px;
     display: flex;
     align-items: center;
-    margin-right: 10px; /* Adjust the margin as needed */
+    margin-right: 10px; /* Adjust the margin as needed 
 }
 
 .profile-message {
     margin-top: 20px;
     font-style: italic;
     color: #888;
-}
+} */
 
-.profile-stats {
+/* .profile-stats {
     display: flex;
     flex-direction: column;
-}
+} */

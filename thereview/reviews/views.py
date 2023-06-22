@@ -1,16 +1,14 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import ReviewForm
 from django.contrib.auth.models import User
-from content.models import Entity, Tag, Category
+from content.models import Entity, Tag, Category, EntityTag
+from users.models import UserTag
 from .models import Review
-from django.core.exceptions import ObjectDoesNotExist
-import json
 from django.urls import reverse
 from django.db import models
 from content.views import update_entity
 from users.views import update_user
 
-# Create your views here.
 def write_review(request, entity_id):
     
     # Store core data in local variables from request object
@@ -20,7 +18,7 @@ def write_review(request, entity_id):
     categories = Category.objects.filter(medium=medium)
     user = get_object_or_404(User, id=request.user.id)
 
-    # store data to be used in write_review template in context
+    # Store data to be used in write_review template in context
     context = {
         'entity': entity,
         'tags': tags,
@@ -33,23 +31,23 @@ def write_review(request, entity_id):
             final_score = request.POST.get('final_score') # get final_score from form
             blurb = request.POST.get('blurb') # get blurb from form
             
-            # create new review and populate it with required data
+            # Create new review and populate it with required data
             review = Review(user=user, entity=entity, final_score=final_score, blurb=blurb)
             review.save()
 
-            # get privacy toggle from form
+            # Get privacy toggle from form
             if request.POST.get("make_private") == "private":
                 review.private = True
             else:
                 review.private = False
 
-            # get categories data from form
+            # Get categories data from form
             i = 1
             while f'feedback_{i}' in request.POST:
                 category_name = request.POST[f'category_{i}']
                 feedback = request.POST.get(f'feedback_{i}', '')
                 
-                # update review object
+                # Update review object
                 category_rating = f'category_rating{i}'
                 if feedback == 'like':
                     setattr(review, category_rating, 1)
@@ -58,7 +56,7 @@ def write_review(request, entity_id):
 
                 i += 1 # increment counter
 
-            # get tag data from form
+            # Get tag data from form
             # Loop through the form data and retrieve the values of the selected tags
             for key in request.POST.keys():
                 if key.startswith('tag_'):
@@ -66,8 +64,17 @@ def write_review(request, entity_id):
                     if tag_id.isdigit():
                         tag = Tag.objects.get(id=int(tag_id))
                         review.tags.add(tag) # added tags to review object
+
+                        # Add tags to entity
+                        try:
+                            entity_tag = EntityTag.objects.get(entity=entity, tag=tag)
+                            entity_tag.count += 1
+                            entity_tag.save()
+                        except EntityTag.DoesNotExist:
+                            entity_tag = EntityTag(entity=entity, tag=tag, count=1)
+                            entity_tag.save()                 
             
-            # Update Entity
+            # Update entity and user metrics
             update_entity(entity.id)
             update_user(user.id)
 
@@ -95,8 +102,9 @@ def view_review(request, review_id):
 
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-
     review.delete()
+
+    update_entity(review.entity.id)
     user = get_object_or_404(User, id=request.user.id)
 
     view_profile_url = reverse('view_profile', args=[user.username])

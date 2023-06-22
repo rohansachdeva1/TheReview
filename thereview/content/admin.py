@@ -26,3 +26,15 @@ class EmotionAdmin(admin.ModelAdmin):
 
 admin.site.unregister(BaseEmotion)
 admin.site.register(BaseEmotion, EmotionAdmin)
+
+
+class EntityTagsInline(admin.StackedInline):
+    model = EntityTag
+
+class EntityAdmin(admin.ModelAdmin):
+    model = Entity
+    fields = ["api_id", "image", "title", "description", "plot", "overall_score", "genre", "medium"]
+    inlines = [EntityTagsInline]
+
+admin.site.unregister(Entity)
+admin.site.register(Entity, EntityAdmin)

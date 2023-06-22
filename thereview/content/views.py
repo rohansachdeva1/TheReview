@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
-from content.models import Medium, Entity
+from content.models import Medium, Entity, EntityTag
 from reviews.models import Review
 from django.dispatch import receiver
 from reviews.signals import review_saved
@@ -31,9 +31,7 @@ def search_entities(request):
                 description = item['description']
                 plot = item['plot']
 
-                medium = Medium.objects.get(name='Other')  # Default medium value for cases without resultType
-                if 'resultType' in item and item['resultType'] == "Movie":
-                    medium = Medium.objects.get(name='Movies')
+                medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
 
                 # prevent duplicates by checking if description is different, create new entity object and save
                 if (not Entity.objects.filter(description=description)):
@@ -47,11 +45,11 @@ def search_entities(request):
                         medium=medium)
 
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
-            return render(request, 'content/search_tile_results.html', {'results': new_results})
+            return render(request, 'content/search_results.html', {'results': new_results})
         
         # return original list from database if results more than 10
         else:
-            return render(request, 'content/search_tile_results.html', {'results': results})
+            return render(request, 'content/search_results.html', {'results': results})
     else:
         return redirect('homepage')
 
@@ -75,3 +73,11 @@ def update_entity(entity_id):
     if sum_scores is not None:
         entity.overall_score = sum_scores / entity.reviewed # update overall score
     entity.save()
+
+    # Update EntityTag Counts
+    entity_tags = EntityTag.objects.filter(entity=entity)
+    for entity_tag in entity_tags:
+        tag = entity_tag.tag
+        count = Review.objects.filter(entity=entity, tags=tag).count()
+        entity_tag.count = count
+        entity_tag.save()
