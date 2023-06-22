@@ -90,12 +90,10 @@
     <div>
       <h4 class="form-label" style="display: inline;">Blurb <span class="subtext">Any additional thoughts?</span></h4>
       <div class="input-group">
-        <textarea name="blurb" class="form-control" id="blurb"></textarea>
+        <textarea name="blurb" class="form-control" id="blurb" maxlength="255"></textarea>
       </div>
       <span id="character-count" style="float: right;">0/255</span>
     </div>
-
-    
 
     <!-- Privacy Input -->
     <div class="form-check">
@@ -118,6 +116,24 @@
     });
 </script>
 
+<!-- Limit Blurb to 255 characters Script -->
+<script>
+  const blurbTextarea = document.getElementById('blurb');
+  const characterCount = document.getElementById('character-count');
+
+  blurbTextarea.addEventListener('input', function() {
+    const textLength = blurbTextarea.value.length;
+    characterCount.textContent = `${textLength}/255`;
+
+    if (textLength > 255) {
+      blurbTextarea.value = blurbTextarea.value.slice(0, 255);
+      characterCount.style.color = 'red';
+    } else {
+      characterCount.style.color = 'black';
+    }
+  });
+</script>
+
 <!-- Blurb Character Counter Script -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -129,7 +145,7 @@
       characterCount.textContent = count + '/255';
     });
   });
-  </script>
+</script>
 
 
 <!-- Category Selector Script -->

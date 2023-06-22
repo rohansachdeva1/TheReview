@@ -78,7 +78,10 @@ def write_review(request, entity_id):
                         try:
                             user_tag = UserTag.objects.get(user=user, tag=tag)
                             user_tag.count += 1
-                            user_tag.sum_scores += float(review.final_score)
+                            if user_tag.sum_scores is not None:
+                                user_tag.sum_scores += float(review.final_score)
+                            else:
+                                user_tag.sum_scores = float(review.final_score)
                             user_tag.save()
                         except UserTag.DoesNotExist:
                             user_tag = UserTag(user=user, tag=tag, count=1, sum_scores=review.final_score)
