@@ -33,7 +33,7 @@ class EntityTagsInline(admin.StackedInline):
 
 class EntityAdmin(admin.ModelAdmin):
     model = Entity
-    fields = ["api_id", "image", "title", "description", "plot", "overall_score", "genre", "medium"]
+    fields = ["api_id", "image", "title", "year", "plot", "overall_score", "genre", "medium"]
     inlines = [EntityTagsInline]
 
 admin.site.unregister(Entity)

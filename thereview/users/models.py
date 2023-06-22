@@ -27,7 +27,7 @@ post_save.connect(create_profile, sender=User)
 class UserTag(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-    sum_scores = models.FloatField(default=0)
+    sum_scores = models.FloatField(default=0, null=True, blank=True)
     count = models.IntegerField(default=1, null=True, blank=True)
 
     def __str__(self):

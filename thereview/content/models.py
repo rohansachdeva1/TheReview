@@ -23,7 +23,7 @@ class Entity(models.Model):
     slug_field = models.CharField(max_length=500, null=True, blank=True)
     image = models.CharField(max_length=500, null=True, blank=True)
     title = models.CharField(max_length=255)
-    description = models.CharField(max_length=100, null=True, blank=True)
+    year = models.CharField(max_length=100, null=True, blank=True)
     plot = models.CharField(max_length=500, null=True, blank=True)
     overall_score = models.DecimalField(
         default=0.0,
@@ -78,8 +78,8 @@ class DerivedEmotion(models.Model):
         return self.name
 
 class EntityTag(models.Model):
-    entity = models.ForeignKey(Entity, on_delete=models.DO_NOTHING)
-    tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     count = models.IntegerField(default=1, null=True, blank=True)
 
     def __str__(self):

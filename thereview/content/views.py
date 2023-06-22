@@ -24,32 +24,33 @@ def search_entities(request):
 
             # loop through json object and create variables for needed fields
             for item in data['results']:
-                id = item['id']
-                title = item['title']
-                slug = title.replace(' ', '-').lower()
-                image = item['image']
-                description = item['description']
-                plot = item['plot']
+                if item['imDbRatingVotes'] is not None and int(item['imDbRatingVotes']) > 10000:
+                    id = item['id']
+                    title = item['title']
+                    slug = title.replace(' ', '-').lower()
+                    image = item['image']
+                    year = item['description']
+                    plot = item['plot']
 
-                medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
+                    medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
 
-                # prevent duplicates by checking if description is different, create new entity object and save
-                if (not Entity.objects.filter(description=description)):
-                    entity_obj = Entity.objects.createentity_obj = Entity.objects.create(
-                        api_id=id, 
-                        slug_field=slug, 
-                        title=title, 
-                        image=image, 
-                        description=description, 
-                        plot = plot,
-                        medium=medium)
+                    # prevent duplicates by checking if description is different, create new entity object and save
+                    if (not Entity.objects.filter(api_id=id)):
+                        entity_obj = Entity.objects.createentity_obj = Entity.objects.create(
+                            api_id=id, 
+                            slug_field=slug, 
+                            title=title, 
+                            image=image, 
+                            year=year, 
+                            plot = plot,
+                            medium=medium)
 
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
-            return render(request, 'content/search_results.html', {'results': new_results})
+            return render(request, 'content/search_tile_results.html', {'results': new_results})
         
         # return original list from database if results more than 10
         else:
-            return render(request, 'content/search_results.html', {'results': results})
+            return render(request, 'content/search_tile_results.html', {'results': results})
     else:
         return redirect('homepage')
 

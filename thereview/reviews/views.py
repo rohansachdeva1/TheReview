@@ -116,7 +116,6 @@ def delete_review(request, review_id):
 
     update_entity(review.entity.id)
     update_user(review.user.id)
-    user = get_object_or_404(User, id=request.user.id)
 
-    view_profile_url = reverse('view_profile', args=[user.username])
+    view_profile_url = reverse('view_profile', args=[review.user.username])
     return redirect(view_profile_url)
