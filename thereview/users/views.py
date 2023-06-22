@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.db.models import Sum
+from users.models import UserTag
 from .forms import RegisterForm
 from reviews.models import Review
 from django.db import models
@@ -45,6 +47,7 @@ def log_in(request):
         # if the user exists, log them in and redirect to homepage
         if user is not None:
             login(request, user)
+            update_user(user.id)
             return redirect('homepage')
         # if not, prompt them to log in again
         else:
@@ -73,3 +76,11 @@ def update_user(user_id):
     user.profile.reviewed = Review.objects.filter(user=user).count() # update number of reviews
     user.profile.avg_rating = Review.objects.filter(user=user).aggregate(models.Avg('final_score')).get('final_score__avg')
     user.profile.save()
+
+    # Update UserTag counts and sum_scores
+    user_tags = UserTag.objects.filter(user=user)
+    for user_tag in user_tags:
+        tag = user_tag.tag
+        user_tag.count = Review.objects.filter(user=user, tags=tag).count()
+        user_tag.sum_scores = Review.objects.filter(user=user, tags=tag).aggregate(total_score=Sum('final_score')).get('total_score', 0)
+        user_tag.save()

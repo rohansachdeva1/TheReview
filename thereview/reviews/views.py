@@ -72,7 +72,17 @@ def write_review(request, entity_id):
                             entity_tag.save()
                         except EntityTag.DoesNotExist:
                             entity_tag = EntityTag(entity=entity, tag=tag, count=1)
-                            entity_tag.save()                 
+                            entity_tag.save()
+
+                        # Add tags to user profile
+                        try:
+                            user_tag = UserTag.objects.get(user=user, tag=tag)
+                            user_tag.count += 1
+                            user_tag.sum_scores += float(review.final_score)
+                            user_tag.save()
+                        except UserTag.DoesNotExist:
+                            user_tag = UserTag(user=user, tag=tag, count=1, sum_scores=review.final_score)
+                            user_tag.save()               
             
             # Update entity and user metrics
             update_entity(entity.id)
@@ -105,6 +115,7 @@ def delete_review(request, review_id):
     review.delete()
 
     update_entity(review.entity.id)
+    update_user(review.user.id)
     user = get_object_or_404(User, id=request.user.id)
 
     view_profile_url = reverse('view_profile', args=[user.username])
