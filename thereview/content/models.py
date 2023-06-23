@@ -20,11 +20,14 @@ class Genre(models.Model):
     
 class Entity(models.Model):
     api_id = models.CharField(max_length=500, null=True, blank=True)
+    imDbRatingVotes = models.CharField(max_length=255, null=True, blank=True)
     slug_field = models.CharField(max_length=500, null=True, blank=True)
     image = models.CharField(max_length=500, null=True, blank=True)
     title = models.CharField(max_length=255)
     year = models.CharField(max_length=100, null=True, blank=True)
     plot = models.CharField(max_length=500, null=True, blank=True)
+    runtime = models.CharField(max_length=50, null=True, blank=True)
+    content_rating = models.CharField(max_length=50, null=True, blank=True)
     overall_score = models.DecimalField(
         default=0.0,
         null=True,
@@ -32,9 +35,10 @@ class Entity(models.Model):
         max_digits=5,
         decimal_places=2
     )
-    genre = models.ManyToManyField(Genre, related_name='GenreEntityLinker')
+    genres = models.ManyToManyField(Genre, blank=True, related_name='entities')
+    actors = models.ManyToManyField('Actor', through='EntityActor')
     medium = models.ForeignKey(Medium, on_delete=models.DO_NOTHING)
-    tag = models.ManyToManyField('Tag', through='EntityTag')
+    tags = models.ManyToManyField('Tag', through='EntityTag')
 
     # metrics
     clean = models.BooleanField(null=True, blank=True) # if entity is considered clean or unsure (our definition)

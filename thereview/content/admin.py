@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Medium, Genre, Entity, Category, Tag, EntityTag
+from .models import Medium, Genre, Entity, Category, Tag, EntityTag, Actor, EntityActor
 from .models import BaseEmotion, DerivedEmotion
 
 # Register your models here.
@@ -12,6 +12,8 @@ admin.site.register(Tag)
 admin.site.register(BaseEmotion)
 admin.site.register(DerivedEmotion)
 admin.site.register(EntityTag)
+admin.site.register(Actor)
+admin.site.register(EntityActor)
 
 class DerivedEmotionsInline(admin.StackedInline):
     model = DerivedEmotion
@@ -31,10 +33,22 @@ admin.site.register(BaseEmotion, EmotionAdmin)
 class EntityTagsInline(admin.StackedInline):
     model = EntityTag
 
+class EntityActorsInline(admin.StackedInline):
+    model = EntityActor
+
 class EntityAdmin(admin.ModelAdmin):
     model = Entity
-    fields = ["api_id", "image", "title", "year", "plot", "overall_score", "genre", "medium"]
-    inlines = [EntityTagsInline]
+    fields = ["api_id", 
+              "image", 
+              "title", 
+              "year", 
+              "plot", 
+              "medium", 
+              "content_rating", 
+              "runtime", 
+              "overall_score",
+              "genres"]
+    inlines = [EntityTagsInline, EntityActorsInline]
 
 admin.site.unregister(Entity)
 admin.site.register(Entity, EntityAdmin)

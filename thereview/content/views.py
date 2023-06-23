@@ -1,15 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
-from content.models import Medium, Entity, EntityTag
+from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor
 from reviews.models import Review
-from django.dispatch import receiver
-from reviews.signals import review_saved
-from reviews.signals import review_deleted
 from django.db import models
-
-
-# Create your views here.
 
 def search_entities(request):
     if request.method == "POST":
@@ -18,8 +12,8 @@ def search_entities(request):
         
         results = Entity.objects.filter(title__icontains=user_input)[:12]
 
-        # use api if not enough objects in database (10)
-        if results.count() < 12:
+        # use api if not enough objects in database
+        if results.count() < 5:
             data = requests.get('https://imdb-api.com/API/AdvancedSearch/k_28nyce3o?title=' + user_input).json()
 
             # loop through json object and create variables for needed fields
@@ -31,19 +25,47 @@ def search_entities(request):
                     image = item['image']
                     year = item['description']
                     plot = item['plot']
+                    runtime = item['runtimeStr']
+                    content_rating = item['contentRating']
 
                     medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
 
                     # prevent duplicates by checking if description is different, create new entity object and save
                     if (not Entity.objects.filter(api_id=id)):
-                        entity_obj = Entity.objects.createentity_obj = Entity.objects.create(
+                        entity = Entity.objects.createentity_obj = Entity.objects.create(
                             api_id=id, 
                             slug_field=slug, 
                             title=title, 
                             image=image, 
                             year=year, 
                             plot = plot,
+                            content_rating = content_rating,
+                            runtime = runtime,
                             medium=medium)
+                        
+                        # add genres to the entity
+                        for genre in item['genreList']:
+                            try:
+                                curr_genre = Genre.objects.get(name=genre['key'])
+                                
+                            except Genre.DoesNotExist:
+                                curr_genre = Genre(name=genre['key'], medium=medium)
+                                curr_genre.save()
+                                curr_genre.entities.add(entity)
+                        
+                            entity.genres.add(curr_genre)
+
+                        # add actors to the entity
+                        for star in item['starList']:
+                            # print(star['id'])
+                            # print(star['name'])
+                            try:
+                                actor = Actor.objects.get(api_id=star['id'])
+                            except Actor.DoesNotExist:
+                                print("hello")
+                                actor = Actor.objects.create(api_id=star['id'], name=star['name'])
+
+                            #EntityActor.objects.create(entity=entity, actor=actor)
 
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
             return render(request, 'content/search_tile_results.html', {'results': new_results})
@@ -56,11 +78,13 @@ def search_entities(request):
 
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
+    entity_tags = EntityTag.objects.filter(entity=entity)
 
     update_entity(entity.id) # update entity information before displaying
 
     context = {
         'entity': entity,
+        'entity_tags': entity_tags,
         # ... other context data ...
     }
 
@@ -82,3 +106,6 @@ def update_entity(entity_id):
         count = Review.objects.filter(entity=entity, tags=tag).count()
         entity_tag.count = count
         entity_tag.save()
+        if entity_tag.count < 1:
+            entity_tag.delete()
+        

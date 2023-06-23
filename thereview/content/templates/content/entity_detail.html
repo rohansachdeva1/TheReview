@@ -8,28 +8,48 @@
 <h2>Entity Detail Page</h2>
 </br>
 
+<!-- Entity Information -->
 <div class="entity-details">
     <img src="{{ entity.image }}" width="400" height="600" alt="{{ entity.name }} Image">
     <div class="entity-info">
-        <h1>{{ entity.title }}</h1>
-        <h3>{{ entity.description }}</h3>
+        <h1>{{ entity.title }} {{ entity.year }}</h1>
         <h4>{{ entity.plot }}</h4>
-        <h4>Medium: {{ entity.medium }}</h4>
+        <h4>Medium: {{ entity.medium }} {{ entity.content_rating }}</h4>
+        
+            {% if entity.genres %}
+                <h4 style="display: inline-block">Genres: </h4>
+                {% for genre in entity.genres.all %}
+                    <h4 style="display: inline-block">{{ genre.name }}</h4>
+                {% endfor %}
+                </br>
+            {% endif %}
+
+        <h4>Run Time: {{ entity.runtime }}</h4>
         <h4>Overall Score: {{ entity.overall_score }}</h4>
         <h4>Number of Reviews: {{ entity.reviewed }}</h4>
     </div>
 </div>
+</br>
 
+<!-- Entity Tags -->
 {% if entity.tags %}
-    <h2>Tags:</h2>
-    <ul>
     {% for tag in entity.tags.all %}
-        <li>{{ tag.name }}</li>
+        <div style="display: inline-block; background-color: #f2f2f2; padding: 5px 10px; margin-right: 10px; border-radius: 4px;">{{ tag.name }}</div>
     {% endfor %}
-    </ul>
+    </br>
 {% endif %}
 </br>
 
+<!-- Entity Actors -->
+{% if entity.actors %}
+    {% for actor in entity.actors.all %}
+        <div> {{ actor.name }}</div>
+    {% endfor %}
+    </br>
+{% endif %}
+</br>
+
+<!-- Write Review Button -->
 <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
 
 {% endblock %}
