@@ -1,0 +1,22 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
+
+<!-- <div class="actor-tile" style="width: 18rem;">
+    <div class="image-container">
+        <img src="{{ entity_actor.actor.image }}" class="card-img-top" alt="..." width="100" height="100">
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ entity_actor.actor.name }}</h5>
+        <p class="card-text">{{ entity_actor.as_character }}</p>
+    </div>
+</div> -->
+
+<div class="entity-tile">
+    <div class="card h-150">
+        <img src="{{ entity_actor.actor.image }}" class="card-img-top" alt="Actor Image">
+        <div class="card-body">
+            <h5 class="card-title">{{ entity_actor.actor.name }}</h5>
+        <p class="card-text">{{ entity_actor.as_character }}</p>
+        </div>
+    </div>
+</div>

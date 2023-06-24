@@ -96,12 +96,14 @@ def fetch_actor_info(entity_id):
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     entity_tags = EntityTag.objects.filter(entity=entity)
+    entity_actors = EntityActor.objects.filter(entity=entity)
 
     update_entity(entity.id) # update entity information before displaying
 
     context = {
         'entity': entity,
         'entity_tags': entity_tags,
+        'entity_actors': entity_actors,
         # ... other context data ...
     }
 

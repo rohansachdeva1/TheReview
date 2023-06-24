@@ -41,15 +41,41 @@
 </br>
 
 <!-- Entity Actors -->
-{% if entity.actors %}
+<!-- {% if entity.actors %}
     {% for actor in entity.actors.all %}
         <div> {{ actor.name }}</div>
+        <div> {{ actor.as_character }}</div>
+        
     {% endfor %}
     </br>
 {% endif %}
+</br> -->
+
+<!-- {% for item in entity_actors %}
+    <div> {{ item.actor.name }} as {{ item.as_character }}</div>
+{% endfor %}
+</br>
+
+</br> -->
+
+<div class="row">
+    {% for item in entity_actors %}
+        <div class="col-md-2">
+            <div class="actor-tile">
+                {% include 'content/actor_tile.html' with entity_actor=item %}
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:5 and not forloop.last %}
+            </div><div class="row">
+        {% endif %}
+    {% endfor %}
+</div>
 </br>
 
 <!-- Write Review Button -->
 <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
-
+</br>
+</br>
+</br>
+</br>
 {% endblock %}
