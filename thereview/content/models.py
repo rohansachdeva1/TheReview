@@ -36,9 +36,9 @@ class Entity(models.Model):
         decimal_places=2
     )
     genres = models.ManyToManyField(Genre, blank=True, related_name='entities')
-    actors = models.ManyToManyField('Actor', through='EntityActor')
+    actors = models.ManyToManyField('Actor', blank=True, through='EntityActor')
     medium = models.ForeignKey(Medium, on_delete=models.DO_NOTHING)
-    tags = models.ManyToManyField('Tag', through='EntityTag')
+    tags = models.ManyToManyField('Tag',blank=True, through='EntityTag')
 
     # metrics
     clean = models.BooleanField(null=True, blank=True) # if entity is considered clean or unsure (our definition)
@@ -99,8 +99,8 @@ class Actor(models.Model):
         return self.name
     
 class EntityActor(models.Model):
-    entity = models.ForeignKey(Entity, on_delete=models.DO_NOTHING)
-    actor = models.ForeignKey(Actor, on_delete=models.DO_NOTHING)
+    entity = models.ForeignKey(Entity, null=True, blank=True, on_delete=models.CASCADE)
+    actor = models.ForeignKey(Actor, null=True, blank=True, on_delete=models.CASCADE)
     as_character = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):

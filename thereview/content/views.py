@@ -56,16 +56,13 @@ def search_entities(request):
                             entity.genres.add(curr_genre)
 
                         # add actors to the entity
-                        for star in item['starList']:
-                            # print(star['id'])
-                            # print(star['name'])
+                        for star in item['starList'][1:]:
                             try:
-                                actor = Actor.objects.get(api_id=star['id'])
+                                actor = Actor.objects.get(name=star['name'])
                             except Actor.DoesNotExist:
-                                print("hello")
-                                actor = Actor.objects.create(api_id=star['id'], name=star['name'])
+                                actor = Actor.objects.create(name=star['name'])
 
-                            #EntityActor.objects.create(entity=entity, actor=actor)
+                            EntityActor.objects.create(entity=entity, actor=actor)
 
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
             return render(request, 'content/search_tile_results.html', {'results': new_results})
