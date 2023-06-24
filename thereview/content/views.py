@@ -1,9 +1,11 @@
+import asyncio
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
 from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor
 from reviews.models import Review
 from django.db import models
+from .tasks import fetch_actor_info
 
 def search_entities(request):
     if request.method == "POST":
@@ -18,20 +20,22 @@ def search_entities(request):
 
             # loop through json object and create variables for needed fields
             for item in data['results']:
+                # only allow entities with imDbRatingVotes above 10k
                 if item['imDbRatingVotes'] is not None and int(item['imDbRatingVotes']) > 10000:
                     id = item['id']
-                    title = item['title']
-                    slug = title.replace(' ', '-').lower()
-                    image = item['image']
-                    year = item['description']
-                    plot = item['plot']
-                    runtime = item['runtimeStr']
-                    content_rating = item['contentRating']
-
-                    medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
-
-                    # prevent duplicates by checking if description is different, create new entity object and save
+                    
+                    # prevent duplicates by checking if we already have an entity with that id, create new entity object and save
                     if (not Entity.objects.filter(api_id=id)):
+                        
+                        title = item['title']
+                        slug = title.replace(' ', '-').lower()
+                        image = item['image']
+                        year = item['description']
+                        plot = item['plot']
+                        runtime = item['runtimeStr']
+                        content_rating = item['contentRating']
+                        medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
+                        
                         entity = Entity.objects.createentity_obj = Entity.objects.create(
                             api_id=id, 
                             slug_field=slug, 
@@ -55,15 +59,9 @@ def search_entities(request):
                         
                             entity.genres.add(curr_genre)
 
-                        # add actors to the entity
-                        for star in item['starList'][1:]:
-                            try:
-                                actor = Actor.objects.get(name=star['name'])
-                            except Actor.DoesNotExist:
-                                actor = Actor.objects.create(name=star['name'])
-
-                            EntityActor.objects.create(entity=entity, actor=actor)
-
+                        # get actor info from full cast api, link them to entity using EntityActor model
+                        fetch_actor_info(entity.api_id)
+                            
             new_results = Entity.objects.filter(title__icontains=user_input)[:12]
             return render(request, 'content/search_tile_results.html', {'results': new_results})
         
@@ -72,6 +70,28 @@ def search_entities(request):
             return render(request, 'content/search_tile_results.html', {'results': results})
     else:
         return redirect('homepage')
+    
+def fetch_actor_info(entity_id):
+    
+    data = requests.get('https://imdb-api.com/en/API/FullCast/k_28nyce3o/' + entity_id).json()
+    entity = Entity.objects.get(api_id=entity_id)
+
+    # Loop through json object and create variables for needed fields
+    if data['actors'] is not None:
+        for item in data['actors'][:5]:
+            api_id = item['id']
+            image = item['image']
+            name = item['name']
+            asCharacter = item['asCharacter']
+
+            # Create actor obj if not already in database
+            try:
+                actor = Actor.objects.get(api_id=api_id)
+            except Actor.DoesNotExist:
+                actor = Actor.objects.create(api_id=api_id, name=name, image=image)
+
+            # Link to entity using EntityActor model
+            EntityActor.objects.create(entity=entity, actor=actor, as_character=asCharacter)
 
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
