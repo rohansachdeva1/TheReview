@@ -4,6 +4,21 @@
 
 <title>The Review</title>
 
+<!-- Display Genre Recommendations Based on Search History -->
+<h3>You may like these based off your search history...</h3>
+{% if genre_recs %}
+<div class="row">
+    {% for entity in genre_recs %}
+      <div class="col-md-3">
+        {% include 'content/entity_tile.html' with entity=entity %}
+      </div>
+      {% if forloop.counter|divisibleby:4 and not forloop.last %}
+        </div><div class="row">
+      {% endif %}
+    {% endfor %}
+  </div>
+{% else %}
+{% endif %}
 
 <footer>
 <div class="footer-logo">

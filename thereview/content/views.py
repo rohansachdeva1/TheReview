@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
 from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor
+from users.models import SearchHistory
 from reviews.models import Review
 from django.db import models
 from .tasks import fetch_actor_info
@@ -102,6 +103,7 @@ def view_entity(request, entity_id):
     genre_recs = generate_genre_recs(entity_id)
 
     update_entity(entity.id) # update entity information before displaying
+    SearchHistory.objects.create(entity=entity, user=request.user)
 
     context = {
         'entity': entity,
