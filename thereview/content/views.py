@@ -6,6 +6,8 @@ from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor
 from reviews.models import Review
 from django.db import models
 from .tasks import fetch_actor_info
+import random
+from django.db.models import Count
 
 def search_entities(request):
     if request.method == "POST":
@@ -97,6 +99,7 @@ def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     entity_tags = EntityTag.objects.filter(entity=entity)
     entity_actors = EntityActor.objects.filter(entity=entity)
+    genre_recs = generate_genre_recs(entity_id)
 
     update_entity(entity.id) # update entity information before displaying
 
@@ -104,6 +107,7 @@ def view_entity(request, entity_id):
         'entity': entity,
         'entity_tags': entity_tags,
         'entity_actors': entity_actors,
+        'genre_recs': genre_recs,
         # ... other context data ...
     }
 
@@ -127,4 +131,17 @@ def update_entity(entity_id):
         entity_tag.save()
         if entity_tag.count < 1:
             entity_tag.delete()
+
+def generate_genre_recs(entity_id):
+    entity = get_object_or_404(Entity, id=entity_id)
+
+    genres = entity.genres.all()  # get all genres associated with that entity
+    print(genres)
+    #related_entities = Entity.objects.filter(genres__in=genres).distinct() # generate list of other entities with those same genres
+    related_entities = Entity.objects.annotate(num_matching_genres=Count('genres')).filter(genres__in=genres, num_matching_genres=len(genres)).exclude(id=entity_id).distinct()
+    random_entities = random.sample(list(related_entities), min(5, len(related_entities)))
+    # related_entities = Entity.objects.filter(genres__in=genres).exclude(id=entity_id).distinct()
+    # random_entities = random.sample(list(related_entities), 5) if len(related_entities) > 5 else related_entities
+
+    return random_entities
         

@@ -13,8 +13,9 @@
     <img src="{{ entity.image }}" width="400" height="600" alt="{{ entity.name }} Image">
     <div class="entity-info">
         <h1>{{ entity.title }} {{ entity.year }}</h1>
+        <h4>{{ entity.medium }} {{ entity.content_rating }}</h4>
         <h4>{{ entity.plot }}</h4>
-        <h4>Medium: {{ entity.medium }} {{ entity.content_rating }}</h4>
+        <h4>Duration: {{ entity.runtime }}</h4>
         
             {% if entity.genres %}
                 <h4 style="display: inline-block">Genres: </h4>
@@ -24,7 +25,6 @@
                 </br>
             {% endif %}
 
-        <h4>Run Time: {{ entity.runtime }}</h4>
         <h4>Overall Score: {{ entity.overall_score }}</h4>
         <h4>Number of Reviews: {{ entity.reviewed }}</h4>
     </div>
@@ -41,28 +41,26 @@
 </br>
 
 <!-- Entity Actors -->
-<!-- {% if entity.actors %}
-    {% for actor in entity.actors.all %}
-        <div> {{ actor.name }}</div>
-        <div> {{ actor.as_character }}</div>
-        
-    {% endfor %}
-    </br>
-{% endif %}
-</br> -->
-
-<!-- {% for item in entity_actors %}
-    <div> {{ item.actor.name }} as {{ item.as_character }}</div>
-{% endfor %}
-</br>
-
-</br> -->
-
 <div class="row">
     {% for item in entity_actors %}
         <div class="col-md-2">
             <div class="actor-tile">
                 {% include 'content/actor_tile.html' with entity_actor=item %}
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:5 and not forloop.last %}
+            </div><div class="row">
+        {% endif %}
+    {% endfor %}
+</div>
+</br>
+
+<!-- Genre Recommendations -->
+<div class="row">
+    {% for entity in genre_recs %}
+        <div class="col-md-2">
+            <div class="entity-tile">
+                {% include 'content/entity_tile.html' with entity=entity %}
             </div>
         </div>
         {% if forloop.counter|divisibleby:5 and not forloop.last %}
