@@ -68,7 +68,13 @@ def view_profile(request, username):
     except Review.DoesNotExist:
         reviews = None
 
-    return render(request, 'users/view_profile.html', {'user':user, 'reviews':reviews})
+    context = {
+        'user': user,
+        'reviews': reviews,
+        # ... other context data ...
+    }
+
+    return render(request, 'users/view_profile.html', context)
 
 def update_user(user_id):
     user = get_object_or_404(User, id=user_id)

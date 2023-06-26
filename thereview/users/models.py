@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from content.models import Tag, Entity
+from content.models import Medium, Tag, Entity
 from decimal import Decimal
 
 # Create your models here.

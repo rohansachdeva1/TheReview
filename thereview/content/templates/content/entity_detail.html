@@ -82,6 +82,7 @@
 {% if user.is_authenticated %}
     <!-- Write Review Button -->
     <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
+    <a href="{% url 'add_to_playlist' entity.id %}" class="btn btn-outline-secondary">{{ playlist.medium }} For Later</a>
 {% else %}
     <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
 {% endif %}

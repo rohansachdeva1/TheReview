@@ -28,4 +28,5 @@ urlpatterns = [
     re_path(r'^search/', include('content.urls')),
     re_path(r'^users/', include('users.urls')),
     re_path(r'^review/', include('reviews.urls')),
+    re_path(r'^playlists/', include('playlists.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

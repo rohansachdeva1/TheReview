@@ -4,8 +4,8 @@ from content.models import Medium, Entity
 
 # Create your models here.
 class Playlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    medium = models.ForeignKey(Medium, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='playlists')
+    medium = models.ForeignKey(Medium, on_delete=models.CASCADE, related_name='playlists')
     entities = models.ManyToManyField(Entity, related_name='playlists')
 
     def __str__(self):

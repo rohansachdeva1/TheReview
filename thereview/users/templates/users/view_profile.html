@@ -27,6 +27,15 @@
         </div>
     </div>
 
+    <!-- Playlists Functionality -->
+    {% if user.playlists %}
+        <div>
+            {% for playlist in user.playlists.all %}
+                <p>{{ playlist.entities.all }}!</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- User Reviews -->
     <div>
         <h1 class="profile-heading">Reviews</h1>
@@ -48,6 +57,8 @@
         </div>
     </div>
     </br>
+
+
 
     <!-- Log Out Functionality -->
     <div>
