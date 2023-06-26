@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import ReviewForm
 from django.contrib.auth.models import User
 from content.models import Entity, Tag, Category, EntityTag
 from users.models import UserTag
@@ -100,7 +99,7 @@ def write_review(request, entity_id):
             return render(request, 'reviews/write_review.html', context)
         
     else:
-        redirect('login')
+        return redirect('homepage')
 
 def view_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)

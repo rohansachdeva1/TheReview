@@ -42,41 +42,52 @@
 
 
 <!-- Entity Actors -->
-<h4>Cast</h4>
-<div class="row">
-    {% for item in entity_actors %}
-        <div class="col-md-2">
-            <div class="actor-tile">
-                {% include 'content/actor_tile.html' with entity_actor=item %}
+{% if entity_actors %}
+    <h4>Cast</h4>
+    <div class="row">
+        {% for item in entity_actors %}
+            <div class="col-md-2">
+                <div class="actor-tile">
+                    {% include 'content/actor_tile.html' with entity_actor=item %}
+                </div>
             </div>
-        </div>
-        {% if forloop.counter|divisibleby:5 and not forloop.last %}
-            </div><div class="row">
-        {% endif %}
-    {% endfor %}
-</div>
-</br>
+            {% if forloop.counter|divisibleby:5 and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+    </br>
+{% endif %}
 
 <!-- Genre Recommendations -->
-<h4>Similar {{ entity.medium }}...</h4>
-<div class="row">
-    {% for entity in genre_recs %}
-        <div class="col-md-2">
-            <div class="entity-tile">
-                {% include 'content/entity_tile.html' with entity=entity %}
+{% if user.is_authenticated %}
+    {% if genre_recs %}
+    <h4>Similar {{ entity.medium }}...</h4>
+    <div class="row">
+        {% for entity in genre_recs %}
+            <div class="col-md-2">
+                <div class="entity-tile">
+                    {% include 'content/entity_tile.html' with entity=entity %}
+                </div>
             </div>
-        </div>
-        {% if forloop.counter|divisibleby:5 and not forloop.last %}
-            </div><div class="row">
-        {% endif %}
-    {% endfor %}
-</div>
+            {% if forloop.counter|divisibleby:5 and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+    </br>
+    {% endif %}
+{% endif %}
+
+{% if user.is_authenticated %}
+    <!-- Write Review Button -->
+    <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
+{% else %}
+    <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
+{% endif %}
+</br>
+</br>
+</br>
 </br>
 
-<!-- Write Review Button -->
-<a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
-</br>
-</br>
-</br>
-</br>
 {% endblock %}
