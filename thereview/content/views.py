@@ -5,10 +5,10 @@ import requests
 from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor
 from users.models import User, UserTag, SearchHistory
 from reviews.models import Review
+from playlists.models import Playlist
 from django.db import models
 from .tasks import fetch_actor_info
 import random
-from django.db.models import Count
 from django.db.models import Avg
 
 def search_entities(request):
@@ -105,6 +105,8 @@ def view_entity(request, entity_id):
     entity_tags = EntityTag.objects.filter(entity=entity)
     entity_actors = EntityActor.objects.filter(entity=entity)
     genre_recs = generate_genre_recs(entity_id)
+    user = get_object_or_404(User, id=request.user.id)
+    playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
 
     update_entity(entity.id) # update entity information before displaying
 
@@ -116,6 +118,7 @@ def view_entity(request, entity_id):
         'entity_tags': entity_tags,
         'entity_actors': entity_actors,
         'genre_recs': genre_recs,
+        'playlist': playlist,
         # ... other context data ...
     }
 

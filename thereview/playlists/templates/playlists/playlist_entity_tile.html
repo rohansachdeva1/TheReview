@@ -1,0 +1,15 @@
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
+
+<!-- Entity Tiles (Route to entity detail page) -->
+<a href="{% url 'view_entity' entity.id %}" style="text-decoration: none; color: inherit;">
+    <div class="entity-tile">
+        <div class="card h-100">
+            <img src="{{ entity.image }}" class="card-img-top" alt="Entity Image">
+            <div class="card-body">
+                <h5 class="card-title">{{ entity.title }}</h5>
+                <a href="{% url 'delete_from_playlist' entity.id %}" class="card-link card-link-left">Remove</a>
+            </div>
+        </div>
+    </div>
+</a>

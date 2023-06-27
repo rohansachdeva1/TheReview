@@ -27,6 +27,18 @@
 
         <h4>Overall Score: {{ entity.overall_score }}</h4>
         <h4>Number of Reviews: {{ entity.reviewed }}</h4>
+        </br>
+        {% if user.is_authenticated %}
+            <!-- Write Review Button -->
+            <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
+            {% if entity in playlist.entities.all %}
+                <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-secondary">View {{ entity.medium }} Playlist</a>
+            {% else %}
+                <a href="{% url 'add_to_playlist' entity.id %}" class="btn btn-outline-secondary">Add To Playlist</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
+        {% endif %}
     </div>
 </div>
 </br>
@@ -79,13 +91,7 @@
     {% endif %}
 {% endif %}
 
-{% if user.is_authenticated %}
-    <!-- Write Review Button -->
-    <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
-    <a href="{% url 'add_to_playlist' entity.id %}" class="btn btn-outline-secondary">{{ playlist.medium }} For Later</a>
-{% else %}
-    <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
-{% endif %}
+
 </br>
 </br>
 </br>
