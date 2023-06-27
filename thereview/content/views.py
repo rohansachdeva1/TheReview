@@ -16,10 +16,11 @@ def search_entities(request):
         request.session['search_page_url'] = request.get_full_path()
         user_input = request.POST['searched']
         
-        results = Entity.objects.filter(title__icontains=user_input)[:12]
+        results = Entity.objects.filter(title__icontains=user_input)[:12] # Query entities whose title contains the input
+        users = User.objects.filter(username__icontains=user_input) # Query users whose username contains the input
 
         # use api if not enough objects in database
-        if results.count() < 5:
+        if results.count() < 4:
             data = requests.get('https://imdb-api.com/API/AdvancedSearch/k_28nyce3o?title=' + user_input).json()
 
             # loop through json object and create variables for needed fields
@@ -66,12 +67,15 @@ def search_entities(request):
                         # get actor info from full cast api, link them to entity using EntityActor model
                         fetch_actor_info(entity.api_id)
                             
-            new_results = Entity.objects.filter(title__icontains=user_input)[:12]
-            return render(request, 'content/search_tile_results.html', {'results': new_results})
+            results = Entity.objects.filter(title__icontains=user_input)[:12]
         
-        # return original list from database if results more than 10
-        else:
-            return render(request, 'content/search_tile_results.html', {'results': results})
+        context = {
+        'results': results,
+        'users': users,
+        # ... other context data ...
+    }
+        return render(request, 'content/search_tile_results.html', context)
+        
     else:
         return redirect('homepage')
     
@@ -109,7 +113,12 @@ def view_entity(request, entity_id):
     playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
 
     update_entity(entity.id) # update entity information before displaying
-
+    
+    if entity.clicked is None:
+        entity.clicked = 1
+    else:
+        entity.clicked += 1 # increment clicked for data collection
+    entity.save()
     if request.user.is_authenticated:
         SearchHistory.objects.create(entity=entity, user=request.user)
 
@@ -131,6 +140,7 @@ def update_entity(entity_id):
     sum_scores = Review.objects.filter(entity=entity).aggregate(models.Sum('final_score')).get('final_score__sum')
     if sum_scores is not None:
         entity.overall_score = sum_scores / entity.reviewed # update overall score
+    
     entity.save()
 
     # Update EntityTag Counts

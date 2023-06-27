@@ -1,8 +1,10 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from django.urls import reverse
 from content.models import Entity
 from playlists.models import Playlist
+from django.contrib import messages
 
 # Create your views here.
 def view_playlist(request, playlist_id):
@@ -28,9 +30,13 @@ def add_to_playlist(request, entity_id):
         playlist = Playlist.objects.create(user=request.user, medium=entity.medium)
     
     playlist.entities.add(entity)
+    if entity.added_to_playlist is None:
+        entity.added_to_playlist = 1
+    else:
+        entity.added_to_playlist += 1
+    entity.save()
 
-    # view_profile_url = reverse('view_profile', args=[request.user.username])
-    # return redirect(view_profile_url)
+    messages.success(request, "Entity Added to Playlist Successfully!")
     return redirect('view_entity', entity_id=entity.id)
 
 def delete_from_playlist(request, entity_id):
@@ -40,7 +46,13 @@ def delete_from_playlist(request, entity_id):
     playlist_entities = playlist.entities.all()
 
     playlist.entities.remove(entity)
-    return redirect('view_playlist', playlist_id=playlist.id)
+
+    entity.added_to_playlist -= 1
+    entity.save()
+
+    messages.success(request, "Entity Removed From Playlist Successfully!")
+    return redirect('view_entity', entity_id=entity.id)
+    
 
 
     

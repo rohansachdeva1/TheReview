@@ -9,6 +9,19 @@
 
 <title>The Review</title>
 {% if user.is_authenticated %}
+
+  <!-- User Playlists -->
+  <h3>Your Playlists</h3>
+  {% if user.playlists %}
+  <div>
+      {% for playlist in user.playlists.all %}
+          <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.medium }} Playlist</a>
+      {% endfor %}
+  </div>
+  {% endif %}
+</br>
+
+
   <!-- Display Genre Recommendations Based on Search History -->
   <h3>You may like these based off your search history...</h3>
   <div class="scroll-container">

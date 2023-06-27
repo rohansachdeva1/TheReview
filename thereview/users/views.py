@@ -61,7 +61,8 @@ def log_out(request):
     
 def view_profile(request, username):
     # get user from request object and send review data to template
-    user = get_object_or_404(User, id=request.user.id)
+    #user = get_object_or_404(User, id=request.user.id)
+    user = get_object_or_404(User, username=username)
     update_user(user.id)
     try:
         reviews = Review.objects.filter(user=user).order_by("-created_at")

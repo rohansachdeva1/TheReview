@@ -7,10 +7,17 @@
     <title>Search Results</title>
 </head>
 <body>
-    <h2>Search Results</h2>
+
+    {% if users %}
+      <h2>User Results</h2>
+      {% for user in users %}
+        <a class="nav-link" href="{% url 'view_profile' user.username %}">{{ user.username }}</a>
+      {% endfor %}
+    {% endif %}
 
     <!-- Display Search Results as Entity Tiles -->
     {% if results %}
+    <h2>Entity Results</h2>
     <div class="row">
         {% for entity in results %}
           <div class="col-md-3">
@@ -22,7 +29,7 @@
         {% endfor %}
       </div>
     {% else %}
-        <h1>no results found</h1>
+        <p>No Entities Found With That Input</p>
     {% endif %}
 </body>
 </html>

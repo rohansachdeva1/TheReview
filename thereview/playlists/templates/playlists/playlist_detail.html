@@ -3,9 +3,12 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
-  <!-- Display Genre Recommendations Based on Search History -->
-  <h3>@{{ request.user.username }}'s {{ playlist.medium }} For Later Playlist</h3>
+
+  <!-- Display Playlists -->
+  <h3><a href="{% url 'view_profile' request.user.id %}" style="text-decoration: none;">@{{ request.user.username }}</a>'s {{ playlist.medium }} For Later Playlist</h3>
     </br>
+
+<!-- Display Genre Recommendations Based on Search History -->
   <div class="scroll-container">
     {% if playlist_entities %}
     <div class="row">

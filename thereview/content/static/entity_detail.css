@@ -13,3 +13,12 @@
   margin-right: 10px;
   border-radius: 4px;
 }
+
+#alert-message {
+    z-index: 9999;
+    position: fixed;
+    top: 60px; /* Adjust the value as needed to position the alert below the navigation bar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Adjust the width as needed */
+}

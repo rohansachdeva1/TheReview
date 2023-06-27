@@ -10,6 +10,21 @@
     margin-top: 20px;
 }
 
+.metric {
+    text-align: center;
+  }
+  
+  .metric-value {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .metric-label {
+    font-size: 14px;
+    color: #888;
+  }
+  
+
 /* .profile-container {
     max-width: 400px;
     margin: 0 auto;
