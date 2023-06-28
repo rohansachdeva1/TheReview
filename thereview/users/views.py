@@ -60,17 +60,22 @@ def log_out(request):
     return redirect('homepage') # redirect to homepage
     
 def view_profile(request, username):
-    # get user from request object and send review data to template
-    #user = get_object_or_404(User, id=request.user.id)
-    user = get_object_or_404(User, username=username)
-    update_user(user.id)
+    user = get_object_or_404(User, id=request.user.id)
+    profile_user = get_object_or_404(User, username=username)
+    update_user(profile_user.id)
     try:
-        reviews = Review.objects.filter(user=user).order_by("-created_at")
+        if user == profile_user:
+            # Current user is the profile user, show all reviews
+            reviews = Review.objects.filter(user=profile_user).order_by("-created_at")
+        else:
+            # Current user is not the profile user, show only non-private reviews
+            reviews = Review.objects.filter(user=profile_user, private=False).order_by("-created_at")
+
     except Review.DoesNotExist:
         reviews = None
 
     context = {
-        'user': user,
+        'user': profile_user,
         'reviews': reviews,
         # ... other context data ...
     }

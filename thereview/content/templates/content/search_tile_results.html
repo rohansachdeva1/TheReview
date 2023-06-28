@@ -10,9 +10,16 @@
 
     {% if users %}
       <h2>User Results</h2>
-      {% for user in users %}
-        <a class="nav-link" href="{% url 'view_profile' user.username %}">{{ user.username }}</a>
-      {% endfor %}
+      <div class="row">
+        {% for user in users %}
+          <div class="col-md-3">
+            {% include 'users/profile_tile.html' with user=user %}
+          </div>
+          {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            </div><div class="row">
+          {% endif %}
+        {% endfor %}
+      </div>
     {% endif %}
 
     <!-- Display Search Results as Entity Tiles -->
@@ -29,7 +36,6 @@
         {% endfor %}
       </div>
     {% else %}
-        <p>No Entities Found With That Input</p>
     {% endif %}
 </body>
 </html>

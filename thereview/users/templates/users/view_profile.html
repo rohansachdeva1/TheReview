@@ -77,7 +77,7 @@
     <div>
         <h1 class="profile-heading">Reviews</h1>
         <div class="container-fluid">
-            {% if user.reviews.exists %}
+            {% if user.reviews %}
             <div class="row">
                 {% for review in reviews %}
                 <div class="col-md-4">
