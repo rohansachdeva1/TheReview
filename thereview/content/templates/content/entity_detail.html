@@ -34,8 +34,9 @@
         <h4>Overall Score: {{ entity.overall_score }}</h4>
         <h4>Number of Reviews: {{ entity.reviewed }}</h4>
         </br>
+
+        <!-- Review/Playlist Interaction Buttons -->
         {% if user.is_authenticated %}
-            <!-- Write Review Button -->
             <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
             {% if entity in playlist.entities.all %}
                 <a href="{% url 'delete_from_playlist' entity.id %}" class="btn btn-outline-danger">Remove From Playlist</a>
@@ -76,6 +77,27 @@
         {% endfor %}
     </div>
     </br>
+{% endif %}
+
+<!-- Entity Reviews -->
+{% if reviews %}
+<div>
+    <h4 class="profile-heading">Reviews</h4>
+    <div class="container-fluid">
+        
+        <div class="row">
+            {% for review in reviews %}
+            <div class="col-md-4">
+                {% include 'reviews/review_tile.html' with review=review %}
+            </div>
+              {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                </div><div class="row" style="margin-top: 15px">
+              {% endif %}
+            {% endfor %}
+          </div>
+    </div>
+</div>
+</br>
 {% endif %}
 
 <!-- Genre Recommendations -->

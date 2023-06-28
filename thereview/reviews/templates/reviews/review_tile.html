@@ -18,7 +18,8 @@
                     {% endif %}
                 </h6>
             </div>
-            <p class="card-text">"{{ review.blurb|slice:":105" }}{% if review.blurb|length > 105 %}{% endif %}..."</p>
+            
+            <p class="card-text">"{{ review.blurb|slice:":95" }}{% if review.blurb|length > 95 %}{% endif %}..."</p>
             <h6 class="card-subtitle mb-2 text-body-secondary bottom-left">at {{ review.created_at }}</h6>
         </div>
     </div>

@@ -86,7 +86,7 @@ def fetch_actor_info(entity_id):
 
     # Loop through json object and create variables for needed fields
     if data['actors'] is not None:
-        for item in data['actors'][:5]:
+        for item in data['actors'][:6]:
             api_id = item['id']
             image = item['image']
             name = item['name']
@@ -106,10 +106,11 @@ def update_database(data):
 
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    entity_tags = EntityTag.objects.filter(entity=entity)
+    entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:6]
     entity_actors = EntityActor.objects.filter(entity=entity)
     genre_recs = generate_genre_recs(entity_id)
     user = get_object_or_404(User, id=request.user.id)
+    reviews = Review.objects.filter(entity=entity)[:3]
     try:
         playlist = Playlist.objects.get(user=user, medium=entity.medium)
     except Playlist.DoesNotExist:
@@ -131,6 +132,7 @@ def view_entity(request, entity_id):
         'entity_actors': entity_actors,
         'genre_recs': genre_recs,
         'playlist': playlist,
+        'reviews': reviews,
         # ... other context data ...
     }
 
