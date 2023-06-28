@@ -5,7 +5,7 @@
 {% if request.user.is_authenticated %}
 
   <!-- Display Playlists -->
-  <h3><a href="{% url 'view_profile' request.user.id %}" style="text-decoration: none;">@{{ request.user.username }}</a>'s {{ playlist.medium }} For Later Playlist</h3>
+  <h3><a href="{% url 'view_profile' user.username %}" style="text-decoration: none;">@{{ user.username }}</a>'s {{ playlist.medium }} For Later Playlist</h3>
     </br>
 
 <!-- Display Genre Recommendations Based on Search History -->

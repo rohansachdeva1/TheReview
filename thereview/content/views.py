@@ -110,7 +110,10 @@ def view_entity(request, entity_id):
     entity_actors = EntityActor.objects.filter(entity=entity)
     genre_recs = generate_genre_recs(entity_id)
     user = get_object_or_404(User, id=request.user.id)
-    playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
+    try:
+        playlist = Playlist.objects.get(user=user, medium=entity.medium)
+    except Playlist.DoesNotExist:
+        playlist = None
 
     update_entity(entity.id) # update entity information before displaying
     

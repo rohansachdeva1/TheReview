@@ -21,7 +21,7 @@
         <h1>{{ review.entity.title }}</h1>
         <h3>{{ review.entity.description }}</h3>
         </a>
-        <h3>review by <a href="{% url 'view_profile' review.user.id %}" style="text-decoration: none;">@{{ review.user }}</a></h3>
+        <h3>review by <a href="{% url 'view_profile' review.user.username %}" style="text-decoration: none;">@{{ review.user }}</a></h3>
     </div>
 </div>
 </br>

@@ -10,11 +10,13 @@ from django.contrib import messages
 def view_playlist(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id)
     playlist_entities = playlist.entities.all()
+    user = playlist.user
 
     # store data to be used in playlist_detail template in context
     context = {
         'playlist': playlist,
         'playlist_entities': playlist_entities,
+        'user': user,
         # ... other context data ...
     }
 
