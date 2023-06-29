@@ -96,3 +96,11 @@ def update_user(user_id):
         user_tag.count = Review.objects.filter(user=user, tags=tag).count()
         user_tag.sum_scores = Review.objects.filter(user=user, tags=tag).aggregate(total_score=Sum('final_score')).get('total_score', 0)
         user_tag.save()
+
+def follow(request, user_id):
+    request_user = get_object_or_404(User, id=request.user.id)
+    user_to_follow = get_object_or_404(User, id=user_id)
+    pass
+
+def unfollow(request, user_id):
+    pass
