@@ -60,6 +60,34 @@
                 <p>Bio: {{ user.profile.bio }}</p>
             </div>
         {% endif %}
+
+        <!-- Check following and followers for testing -->
+        <!-- <p>Following:</p>
+        {% for following in user.profile.follows.all %}
+            <a href="{% url 'view_profile' following %}">
+            <p>{{ following }}</p>
+            </a>
+        {% endfor%}
+
+        <p>Followed by:</p>
+        {% for following in user.profile.followed_by.all %}
+            <a href="{% url 'view_profile' following %}">
+            <p>{{ following }}</p>
+            </a>
+        {% endfor%} -->
+
+        <!-- Follow / Unfollow buttons on other user's profiles -->
+        {% if request.user.id != user.id %}
+            {% if request.user.profile in user.profile.followed_by.all %}
+                <div>
+                    <a href="{% url 'unfollow' user.id %}" class="btn btn-outline-danger">Unfollow</a>
+                </div>
+            {% else %}
+                <div>
+                    <a href="{% url 'follow' user.id %}" class="btn btn-outline-success">Follow</a>
+                </div>
+            {% endif%}
+        {% endif %}
         
     </div>
 
@@ -95,7 +123,19 @@
     </div>
     </br>
 
-
+    <!-- List of Followers-->
+    <h4>Following</h4>
+    <div class="row">
+        {% for following in user.profile.follows.all %}
+        <div class="col-md-3">
+            {% include 'users/profile_tile.html' with user=following.user %}
+        </div>
+        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            </div><div class="row">
+        {% endif %}
+        {% endfor %}
+    </div>
+    </br>
 
     <!-- Log Out Functionality -->
     {% if request.user.id == user.id %}

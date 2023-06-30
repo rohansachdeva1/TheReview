@@ -98,9 +98,17 @@ def update_user(user_id):
         user_tag.save()
 
 def follow(request, user_id):
-    request_user = get_object_or_404(User, id=request.user.id)
-    user_to_follow = get_object_or_404(User, id=user_id)
-    pass
+    profile_user = get_object_or_404(User, id=user_id)
+
+    if (request.user.profile not in profile_user.profile.followed_by.all()):
+        request.user.profile.follows.add(profile_user.profile)
+
+    return redirect('view_profile', profile_user.username)
 
 def unfollow(request, user_id):
-    pass
+    profile_user = get_object_or_404(User, id=user_id)
+
+    if (request.user.profile in profile_user.profile.followed_by.all()):
+        request.user.profile.follows.remove(profile_user.profile)
+
+    return redirect('view_profile', profile_user.username)

@@ -12,6 +12,10 @@ class Profile(models.Model):
     email = models.EmailField(null=True, blank=True)
     reviewed = models.IntegerField(default=0, null=True, blank=True)
     avg_rating = models.DecimalField(default=Decimal('0.0'), max_digits=3, decimal_places=2, null=True, blank=True)
+    follows = models.ManyToManyField("self",
+        related_name="followed_by",
+        symmetrical=False,
+        blank=True)
 
     def __str__(self):
         return str(self.user)
@@ -48,8 +52,3 @@ class SearchHistory(models.Model):
 
     def __str__(self):
         return f'{self.user.username} searched for {self.entity.name} at {self.timestamp}'
-    
-class Follow(models.Model):
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
-    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
-    created_at = models.DateTimeField(auto_now_add=True)
