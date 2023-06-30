@@ -6,8 +6,9 @@ from users.models import UserTag
 from .forms import RegisterForm
 from reviews.models import Review
 from django.db import models
+import random
 
-# Create your views here.
+# Register new users using the custom Register form, authenticate them and log them in, no parameters
 def register(request):
     if request.method == 'POST': # once user has filled out form
         form = RegisterForm(request.POST, request.FILES)
@@ -27,8 +28,18 @@ def register(request):
             
             # save non-required fields to user's profile
             user.profile.email = email
-            user.profile.profile_image = pic
             user.profile.bio = bio
+
+            # Check if pic is empty (None) or an empty file
+            if not pic:
+                # If no profile picture is uploaded, set it to the default image path
+                random_number = random.randint(1, 8)
+                default_profile_pic = f'profile/default_pp_{random_number}.PNG'
+                user.profile.profile_image = default_profile_pic
+            else:
+                # Otherwise, save the uploaded picture
+                user.profile.profile_image = pic
+            
             user.profile.save()
             
             login(request, user) # log user in using django contrib auth
@@ -38,6 +49,7 @@ def register(request):
 
     return render(request, 'users/register.html', {'form': form}) # render register form
 
+# Authenticate and log the user in, no parameters
 def log_in(request):
     if request.method == 'POST': # once user has filled our form
         username = request.POST['username'] # get username and password from request object
@@ -55,10 +67,12 @@ def log_in(request):
     
     return render(request, 'users/login.html') # render the login template
 
+# Log the user out, no parameters
 def log_out(request):
     logout(request) # log current user out from request object
     return redirect('homepage') # redirect to homepage
-    
+
+# View user's profile, username parameter
 def view_profile(request, username):
     user = get_object_or_404(User, id=request.user.id)
     profile_user = get_object_or_404(User, username=username)
@@ -82,10 +96,12 @@ def view_profile(request, username):
 
     return render(request, 'users/view_profile.html', context)
 
+# Update user metrics like tags, reviewed, avg_rating, etc. User id parameter
 def update_user(user_id):
     user = get_object_or_404(User, id=user_id)
 
-    user.profile.reviewed = Review.objects.filter(user=user).count() # update number of reviews
+    # update number of reviews and average rating
+    user.profile.reviewed = Review.objects.filter(user=user).count() 
     user.profile.avg_rating = Review.objects.filter(user=user).aggregate(models.Avg('final_score')).get('final_score__avg')
     user.profile.save()
 
@@ -97,18 +113,22 @@ def update_user(user_id):
         user_tag.sum_scores = Review.objects.filter(user=user, tags=tag).aggregate(total_score=Sum('final_score')).get('total_score', 0)
         user_tag.save()
 
+# Follow user, user id parameter
 def follow(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
 
+    # Check that they are already following profile user, add to follows
     if (request.user.profile not in profile_user.profile.followed_by.all()):
         request.user.profile.follows.add(profile_user.profile)
 
     return redirect('view_profile', profile_user.username)
 
+# Unfollor user, user id parameter
 def unfollow(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
 
+    # Check that they are already following profile user, remove from follows
     if (request.user.profile in profile_user.profile.followed_by.all()):
         request.user.profile.follows.remove(profile_user.profile)
 
-    return redirect('view_profile', profile_user.username)
+    return redirect('view_profile', profile_user.username) # redirect to profile page
