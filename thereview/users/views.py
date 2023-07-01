@@ -32,7 +32,7 @@ def register(request):
 
             # Check if pic is empty (None) or an empty file
             if not pic:
-                # If no profile picture is uploaded, set it to the default image path
+                # If no profile picture is uploaded, set it to one of 8 default image paths
                 random_number = random.randint(1, 8)
                 default_profile_pic = f'profile/default_pp_{random_number}.PNG'
                 user.profile.profile_image = default_profile_pic
@@ -77,6 +77,8 @@ def view_profile(request, username):
     user = get_object_or_404(User, id=request.user.id)
     profile_user = get_object_or_404(User, username=username)
     update_user(profile_user.id)
+
+    # Get reviews, private or all depending if you are viewing another profile or your own
     try:
         if user == profile_user:
             # Current user is the profile user, show all reviews

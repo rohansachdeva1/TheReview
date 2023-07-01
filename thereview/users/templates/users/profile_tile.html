@@ -1,16 +1,18 @@
 
-
-
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'profile_tile.css' %}">
 
 
-
+<!-- Profile tile with image, username and routing to user's profile -->
 <a href="{% url 'view_profile' user.username %}" style="text-decoration: none; color: black;">
     <div class="profile-tile">
+        
+        <!-- Display profile picture -->
         <div class="profile-picture">
             <img src="{{ user.profile.profile_image.url }}" alt="Profile Picture" class="profile-image">
         </div>
+
+        <!-- Display username -->
         <div class="username">{{ user.username }}</div>
     </div>
 </a>

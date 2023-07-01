@@ -33,3 +33,12 @@
   .outline-input::placeholder {
     color: #fff; /* Set the placeholder text color to white */
   }
+
+  .custom-circle {
+    width: 50px;
+    height: 15px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+

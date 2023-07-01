@@ -20,7 +20,7 @@ def search_entities(request):
         users = User.objects.filter(username__icontains=user_input) # Query users whose username contains the input
 
         # use api if not enough objects in database
-        if results.count() < 4:
+        if results.count() < 2:
             data = requests.get('https://imdb-api.com/API/AdvancedSearch/k_28nyce3o?title=' + user_input).json()
 
             # loop through json object and create variables for needed fields
@@ -166,7 +166,7 @@ def generate_genre_recs(entity_id):
     for genre in genres:
         related_entities = related_entities.filter(genres=genre)
     related_entities = related_entities.distinct()
-    random_entities = random.sample(list(related_entities), min(5, len(related_entities)))
+    random_entities = random.sample(list(related_entities), min(6, len(related_entities)))
 
     return random_entities
 

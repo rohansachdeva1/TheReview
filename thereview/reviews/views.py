@@ -8,6 +8,7 @@ from django.db import models
 from content.views import update_entity
 from users.views import update_user
 
+# Write a review, entity id parameter, (linked to a user and an entity)
 def write_review(request, entity_id):
     
     # Store core data in local variables from request object
@@ -25,6 +26,7 @@ def write_review(request, entity_id):
         # ... other context data ...
     }
 
+    # Create and populate new review object and save to profile
     if request.user.is_authenticated:
         if request.method == "POST":
             final_score = request.POST.get('final_score') # get final_score from form
@@ -46,7 +48,6 @@ def write_review(request, entity_id):
                 category_name = request.POST[f'category_{i}']
                 feedback = request.POST.get(f'feedback_{i}', '')
                 
-                # Update review object
                 category_rating = f'category_rating{i}'
                 if feedback == 'like':
                     setattr(review, category_rating, 1)
@@ -101,6 +102,7 @@ def write_review(request, entity_id):
     else:
         return redirect('homepage')
 
+# View a review in detail
 def view_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
 
@@ -112,6 +114,7 @@ def view_review(request, review_id):
 
     return render(request, 'reviews/review_detail.html', context)
 
+# Delete a review from profile
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
     review.delete()

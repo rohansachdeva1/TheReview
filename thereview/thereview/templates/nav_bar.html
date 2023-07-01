@@ -1,13 +1,28 @@
 {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'nav_bar.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'nav_bar.css' %}">
+
 <style>
-    
+.profile-image-container {
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 50%; /* This creates the circular shape */
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This ensures the image is cropped to fit the circle */
+}
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #141A20;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'homepage' %}">The Review</a>
+
+        <!-- Homepage Link-->
+        <a class="navbar-brand" href="{% url 'homepage' %}">The Review</a>
     
+        <!-- Search Bar -->
         <ul class="navbar-nav ">
             <div class="navbar-center">
             <form class="d-flex" role="search" method=POST action="{% url 'search_entities' %}">
@@ -15,27 +30,29 @@
                 <input class="form-control me-2 outline-input" type="search" placeholder="Search Entities" name="searched" aria-label="Search">
                 <button class="btn btn-outline-light" style="outline-color: #E8F1F2;" type="submit">Search</button>
             </form>
-        </div>
+            </div>
+
+            <!-- Profile / Login / Logout Links -->
             {% if request.user.is_authenticated %}
             <div>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'view_profile' request.user.username %}">Profile</a>
+                    <a class="nav-link" href="{% url 'view_profile' request.user.username %}">
+                        <div class="profile-image-container">
+                            <img src="{{ request.user.profile.profile_image.url }}" class="profile-image" width="30">
+                        </div>  
+                    </a>
                 </li>
             </div>
-            <!-- <div>
-                <li class="nav-item">
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button class="nav-link" type="submit">Log Out</button>
-                    </form>
-                </li>
-            </div> -->
             {% else %}
+
+            <!-- Login Link -->
             <div>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Log In</a>
                 </li>
             </div>
+
+            <!-- Register Link -->
             <div>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'register' %}">Register</a>

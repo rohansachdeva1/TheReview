@@ -111,7 +111,7 @@
                     {% include 'content/entity_tile.html' with entity=entity %}
                 </div>
             </div>
-            {% if forloop.counter|divisibleby:5 and not forloop.last %}
+            {% if forloop.counter|divisibleby:6 and not forloop.last %}
                 </div><div class="row">
             {% endif %}
         {% endfor %}

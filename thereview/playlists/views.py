@@ -45,7 +45,7 @@ def delete_from_playlist(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     user = get_object_or_404(User, id=request.user.id)
     playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
-    playlist_entities = playlist.entities.all()
+    #playlist_entities = playlist.entities.all()
 
     playlist.entities.remove(entity)
 

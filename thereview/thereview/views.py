@@ -5,11 +5,12 @@ from content.views import generate_genre_recs
 
 def homepage(request):
     genre_recs = set()
-    
+
     # Check if the user is logged in
     if request.user.is_authenticated:
 
         recent_searches = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')[:5] # Retrieve the 5 most recent searches for the logged-in user
+        
         # Loop through the recent searches and add entity recommendations
         for search in recent_searches:
             entity_id = search.entity_id
@@ -22,4 +23,5 @@ def homepage(request):
         'genre_recs': genre_recs,
         # ... other context data ...
     }
+    
     return render(request, 'homepage.html', context)

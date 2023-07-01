@@ -9,7 +9,7 @@
             </div> -->
             <div class="content-container">
                 <h5 class="card-title">
-                    {{ review.final_score }} {{ review.entity.title|slice:":22" }}{% if review.entity.title|length > 22 %}...{% endif %}
+                    {{ review.final_score }} {{ review.entity.title|slice:":20" }}{% if review.entity.title|length > 20 %}...{% endif %}
                 </h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">
                     By @{{ review.user }}
@@ -19,7 +19,7 @@
                 </h6>
             </div>
             
-            <p class="card-text">"{{ review.blurb|slice:":95" }}{% if review.blurb|length > 95 %}{% endif %}..."</p>
+            <p class="card-text">"{{ review.blurb|slice:":92" }}{% if review.blurb|length > 92 %}{% endif %}..."</p>
             <h6 class="card-subtitle mb-2 text-body-secondary bottom-left">at {{ review.created_at }}</h6>
         </div>
     </div>
