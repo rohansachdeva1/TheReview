@@ -4,9 +4,29 @@
 
 {% if request.user.is_authenticated %}
 
-  <!-- Display Playlists -->
-  <h3><a href="{% url 'view_profile' user.username %}" style="text-decoration: none;">@{{ user.username }}</a>'s {{ playlist.medium }} For Later Playlist</h3>
+<style>
+    .header-container {
+      display: flex;
+      align-items: center;
+    }
+  
+    .header-container h2 {
+      margin-left: 10px;
+    }
+  </style>
+  
+  <div class="header-container">
+    <a href="javascript:history.go(-1)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="black" class="bi bi-chevron-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+      </svg>
+    </a>
+    <h3><a href="{% url 'view_profile' user.username %}" style="text-decoration: none;">@{{ user.username }}</a>'s {{ playlist.medium }} For Later Playlist</h3>
     </br>
+  </div>
+</br>
+  <!-- Display Playlists -->
+  
 
 <!-- Display Genre Recommendations Based on Search History -->
   <div class="scroll-container">

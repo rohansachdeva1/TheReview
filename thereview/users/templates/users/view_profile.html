@@ -106,19 +106,28 @@
 
     <!-- User Reviews -->
     {% if user.reviews.exists %}
+    <div id="reviews-container">
         <div class="container-fluid">
-            <h1 class="profile-heading">Reviews</h1>
-            <div class="row">
-            {% for review in reviews %}
-                <div class="col-md-4">
-                    {% include 'reviews/review_tile.html' with review=review %}
-                </div>
-                {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                    </div><div class="row" style="margin-top: 15px">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="profile-heading mb-0">Reviews</h1>
+                {% if reviews.count > 3 %}
+                    <a href="#" id="show-more-button" class="text-secondary" style="text-decoration: none;">Show more</a>
                 {% endif %}
-            {% endfor %}
+            </div>
+            <div class="row">
+                {% for review in reviews %}
+                <div class="col-md-4">
+                    <div class="review-tile">
+                        {% include 'reviews/review_tile.html' with review=review %}
+                    </div>
+                </div>
+                    {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                        </div><div class="row" style="margin-top: 15px">
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
+    </div>
     {% endif %}
     </br>
 
@@ -149,4 +158,30 @@
 </br>
 </br>
 </div>
+
+<!-- Review Show More Button Script-->
+<script>
+    const reviewsContainer = document.getElementById('reviews-container');
+    const showMoreButton = document.getElementById('show-more-button');
+    const reviews = reviewsContainer.getElementsByClassName('review-tile');
+    const numReviewsToShow = 3;
+
+    // Function to toggle visibility of the remaining reviews
+    function toggleReviewsVisibility() {
+        for (let i = numReviewsToShow; i < reviews.length; i++) {
+            reviews[i].style.display = (reviews[i].style.display === 'none') ? 'block' : 'none';
+        }
+
+        // Update the "Show more" button text
+        showMoreButton.innerText = (showMoreButton.innerText === 'Show more') ? 'Show less' : 'Show more';
+    }
+
+    // Hide all reviews except the first 3 initially
+    for (let i = numReviewsToShow; i < reviews.length; i++) {
+        reviews[i].style.display = 'none';
+    }
+
+    // Add event listener to the "Show more" button
+    showMoreButton.addEventListener('click', toggleReviewsVisibility);
+</script>
 {% endblock %}

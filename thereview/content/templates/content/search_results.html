@@ -1,6 +1,34 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% load static %}
+
+<style>
+.placeholder-card {
+  margin-bottom: 10px;
+}
+
+.placeholder {
+  width: 100%;
+  height: 150px; /* Adjust the height as needed */
+  background: #f1f1f1; /* Placeholder background color */
+  animation: placeholder-glow 1s infinite; /* Glowing animation */
+}
+
+@keyframes placeholder-glow {
+  0% {
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+  }
+}
+
+</style>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,17 +37,61 @@
 <body>
     <h2>Search Results</h2>
 
-    <!-- Display Search Results -->
-    {% if results %}
-        <ul>
-            {% for result in results %}
-                <li>{{ result.title }} {{ result.description }}</li>
-                <a href="{% url 'write_review' result.id %}" class="card-link card-link-left">Write a Review</a>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <h1>no results found</h1>
-    {% endif %}
+    <!-- Your search results container -->
+<div class="search-results">
+    <!-- Placeholder for loading message -->
+    <div class="card placeholder-card" id="loading-placeholder" style="display: none;">
+      <img src="..." class="card-img-top placeholder" alt="...">
+      <div class="card-body">
+        <h5 class="card-title placeholder-glow">
+          <span class="placeholder col-6"></span>
+        </h5>
+        <p class="card-text placeholder-glow">
+          <span class="placeholder col-7"></span>
+        </p>
+        <a class="btn btn-primary disabled placeholder col-6"></a>
+      </div>
+    </div>
+  
+    <!-- Your actual search results will be displayed here -->
+    <div id="actual-results">
+      <!-- Display Search Results -->
+        {% if results %}
+            <ul>
+                {% for result in results %}
+                    <li>{{ result.title }} {{ result.description }}</li>
+                    <a href="{% url 'write_review' result.id %}" class="card-link card-link-left">Write a Review</a>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h1>no results found</h1>
+        {% endif %}
+    </div>
+  </div>
+
+  <script>
+    // Simulate a delay to show the placeholder for demonstration purposes (remove this in your actual code)
+    function simulateLoading() {
+      const loadingPlaceholder = document.getElementById("loading-placeholder");
+      const actualResults = document.getElementById("actual-results");
+  
+      // Show the loading placeholder
+      loadingPlaceholder.style.display = "block";
+      actualResults.style.display = "none";
+  
+      // Simulate loading time (replace 2000 with your actual loading time in milliseconds)
+      setTimeout(function() {
+        // Hide the loading placeholder and show the actual search results
+        loadingPlaceholder.style.display = "none";
+        actualResults.style.display = "block";
+      }, 2000);
+    }
+  
+    // Call the simulateLoading function when your search results are being loaded
+    simulateLoading();
+  </script>
+  
+    
 </body>
 </html>
 {% endblock %}
