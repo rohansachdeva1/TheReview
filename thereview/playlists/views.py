@@ -32,10 +32,10 @@ def add_to_playlist(request, entity_id):
         playlist = Playlist.objects.create(user=request.user, medium=entity.medium)
     
     playlist.entities.add(entity)
-    if entity.added_to_playlist is None:
-        entity.added_to_playlist = 1
-    else:
-        entity.added_to_playlist += 1
+    # if entity.added_to_playlist is None:
+    #     entity.added_to_playlist = 1
+    # else:
+    #     entity.added_to_playlist += 1
     entity.save()
 
     messages.success(request, "Entity Added to Playlist Successfully!")
@@ -49,7 +49,7 @@ def delete_from_playlist(request, entity_id):
 
     playlist.entities.remove(entity)
 
-    entity.added_to_playlist -= 1
+    # entity.added_to_playlist -= 1
     entity.save()
 
     messages.success(request, "Entity Removed From Playlist Successfully!")
