@@ -8,7 +8,7 @@
 
 <style>
 .metrics-container {
-    display: flex;
+    display: table;
     gap: 10px;
     align-items: center;
     margin-left: 10px;
@@ -29,40 +29,48 @@
 }
 </style>
 
-<!-- Profile Introduction -->
-{% if request.user.id == user.id %}
-    <h1 class="profile-heading">Hiya, @{{ user.username }}!</h1>
+<!-- {% if request.user.id == user.id %}
+<h1 class="profile-heading">Hiya, @{{ user.username }}</h1>
 {% else %}
-    <h1 class="profile-heading">Welcome to @{{ user.username }}'s Profile</h1>
-{% endif %}
+<h1 class="profile-heading">Welcome to @{{ user.username }}'s Profile</h1>
+{% endif %} -->
 
 <!-- Main Profile Details -->
 <div class="container-fluid">
-        <div class="metrics-container">
+        <div class="container text-center">
             <!-- Display user's profile picture -->
             {% if user.profile.profile_image %}
                 <img src="{{ user.profile.profile_image.url }}" width="100" height="100" class="custom-circle">
             {% endif %}
 
-            <!-- Display user's reviewed count -->
-            <div class="metric">
-                <div class="metric-value">{{ user.profile.reviewed }}</div>
-                <div class="metric-label">Reviewed</div>
+            <!-- Username -->
+            <h1 class="profile-heading">@{{ user.username }}</h1>
+
+            <div class="d-flex justify-content-center">
+                <div class="metrics-container mx-auto">
+
+                    <!-- Display user's reviewed count -->
+                    <div class="metric d-inline-block" style="padding-right: 10px;">
+                        <div class="metric-value">{{ user.profile.reviewed }}</div>
+                        <div class="metric-label">Reviewed</div>
+                    </div>
+        
+                    <!-- Display user's average rating -->
+                    <div class="metric d-inline-block" style="padding-left: 10px;">
+                        <div class="metric-value">{{ user.profile.avg_rating }}</div>
+                        <div class="metric-label">Average Rating</div>
+                    </div>
+
+                </div>
             </div>
 
-            <!-- Display user's average rating -->
-            <div class="metric">
-                <div class="metric-value">{{ user.profile.avg_rating }}</div>
-                <div class="metric-label">Average Rating</div>
-            </div>
+            <!-- Display user's bio -->
+            {% if user.profile.bio %}
+                <div class="profile-message">
+                    <p>{{ user.profile.bio }}</p>
+                </div>
+            {% endif %}
         </div>
-
-        <!-- Display user's bio -->
-        {% if user.profile.bio %}
-            <div class="profile-message">
-                <p>Bio: {{ user.profile.bio }}</p>
-            </div>
-        {% endif %}
 
         <!-- Check following and followers for testing -->
         <!-- <p>Following:</p>
@@ -81,19 +89,23 @@
 
         <!-- Follow / Unfollow links on other user's profiles -->
         {% if request.user.id != user.id %}
-            {% if request.user.profile in user.profile.followed_by.all %}
-                <!-- Display unfollow button -->
-                <div>
-                    <a href="{% url 'unfollow' user.id %}" class="btn btn-outline-danger">Unfollow</a>
-                </div>
-            {% else %}
-                <!-- Display follow button -->
-                <div>
-                    <a href="{% url 'follow' user.id %}" class="btn btn-outline-success">Follow</a>
-                </div>
-            {% endif%}
+            <div class="container text-center">
+                {% if request.user.profile in user.profile.followed_by.all %}
+                    <!-- Display unfollow button -->
+                    <div>
+                        <a href="{% url 'unfollow' user.id %}" class="btn btn-outline-danger">Unfollow</a>
+                    </div>
+                {% else %}
+                    <!-- Display follow button -->
+                    <div>
+                        <a href="{% url 'follow' user.id %}" class="btn btn-outline-success">Follow</a>
+                    </div>
+                {% endif%}
+            </div>
+        </br>
         {% endif %}
 
+    <!-- Profile Tabs -->
     <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="true">Reviews</button>
@@ -105,6 +117,7 @@
             <button class="nav-link" id="following-tab" data-bs-toggle="tab" data-bs-target="#following-tab-pane" type="button" role="tab" aria-controls="following-tab-pane" aria-selected="false">Following</button>
         </li>
     </ul>
+
     <div class="tab-content" id="myTabContent">
 
         <!-- User Reviews -->
