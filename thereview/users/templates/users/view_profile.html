@@ -94,6 +94,23 @@
             {% endif%}
         {% endif %}
 
+    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="true">Reviews</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="playlists-tab" data-bs-toggle="tab" data-bs-target="#playlists-tab-pane" type="button" role="tab" aria-controls="playlists-tab-pane" aria-selected="false">Playlists</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social-tab-pane" type="button" role="tab" aria-controls="social-tab-pane" aria-selected="false">Social</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">...</div>
+        <div class="tab-pane fade" id="playlists-tab-pane" role="tabpanel" aria-labelledby="playlists-tab" tabindex="0">...</div>
+        <div class="tab-pane fade" id="social-tab-pane" role="tabpanel" aria-labelledby="social-tab" tabindex="0">...</div>
+    </div>
+
     <!-- User Playlists -->
     {% if user.playlists.exists %}
         <h1 class="profile-heading">Playlists</h1>
