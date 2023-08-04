@@ -91,9 +91,9 @@
     <div>
       <h4 class="form-label" style="display: inline;">Blurb <span class="subtext">Any additional thoughts?</span></h4>
       <div class="input-group">
-        <textarea name="blurb" class="form-control" id="blurb" maxlength="255"></textarea>
+        <textarea name="blurb" class="form-control" id="blurb" maxlength="999"></textarea>
       </div>
-      <span id="character-count" style="float: right;">0/255</span>
+      <span id="character-count" style="float: right;">0/999</span>
     </div>
 
     <!-- Privacy Input -->
@@ -125,10 +125,10 @@
 
   blurbTextarea.addEventListener('input', function() {
     const textLength = blurbTextarea.value.length;
-    characterCount.textContent = `${textLength}/255`;
+    characterCount.textContent = `${textLength}/999`;
 
-    if (textLength > 255) {
-      blurbTextarea.value = blurbTextarea.value.slice(0, 255);
+    if (textLength > 999) {
+      blurbTextarea.value = blurbTextarea.value.slice(0, 999);
       characterCount.style.color = 'red';
     } else {
       characterCount.style.color = 'black';
@@ -144,7 +144,7 @@
   
     blurbInput.addEventListener('input', function() {
       const count = blurbInput.value.length;
-      characterCount.textContent = count + '/255';
+      characterCount.textContent = count + '/999';
     });
   });
 </script>

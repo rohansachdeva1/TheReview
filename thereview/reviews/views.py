@@ -124,3 +124,20 @@ def delete_review(request, review_id):
 
     view_profile_url = reverse('view_profile', args=[review.user.username])
     return redirect(view_profile_url)
+
+# Like or unlike review
+def like_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    review_user = get_object_or_404(User, id=review.user.id)
+    request_user = get_object_or_404(User, id=request.user.id)
+
+    # check if they already like the post
+    if review.likes.filter(user=request_user):
+        # if so, unlike it
+        review.likes.remove(request_user)
+    else:
+        # if not, like it
+        review.likes.add(request_user)
+
+    view_profile_url = reverse('view_profile', args=[review.user.username])
+    return redirect(view_profile_url)

@@ -21,9 +21,14 @@ class Review(models.Model):
         default=0.0,
         blank=True, null=True,
     )
-    blurb = models.CharField(max_length=255, null=True)
+    blurb = models.CharField(max_length=999, null=True)
     private = models.BooleanField(default=False, blank=True, null=True,)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    likes = models.ManyToManyField(User, related_name="review_like", blank=True)
+
+    # Keep track of the amount of likes
+    def number_of_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return f'{self.entity} review by {self.user}'
