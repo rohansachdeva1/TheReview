@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.db import models
 from content.views import update_entity
 from users.views import update_user
+from django.http import HttpResponseRedirect
 
 # Write a review, entity id parameter, (linked to a user and an entity)
 def write_review(request, entity_id):
@@ -132,12 +133,9 @@ def like_review(request, review_id):
     request_user = get_object_or_404(User, id=request.user.id)
 
     # check if they already like the post
-    if review.likes.filter(user=request_user):
-        # if so, unlike it
+    if review.likes.filter(username=request_user.username):
         review.likes.remove(request_user)
     else:
-        # if not, like it
         review.likes.add(request_user)
 
-    view_profile_url = reverse('view_profile', args=[review.user.username])
-    return redirect(view_profile_url)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

@@ -6,4 +6,5 @@ urlpatterns = [
     path('write_review/<int:entity_id>/', views.write_review, name="write_review"),
     path('view_review/<int:review_id>/', views.view_review, name="view_review"),
     path('delete_review/<int:review_id>/', views.delete_review, name="delete_review"),
+    path('like_review/<int:review_id>/', views.like_review, name="like_review"),
 ]
