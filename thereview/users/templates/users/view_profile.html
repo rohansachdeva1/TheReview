@@ -147,70 +147,78 @@
         </li>
     </ul>
 
-    <div class="tab-content" id="myTabContent">
-        <!-- User Reviews -->
-        <div class="tab-pane fade show active" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
-        </br>
-            {% if user.reviews.exists %}
-            <div id="reviews-container">
-                <div class="container-fluid">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <!-- <h1 class="profile-heading mb-0">Reviews</h1> -->
-                        <!-- {% if reviews.count > 3 %}
-                            <a href="#" id="show-more-button" class="text-secondary" style="text-decoration: none;">Show more</a>
-                        {% endif %} -->
-                    </div>
-                    <div class="row">
-                        {% for review in reviews %}
-                        <div class="col-md-4">
-                            <div class="review-tile">
-                                {% include 'reviews/review_tile.html' with review=review %}
-                            </div>
-                        </div>
-                            {% if forloop.counter|divisibleby:3 and not forloop.last %}
-                                </div><div class="row" style="margin-top: 15px">
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+    {% if request.user == user or request.user.profile in user.profile.followed_by.all%}
+        <div class="tab-content" id="myTabContent">
+            <!-- User Reviews -->
+            <div class="tab-pane fade show active" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
             </br>
-        </div>
-
-        <!-- User Playlists -->
-        <div class="tab-pane fade" id="playlists-tab-pane" role="tabpanel" aria-labelledby="playlists-tab" tabindex="0">
-        </br>
-            {% if user.playlists.exists %}
-                <!-- <h1 class="profile-heading">Playlists</h1> -->
-                <div>
-                    {% for playlist in user.playlists.all %}
-                        <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.medium }} Playlist</a>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- List of Followers-->
-        <div class="tab-pane fade" id="following-tab-pane" role="tabpanel" aria-labelledby="following-tab" tabindex="0">
-        </br>
-            {% if user.profile.follows.exists %}
-            <!-- <h4>Following</h4> -->
-            <div class="row">
-                {% for following in user.profile.follows.all %}
-                    <div class="col-md-3">
-                        {% include 'users/profile_tile.html' with user=following.user %}
+                <!-- Show review content -->
+                {% if user.reviews.exists %}
+                <div id="reviews-container">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <!-- <h1 class="profile-heading mb-0">Reviews</h1> -->
+                            <!-- {% if reviews.count > 3 %}
+                                <a href="#" id="show-more-button" class="text-secondary" style="text-decoration: none;">Show more</a>
+                            {% endif %} -->
+                        </div>
+                        <div class="row">
+                            {% for review in reviews %}
+                            <div class="col-md-4">
+                                <div class="review-tile">
+                                    {% include 'reviews/review_tile.html' with review=review %}
+                                </div>
+                            </div>
+                                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                                    </div><div class="row" style="margin-top: 15px">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
-                    {% if forloop.counter|divisibleby:4 and not forloop.last %}
-                        </div><div class="row">
-                    {% endif %}
-                {% endfor %}
-            </div> 
-            {% endif %}
-        </div>
-    </div>
+                </div>
+                {% endif %}
+                    </br>
+            </div>
 
-    <div class="tab-pane fade" id="notifications-tab-pane" role="tabpanel" aria-labelledby="notifications-tab" tabindex="0">Coming Soon...</div>
+            <!-- User Playlists -->
+            <div class="tab-pane fade" id="playlists-tab-pane" role="tabpanel" aria-labelledby="playlists-tab" tabindex="0">
+            </br>
+                    {% if user.playlists.exists %}
+                        <!-- <h1 class="profile-heading">Playlists</h1> -->
+                        <div>
+                            {% for playlist in user.playlists.all %}
+                                <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.medium }} Playlist</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+            </div>
+
+            <!-- List of Followers-->
+            <div class="tab-pane fade" id="following-tab-pane" role="tabpanel" aria-labelledby="following-tab" tabindex="0">
+            </br>
+                {% if user.profile.follows.exists %}
+                <!-- <h4>Following</h4> -->
+                <div class="row">
+                    {% for following in user.profile.follows.all %}
+                        <div class="col-md-3">
+                            {% include 'users/profile_tile.html' with user=following.user %}
+                        </div>
+                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                            </div><div class="row">
+                        {% endif %}
+                    {% endfor %}
+                </div> 
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="notifications-tab-pane" role="tabpanel" aria-labelledby="notifications-tab" tabindex="0">Coming Soon...</div>
+
+    {% else %}
+        <!-- Display follow message -->
+        </br>
+        Follow this user to get access to their content.
+    {% endif%}
 
     </br>
     </br>
