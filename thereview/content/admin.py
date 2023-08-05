@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Medium, Genre, Entity, Category, Tag, EntityTag, Actor, EntityActor
+from .models import Medium, Genre, Entity, Category, Tag, EntityTag, Actor, EntityActor, StreamingService
 from .models import BaseEmotion, DerivedEmotion
 
 # Register your models here.
@@ -14,6 +14,7 @@ admin.site.register(DerivedEmotion)
 admin.site.register(EntityTag)
 admin.site.register(Actor)
 admin.site.register(EntityActor)
+admin.site.register(StreamingService)
 
 class DerivedEmotionsInline(admin.StackedInline):
     model = DerivedEmotion

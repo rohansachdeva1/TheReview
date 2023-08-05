@@ -106,10 +106,14 @@ def write_review(request, entity_id):
 # View a review in detail
 def view_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
+    full_stars = int(review.final_score)
+    half_star_value = review.final_score - full_stars
 
     # store data to be used in view_review template in context
     context = {
         'review': review,
+        'full_stars': full_stars,
+        'half_star_value': half_star_value,
         # ... other context data ...
     }
 

@@ -86,7 +86,7 @@ def fetch_actor_info(entity_id):
 
     # Loop through json object and create variables for needed fields
     if data['actors'] is not None:
-        for item in data['actors'][:6]:
+        for item in data['actors'][:10]:
             api_id = item['id']
             image = item['image']
             name = item['name']
@@ -107,7 +107,7 @@ def update_database(data):
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:6]
-    entity_actors = EntityActor.objects.filter(entity=entity)
+    entity_actors = EntityActor.objects.filter(entity=entity)[:6]
     genre_recs = generate_genre_recs(entity_id)
     user = get_object_or_404(User, id=request.user.id)
     reviews = Review.objects.filter(entity=entity)[:3]
@@ -125,6 +125,8 @@ def view_entity(request, entity_id):
     entity.save()
     if request.user.is_authenticated:
         SearchHistory.objects.create(entity=entity, user=request.user)
+    
+    get_streaming(entity)
 
     context = {
         'entity': entity,
@@ -137,6 +139,48 @@ def view_entity(request, entity_id):
     }
 
     return render(request, 'content/entity_detail.html', context)
+
+def get_streaming(entity):
+    # testing for streaming availability api
+    api_url = 'https://streaming-availability.p.rapidapi.com/v2/get/basic'
+    api_key = 'ccf83e711emsh0d4ac5f679caffcp14f0e9jsne8d73428fe45'  # Replace this with your actual API key
+
+    headers = {
+        'X-RapidAPI-Key': api_key,
+        'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
+    }
+
+    params = {
+        'country': 'us',  # Replace 'us' with your desired country code
+        'imdb_id': entity.api_id,    # Replace this with the IMDb ID, or you can fetch it from the IMDb API as shown earlier
+        'output_language': 'en'
+    }
+
+    # Make the API call
+    response = requests.get(api_url, headers=headers, params=params)
+
+    if response.status_code == 200:
+        data = response.json()  # Store the JSON response in 'data' variable
+        # print(data)
+    else:
+        # Handle the API error here
+        data = {'error': 'Failed to fetch streaming data.'}
+
+    # find the available networks
+    # Access the 'streamingInfo' dictionary
+    streaming_info = data.get('streamingInfo', {})
+
+    # Access the 'us' dictionary within 'streamingInfo'
+    us_info = streaming_info.get('us', {})
+
+    # Get the keys of the 'us' dictionary, which represent the streaming platforms
+    streaming_platforms = list(us_info.keys())
+
+    # Now 'streaming_platforms' is a list containing the names of streaming platforms available for the entity
+    # You can print or use this list as needed
+    print(streaming_platforms)
+
+    # save that to the entity
 
 def update_entity(entity_id):
     entity = get_object_or_404(Entity, id=entity_id)

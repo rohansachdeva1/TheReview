@@ -18,6 +18,13 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
     
+class StreamingService(models.Model):
+    name = models.CharField(max_length=255)
+    entity = models.ManyToManyField('Entity', related_name='streaming_services', blank=True)
+
+    def __str__(self):
+        return self.name
+    
 class Entity(models.Model):
     api_id = models.CharField(max_length=500, null=True, blank=True)
     imDbRatingVotes = models.CharField(max_length=255, null=True, blank=True)
@@ -36,6 +43,7 @@ class Entity(models.Model):
         decimal_places=2
     )
     genres = models.ManyToManyField(Genre, blank=True, related_name='entities')
+    streamingservices = models.ManyToManyField(StreamingService, blank=True, related_name='entities')
     actors = models.ManyToManyField('Actor', blank=True, through='EntityActor')
     medium = models.ForeignKey(Medium, on_delete=models.DO_NOTHING)
     tags = models.ManyToManyField('Tag',blank=True, through='EntityTag')
