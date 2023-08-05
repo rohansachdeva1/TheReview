@@ -20,7 +20,6 @@ class Genre(models.Model):
     
 class StreamingService(models.Model):
     name = models.CharField(max_length=255)
-    entity = models.ManyToManyField('Entity', related_name='streaming_services', blank=True)
 
     def __str__(self):
         return self.name
@@ -93,6 +92,14 @@ class EntityTag(models.Model):
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     count = models.IntegerField(default=1, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.entity} - {self.tag}'
+    
+class EntityLocation(models.Model):
+    entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
+    location = models.ForeignKey(StreamingService, on_delete=models.CASCADE)
+    link = models.CharField(max_length=500)
 
     def __str__(self):
         return f'{self.entity} - {self.tag}'

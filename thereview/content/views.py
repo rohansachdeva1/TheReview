@@ -143,7 +143,7 @@ def view_entity(request, entity_id):
 def get_streaming(entity):
     # testing for streaming availability api
     api_url = 'https://streaming-availability.p.rapidapi.com/v2/get/basic'
-    api_key = 'ccf83e711emsh0d4ac5f679caffcp14f0e9jsne8d73428fe45'  # Replace this with your actual API key
+    api_key = 'ccf83e711emsh0d4ac5f679caffcp14f0e9jsne8d73428fe45'
 
     headers = {
         'X-RapidAPI-Key': api_key,
@@ -151,7 +151,7 @@ def get_streaming(entity):
     }
 
     params = {
-        'country': 'us',  # Replace 'us' with your desired country code
+        'country': 'us',  # Replace 'us' with desired country code
         'imdb_id': entity.api_id,    # Replace this with the IMDb ID, or you can fetch it from the IMDb API as shown earlier
         'output_language': 'en'
     }
@@ -161,24 +161,45 @@ def get_streaming(entity):
 
     if response.status_code == 200:
         data = response.json()  # Store the JSON response in 'data' variable
-        # print(data)
+        #print(data)
     else:
         # Handle the API error here
         data = {'error': 'Failed to fetch streaming data.'}
 
     # find the available networks
-    # Access the 'streamingInfo' dictionary
-    streaming_info = data.get('streamingInfo', {})
-
+    # Access the 'results' dictionary
+    results = data.get('result', {})
+    #print(results)
+    # Access the 'streamingInfo' dictionary within 'results'
+    streaming_info = results.get('streamingInfo', {})
+    #print(streaming_info)
     # Access the 'us' dictionary within 'streamingInfo'
     us_info = streaming_info.get('us', {})
+    #print(us_info)
+    # Access the list of options within the 'us' dictionary
+    options_list = us_info.get('options', [])
+    # for item in us_info:
+    #     print(item)
 
-    # Get the keys of the 'us' dictionary, which represent the streaming platforms
-    streaming_platforms = list(us_info.keys())
+    streaming_services = {}
 
-    # Now 'streaming_platforms' is a list containing the names of streaming platforms available for the entity
-    # You can print or use this list as needed
-    print(streaming_platforms)
+    # Check if 'netflix', 'apple', 'prime', 'hulu', 'hbo', etc. are available in the data
+    if 'netflix' in us_info:
+        streaming_services['Netflix'] = us_info['netflix'][0]['link']
+    if 'disney' in us_info:
+        streaming_services['Disney'] = us_info['disney'][0]['link']
+    if 'apple' in us_info:
+        streaming_services['Apple'] = us_info['apple'][0]['link']
+    if 'prime' in us_info:
+        streaming_services['Prime'] = us_info['prime'][0]['link']
+    if 'hulu' in us_info:
+        streaming_services['Hulu'] = us_info['hulu'][0]['link']
+    if 'hbo' in us_info:
+        streaming_services['HBO'] = us_info['hbo'][0]['link']
+
+    # Print the names and links of the streaming services
+    for service, link in streaming_services.items():
+        print(f"{service}: {link}")
 
     # save that to the entity
 
