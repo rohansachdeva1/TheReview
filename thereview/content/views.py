@@ -2,7 +2,7 @@ import asyncio
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
-from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor
+from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor, EntityLocation, StreamingService
 from users.models import User, UserTag, SearchHistory
 from reviews.models import Review
 from playlists.models import Playlist
@@ -161,47 +161,55 @@ def get_streaming(entity):
 
     if response.status_code == 200:
         data = response.json()  # Store the JSON response in 'data' variable
-        #print(data)
     else:
-        # Handle the API error here
-        data = {'error': 'Failed to fetch streaming data.'}
+        data = {'error': 'Failed to fetch streaming data.'} # Handle the API error here
 
-    # find the available networks
-    # Access the 'results' dictionary
-    results = data.get('result', {})
-    #print(results)
-    # Access the 'streamingInfo' dictionary within 'results'
-    streaming_info = results.get('streamingInfo', {})
-    #print(streaming_info)
-    # Access the 'us' dictionary within 'streamingInfo'
-    us_info = streaming_info.get('us', {})
-    #print(us_info)
-    # Access the list of options within the 'us' dictionary
-    options_list = us_info.get('options', [])
-    # for item in us_info:
-    #     print(item)
+    # find the available streaming services
+    results = data.get('result', {}) # Access the 'results' dictionary
+    streaming_info = results.get('streamingInfo', {}) # Access the 'streamingInfo' dictionary within 'results'
+    us_info = streaming_info.get('us', {}) # Access the 'us' dictionary within 'streamingInfo'
 
-    streaming_services = {}
-
-    # Check if 'netflix', 'apple', 'prime', 'hulu', 'hbo', etc. are available in the data
+    # Check if 'netflix', 'apple', 'prime', 'hulu', 'hbo', 'disney' have entity
     if 'netflix' in us_info:
-        streaming_services['Netflix'] = us_info['netflix'][0]['link']
+        #streaming_services['Netflix'] = us_info['netflix'][0]['link']
+        loc = StreamingService.objects.get(name='Netflix')
+        if (not EntityLocation.objects.filter(entity=entity, location=loc)):
+            link = us_info['netflix'][0]['link']
+            EntityLocation.objects.create(entity=entity, location=loc, link=link)
+
     if 'disney' in us_info:
-        streaming_services['Disney'] = us_info['disney'][0]['link']
+        loc = StreamingService.objects.get(name='Disney')
+        if (not EntityLocation.objects.filter(entity=entity, location=loc)):
+            link = us_info['disney'][0]['link']
+            EntityLocation.objects.create(entity=entity, location=loc, link=link)
+
     if 'apple' in us_info:
-        streaming_services['Apple'] = us_info['apple'][0]['link']
+        loc = StreamingService.objects.get(name='Apple')
+        if (not EntityLocation.objects.filter(entity=entity, location=loc)):
+            link = us_info['apple'][0]['link']
+            EntityLocation.objects.create(entity=entity, location=loc, link=link)
+
     if 'prime' in us_info:
-        streaming_services['Prime'] = us_info['prime'][0]['link']
+        loc = StreamingService.objects.get(name='Prime')
+        if (not EntityLocation.objects.filter(entity=entity, location=loc)):
+            link = us_info['prime'][0]['link']
+            EntityLocation.objects.create(entity=entity, location=loc, link=link)
+
     if 'hulu' in us_info:
-        streaming_services['Hulu'] = us_info['hulu'][0]['link']
+        loc = StreamingService.objects.get(name='Hulu')
+        if (not EntityLocation.objects.filter(entity=entity, location=loc)):
+            link = us_info['hulu'][0]['link']
+            EntityLocation.objects.create(entity=entity, location=loc, link=link)
+            
     if 'hbo' in us_info:
-        streaming_services['HBO'] = us_info['hbo'][0]['link']
+        loc = StreamingService.objects.get(name='HBO')
+        if (not EntityLocation.objects.filter(entity=entity, location=loc)):
+            link = us_info['hbo'][0]['link']
+            EntityLocation.objects.create(entity=entity, location=loc, link=link)
 
     # Print the names and links of the streaming services
-    for service, link in streaming_services.items():
-        print(f"{service}: {link}")
-
-    # save that to the entity
+    # for service, link in streaming_services.items():
+    #     print(f"{service}: {link}")
 
 def update_entity(entity_id):
     entity = get_object_or_404(Entity, id=entity_id)

@@ -102,7 +102,7 @@ class EntityLocation(models.Model):
     link = models.CharField(max_length=500)
 
     def __str__(self):
-        return f'{self.entity} - {self.tag}'
+        return f'{self.entity} - {self.location}'
 
 
 class Actor(models.Model):
