@@ -111,6 +111,7 @@ def view_entity(request, entity_id):
     genre_recs = generate_genre_recs(entity_id)
     user = get_object_or_404(User, id=request.user.id)
     reviews = Review.objects.filter(entity=entity)[:3]
+    locations = EntityLocation.objects.filter(entity=entity)
     try:
         playlist = Playlist.objects.get(user=user, medium=entity.medium)
     except Playlist.DoesNotExist:
@@ -135,6 +136,7 @@ def view_entity(request, entity_id):
         'genre_recs': genre_recs,
         'playlist': playlist,
         'reviews': reviews,
+        'locations': locations,
         # ... other context data ...
     }
 

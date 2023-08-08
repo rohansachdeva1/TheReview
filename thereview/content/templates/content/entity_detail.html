@@ -67,6 +67,14 @@
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
         {% endif %}
+        </br>
+        </br>
+
+        <!-- Entity Locations-->
+        {% for item in locations %}
+            <a href="{{ item.link }}">{{ item.location }}</a>
+        {% endfor %}
+
     </div>
 </div>
 </br>

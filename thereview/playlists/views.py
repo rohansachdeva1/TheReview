@@ -53,7 +53,7 @@ def delete_from_playlist(request, entity_id):
     entity.save()
 
     messages.success(request, "Entity Removed From Playlist Successfully!")
-    return redirect('view_entity', entity_id=entity.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     
 
 
