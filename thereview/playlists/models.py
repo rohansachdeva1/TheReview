@@ -8,6 +8,7 @@ class Playlist(models.Model):
     medium = models.ForeignKey(Medium, on_delete=models.CASCADE, related_name='playlists')
     entities = models.ManyToManyField(Entity, related_name='playlists')
     name = models.CharField(max_length=30, null=True)
+    description = models.CharField(max_length=500, null=True)
     auto_generated = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):

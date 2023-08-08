@@ -22,23 +22,27 @@ def view_playlist(request, playlist_id):
 
     return render(request, 'playlists/playlist_detail.html', context)
 
-def add_to_playlist(request, entity_id):
+def add_to_playlist(request, entity_id, playlist_id):
     entity = get_object_or_404(Entity, id=entity_id)
-
-    # check if user has playlist for this medium
-    try:
-        playlist = Playlist.objects.get(user=request.user, medium=entity.medium)    
-    except Playlist.DoesNotExist:
-        playlist = Playlist.objects.create(user=request.user, medium=entity.medium)
-    
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+ 
     playlist.entities.add(entity)
-    # if entity.added_to_playlist is None:
-    #     entity.added_to_playlist = 1
-    # else:
-    #     entity.added_to_playlist += 1
-    entity.save()
 
-    messages.success(request, "Entity Added to Playlist Successfully!")
+    messages.success(request, "Entity Added to " + playlist.name + " Successfully!")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def add_to_new_playlist(request, entity_id, playlist_id):
+    entity = get_object_or_404(Entity, id=entity_id)
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+    
+    if request.method == 'POST': # once user has filled our form
+        name = request.POST['name'] # get username and password from request object
+        playlist = Playlist.objects.create(user=request.user, medium=entity.medium, name=name)
+        playlist.entities.add(entity)
+        messages.success(request, "Entity Added to " + playlist.name + " Successfully!")
+    else:
+        return render(request, 'users/login.html') # REPLACE WITH CREATE PLAYLIST TEMPLATE
+    
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def delete_from_playlist(request, entity_id):
@@ -81,7 +85,7 @@ def delete_from_watchlater(request, entity_id):
     # entity.added_to_playlist -= 1
     entity.save()
 
-    messages.success(request, "Entity Removed From Playlist Successfully!")
+    messages.success(request, "Entity Removed From Watch Later Successfully!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     
 

@@ -15,7 +15,7 @@
     <h3>Your Playlists</h3>
     <div>
         {% for playlist in user.playlists.all %}
-            <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.medium }} Playlist</a>
+            <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.name }}</a>
         {% endfor %}
     </div>
   {% endif %}

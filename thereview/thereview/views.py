@@ -9,7 +9,7 @@ def homepage(request):
     # Check if the user is logged in
     if request.user.is_authenticated:
 
-        recent_searches = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')[:5] # Retrieve the 5 most recent searches for the logged-in user
+        recent_searches = SearchHistory.objects.filter(user=request.user).order_by('-timestamp')[:10] # Retrieve the 10 most recent searches for the logged-in user
         
         # Loop through the recent searches and add entity recommendations
         for search in recent_searches:

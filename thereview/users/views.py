@@ -125,7 +125,7 @@ def follow(request, user_id):
 
     return redirect('view_profile', profile_user.username)
 
-# Unfollor user, user id parameter
+# Unfollow user, user id parameter
 def unfollow(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
 
