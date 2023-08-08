@@ -187,7 +187,7 @@
                         <!-- <h1 class="profile-heading">Playlists</h1> -->
                         <div>
                             {% for playlist in user.playlists.all %}
-                                <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.medium }} Playlist</a>
+                                <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.name }}</a>
                             {% endfor %}
                         </div>
                     {% endif %}

@@ -113,9 +113,11 @@ def view_entity(request, entity_id):
     reviews = Review.objects.filter(entity=entity)[:3]
     locations = EntityLocation.objects.filter(entity=entity)
     try:
-        playlist = Playlist.objects.get(user=user, medium=entity.medium)
+        watchlater = Playlist.objects.get(user=user, medium=entity.medium)
     except Playlist.DoesNotExist:
-        playlist = None
+        watchlater = None
+
+    #print(watchlater)
 
     update_entity(entity.id) # update entity information before displaying
     
@@ -134,7 +136,7 @@ def view_entity(request, entity_id):
         'entity_tags': entity_tags,
         'entity_actors': entity_actors,
         'genre_recs': genre_recs,
-        'playlist': playlist,
+        'watchlater': watchlater,
         'reviews': reviews,
         'locations': locations,
         # ... other context data ...
