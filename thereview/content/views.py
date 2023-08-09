@@ -113,9 +113,10 @@ def view_entity(request, entity_id):
     reviews = Review.objects.filter(entity=entity)[:3]
     locations = EntityLocation.objects.filter(entity=entity)
     try:
-        watchlater = Playlist.objects.get(user=user, medium=entity.medium)
+        watchlater = Playlist.objects.get(user=user, medium=entity.medium, auto_generated=True)
     except Playlist.DoesNotExist:
         watchlater = None
+    playlists = Playlist.objects.filter(user=user, medium=entity.medium)
 
     #print(watchlater)
 
@@ -139,6 +140,7 @@ def view_entity(request, entity_id):
         'watchlater': watchlater,
         'reviews': reviews,
         'locations': locations,
+        'playlists': playlists,
         # ... other context data ...
     }
 

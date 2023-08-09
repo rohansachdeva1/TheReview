@@ -74,6 +74,22 @@
                 </a>
             {% endif %}
 
+            <form method="post" action="{% url 'add_to_playlist' entity.id %}">
+                {% csrf_token %}
+                
+                <label for="playlist">Select a playlist or create a new one:</label>
+                <select name="playlist" id="playlist">
+                  {% for playlist in playlists %}
+                    <option value="{{ playlist.id }}">{{ playlist.name }}</option>
+                  {% endfor %}
+                  <option value="new">Create New Playlist</option>
+                </select>
+                
+                <input type="text" name="new_playlist_name" id="new_playlist_name" placeholder="Enter new playlist name" style="display:none;">
+                
+                <input type="submit" value="Add to Playlist">
+            </form>
+
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
         {% endif %}
@@ -176,6 +192,18 @@
         document.querySelector("#alert-message").style.display = "none";
     }, 2000);  // Adjust the time in milliseconds (e.g., 5000 = 5 seconds)
 </script>
+
+<!-- Toggle New Playlist Input-->
+<script>
+    document.getElementById("playlist").addEventListener("change", function() {
+      if (this.value === "new") {
+        document.getElementById("new_playlist_name").style.display = "block";
+      } else {
+        document.getElementById("new_playlist_name").style.display = "none";
+      }
+    });
+  </script>
+  
 
 {% endblock %}
 
