@@ -34,7 +34,7 @@
     <div class="row">
         {% for entity in playlist_entities %}
           <div class="col-md-3">
-            {% include 'playlists/playlist_entity_tile.html' with entity=entity %}
+            {% include 'playlists/playlist_entity_tile.html' with entity=entity playlist=playlist %}
           </div>
           {% if forloop.counter|divisibleby:4 and not forloop.last %}
             </div><div class="row">

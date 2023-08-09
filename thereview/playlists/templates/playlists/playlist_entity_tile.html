@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ entity.title }}</h5>
                 {% if request.user == user %}
-                    <a href="{% url 'delete_from_playlist' entity.id %}" class="card-link card-link-left">Remove</a>
+                    <a href="{% url 'delete_from_playlist' entity_id=entity.id playlist_id=playlist.id %}" class="card-link card-link-left">Remove</a>
                 {% endif %}
             </div>
         </div>

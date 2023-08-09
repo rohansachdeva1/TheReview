@@ -56,10 +56,11 @@ def add_to_new_playlist(request, entity_id, playlist_id):
     
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-def delete_from_playlist(request, entity_id):
+def delete_from_playlist(request, entity_id, playlist_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    user = get_object_or_404(User, id=request.user.id)
-    playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
+    # user = get_object_or_404(User, id=request.user.id)
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+    #playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
     #playlist_entities = playlist.entities.all()
 
     playlist.entities.remove(entity)

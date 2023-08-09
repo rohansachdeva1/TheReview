@@ -74,10 +74,11 @@
                 </a>
             {% endif %}
 
+            <!-- Add to Playlist Functionality-->
             <form method="post" action="{% url 'add_to_playlist' entity.id %}">
                 {% csrf_token %}
                 
-                <label for="playlist">Select a playlist or create a new one:</label>
+                <!-- <label for="playlist">Select a playlist or create a new one:</label> -->
                 <select name="playlist" id="playlist">
                   {% for playlist in playlists %}
                     <option value="{{ playlist.id }}">{{ playlist.name }}</option>
@@ -89,6 +90,99 @@
                 
                 <input type="submit" value="Add to Playlist">
             </form>
+
+            <!-- MODAL 1 EXAMPLE TEST Add to Playlist Functionality -->
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add to Playlist</button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Recipient:</label>
+                          <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="mb-3">
+                          <label for="message-text" class="col-form-label">Message:</label>
+                          <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Send message</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <!-- Select Existing Playlist Modal -->
+            <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Select a Playlist</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'add_to_playlist' entity.id %}">
+                            {% csrf_token %}
+                            
+                            <ul>
+                                {% for playlist in playlists %}
+                                    <li>
+                                        <input type="radio" name="playlist" value="{{ playlist.id }}">
+                                        <label>{{ playlist.name }}</label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            
+                            <input type="hidden" name="entity_id" value="{{ entity.id }}">
+                            <input type="submit" value="Add to Playlist">
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Create New Playlist</button>
+                      <button type="submit" value="Add to Playlist" class="btn btn-outline-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Create New Playlist Modal-->
+              <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Create Playlist</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                              <label for="playlist-name" class="col-form-label">Name:</label>
+                              <input type="text" class="form-control" id="playlist-name">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Select Existing Playlist</button>
+                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-outline-success" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Add to Playlist</button>
 
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
