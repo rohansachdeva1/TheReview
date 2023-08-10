@@ -21,6 +21,10 @@
     .header-container h2 {
       margin-left: 10px;
     }
+
+    .hidden-submit {
+    display: none;
+    }
 </style>
   
   <div class="header-container">
@@ -74,7 +78,7 @@
                 </a>
             {% endif %}
 
-            <!-- Add to Playlist Functionality-->
+            <!-- Bare Bones Add to Playlist Functionality-->
             <form method="post" action="{% url 'add_to_playlist' entity.id %}">
                 {% csrf_token %}
                 
@@ -91,98 +95,74 @@
                 <input type="submit" value="Add to Playlist">
             </form>
 
-            <!-- MODAL 1 EXAMPLE TEST Add to Playlist Functionality -->
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Add to Playlist</button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form>
-                        <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Recipient:</label>
-                          <input type="text" class="form-control" id="recipient-name">
-                        </div>
-                        <div class="mb-3">
-                          <label for="message-text" class="col-form-label">Message:</label>
-                          <textarea class="form-control" id="message-text"></textarea>
-                        </div>
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Send message</button>
-                    </div>
-                  </div>
-                </div>
-            </div>
-
             <!-- Select Existing Playlist Modal -->
             <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-
+                    <div class="modal-content">
+                    
+                    <!-- Select Playlist Header-->
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Select a Playlist</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Select a Playlist</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
+                    <!-- Select Playlist Body-->
                     <div class="modal-body">
                         <form method="post" action="{% url 'add_to_playlist' entity.id %}">
                             {% csrf_token %}
                             
-                            <ul>
                                 {% for playlist in playlists %}
-                                    <li>
+                                    <div>
                                         <input type="radio" name="playlist" value="{{ playlist.id }}">
                                         <label>{{ playlist.name }}</label>
-                                    </li>
+                                    </div>
+                                    
                                 {% endfor %}
-                            </ul>
-                            
+
                             <input type="hidden" name="entity_id" value="{{ entity.id }}">
-                            <input type="submit" value="Add to Playlist">
+                            <input type="submit" class="hidden-submit" value="Add to Playlist">
                         </form>
                     </div>
 
+                    <!-- Select Playlist Footer-->
                     <div class="modal-footer">
-                      <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Create New Playlist</button>
-                      <button type="submit" value="Add to Playlist" class="btn btn-outline-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Submit</button>
+                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Create New Playlist</button>
+                        <button id="outside-button" type="button" class="btn btn-outline-primary">Add</button>
                     </div>
-                  </div>
+                    </div>
                 </div>
-              </div>
+                </div>
 
-              <!-- Create New Playlist Modal-->
-              <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                <!-- Create New Playlist Modal-->
+                <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
+                    <div class="modal-content">
 
+                    <!-- Create Playlist Header-->
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Create Playlist</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Create Playlist</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
+                    <!-- Create Playlist Body-->
                     <div class="modal-body">
                         <form>
                             <div class="mb-3">
-                              <label for="playlist-name" class="col-form-label">Name:</label>
-                              <input type="text" class="form-control" id="playlist-name">
+                                <label for="playlist-name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control" id="playlist-name">
                             </div>
                         </form>
                     </div>
 
+                    <!-- Create Playlist Footer-->
                     <div class="modal-footer">
                         <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Select Existing Playlist</button>
-                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Submit</button>
+                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Add</button>
                     </div>
-                  </div>
+                    </div>
                 </div>
-              </div>
-              <button class="btn btn-outline-success" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Add to Playlist</button>
+                </div>
+                <button class="btn btn-outline-success" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Add to Playlist</button>
 
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
@@ -190,9 +170,15 @@
         </br>
         </br>
 
-        <!-- Entity Locations-->
+        <!-- Entity Streaming Service Locations and Links -->
         {% for item in locations %}
-            <a href="{{ item.link }}">{{ item.location }}</a>
+            <a href="{{ item.link }}" style="text-decoration: none; margin-right: 10px;">
+                {% if item.location.image %}
+                    <img src="{{ item.location.image.url }}" width="50" height="50" alt="{{ item.location }}">
+                {% else %}
+                    {{ item.location }}
+                {% endif %}
+            </a>
         {% endfor %}
 
     </div>
@@ -285,6 +271,18 @@
     setTimeout(function () {
         document.querySelector("#alert-message").style.display = "none";
     }, 2000);  // Adjust the time in milliseconds (e.g., 5000 = 5 seconds)
+</script>
+
+<!-- Add to Playlist Submit Button (Outside Form)-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const outsideButton = document.getElementById("outside-button");
+      const insideSubmitButton = document.querySelector("#exampleModalToggle form input[type='submit']");
+    
+      outsideButton.addEventListener("click", function() {
+        insideSubmitButton.click(); // Simulate the click on the inside button
+      });
+    });
 </script>
 
 <!-- Toggle New Playlist Input-->
