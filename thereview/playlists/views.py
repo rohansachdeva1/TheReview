@@ -42,31 +42,25 @@ def add_to_playlist(request, entity_id):
     # Handle GET request or any other cases if needed
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-def add_to_new_playlist(request, entity_id, playlist_id):
+def add_to_new_playlist(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    playlist = get_object_or_404(Playlist, id=playlist_id)
-    
-    if request.method == 'POST': # once user has filled our form
-        name = request.POST['name'] # get username and password from request object
-        playlist = Playlist.objects.create(user=request.user, medium=entity.medium, name=name)
+
+    if request.method == "POST":
+        new_playlist_name = request.POST.get("new_playlist_name")
+        
+        playlist = Playlist.objects.create(name=new_playlist_name, medium=entity.medium, user=request.user)
+        
         playlist.entities.add(entity)
         messages.success(request, entity.title + " Added to " + playlist.name + " Successfully!")
-    else:
-        return render(request, 'users/login.html') # REPLACE WITH CREATE PLAYLIST TEMPLATE
-    
+        
+    # Handle GET request or any other cases if needed
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def delete_from_playlist(request, entity_id, playlist_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    # user = get_object_or_404(User, id=request.user.id)
     playlist = get_object_or_404(Playlist, id=playlist_id)
-    #playlist = get_object_or_404(Playlist, user=user, medium=entity.medium)
-    #playlist_entities = playlist.entities.all()
 
     playlist.entities.remove(entity)
-
-    # entity.added_to_playlist -= 1
-    entity.save()
 
     messages.success(request, "Entity Removed From Playlist Successfully!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
