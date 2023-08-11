@@ -90,7 +90,15 @@ def delete_from_watchlater(request, entity_id):
 
     messages.success(request, entity.title + " Removed From " + watchlater.name + " Successfully!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-    
+
+# Delete a review from profile
+def delete_playlist(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+    playlist.delete()
+
+    # view_profile_url = reverse('view_profile', args=[review.user.username])
+    # return redirect(view_profile_url)
+    return redirect('view_profile', playlist.user.username)
 
 
     

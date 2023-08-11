@@ -9,4 +9,5 @@ urlpatterns = [
     path('add_to_watchlater/<int:entity_id>/', views.add_to_watchlater, name="add_to_watchlater"),
     path('delete_from_playlist/<int:entity_id>/<int:playlist_id>/', views.delete_from_playlist, name="delete_from_playlist"),
     path('delete_from_watchlater/<int:entity_id>/', views.delete_from_watchlater, name="delete_from_watchlater"),
+    path('delete_playlist/<int:playlist_id>/', views.delete_playlist, name="delete_playlist"),
 ]

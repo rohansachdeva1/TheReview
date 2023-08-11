@@ -46,5 +46,10 @@
   </div>
 {% else %}
 {% endif %}
+</br>
+
+{% if playlist.user == request.user %}
+    <a href="{% url 'delete_playlist' playlist.id %}" class="btn btn-outline-danger">Delete Playlist</a>
+{% endif %}
 
 {% endblock %}
