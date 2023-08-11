@@ -45,6 +45,7 @@ class Entity(models.Model):
     genres = models.ManyToManyField(Genre, blank=True, related_name='entities')
     streamingservices = models.ManyToManyField(StreamingService, blank=True, related_name='entities')
     actors = models.ManyToManyField('Actor', blank=True, through='EntityActor')
+    directors = models.ManyToManyField('Director', blank=True, related_name='entities')
     medium = models.ForeignKey(Medium, on_delete=models.DO_NOTHING)
     tags = models.ManyToManyField('Tag',blank=True, through='EntityTag')
 
@@ -110,6 +111,13 @@ class Actor(models.Model):
     api_id = models.CharField(max_length=500, null=True, blank=True)
     name = models.CharField(max_length=255)
     image = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class Director(models.Model):
+    api_id = models.CharField(max_length=500, null=True, blank=True)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

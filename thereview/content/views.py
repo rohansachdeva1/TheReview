@@ -2,7 +2,7 @@ import asyncio
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
-from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor, EntityLocation, StreamingService
+from content.models import Medium, Entity, EntityTag, Genre, Actor, EntityActor, EntityLocation, StreamingService, Director
 from users.models import User, UserTag, SearchHistory
 from reviews.models import Review
 from playlists.models import Playlist
@@ -86,7 +86,7 @@ def fetch_actor_info(entity_id):
 
     # Loop through json object and create variables for needed fields
     if data['actors'] is not None:
-        for item in data['actors'][:10]:
+        for item in data['actors'][:18]:
             api_id = item['id']
             image = item['image']
             name = item['name']
@@ -100,8 +100,22 @@ def fetch_actor_info(entity_id):
 
             # Link to entity using EntityActor model
             EntityActor.objects.create(entity=entity, actor=actor, as_character=asCharacter)
+    
+    directors = data.get('directors', {})
+    if directors['items']:
+        for item in directors['items']:
+            api_id = item['id']
+            name = item['name']
 
-def update_database(data):
+            # Create director obj if not already in database
+            try:
+                director = Director.objects.get(api_id=api_id)
+            except Director.DoesNotExist:
+                director = Director.objects.create(api_id=api_id, name=name)
+            
+            entity.directors.add(director)
+
+def update_database(request, data):
     pass
 
 def view_entity(request, entity_id):

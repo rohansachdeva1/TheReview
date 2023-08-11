@@ -42,8 +42,12 @@
 <div class="entity-details">
     <img src="{{ entity.image }}" width="400" height="600" alt="{{ entity.name }} Image">
     <div class="entity-info">
-        <h1>{{ entity.title }}</h1>
-        <h5 style="display: inline-block; margin-right: 10px;">{{ entity.content_rating }} • {{ entity.year }} • {% if entity.genres %}
+        <h1>{{ entity.title }} {{ entity.year }}</h1>
+        <h5>{% if entity.directors.all %}
+            Directed by {{ entity.directors.first.name }}
+            {% endif %}
+        </h5>
+        <h5 style="display: inline-block; margin-right: 10px;">{{ entity.content_rating }} • {% if entity.genres %}
                 {% for genre in entity.genres.all %}
                     <h5 style="display: inline-block; margin-right: 5px;">{{ genre.name }} </h5>
                 {% endfor %}
