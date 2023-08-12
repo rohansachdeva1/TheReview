@@ -68,13 +68,13 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                     
-                    <!-- Select Playlist Header-->
+                    <!-- Select Existing Playlist Header-->
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Select a Playlist</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <!-- Select Playlist Body-->
+                    <!-- Select Existing Playlist Body-->
                     <div class="modal-body">
                         <form method="post" action="{% url 'add_to_playlist' entity.id %}">
                             {% csrf_token %}
@@ -91,7 +91,7 @@
                         </form>
                     </div>
 
-                    <!-- Select Playlist Footer-->
+                    <!-- Select Existing Playlist Footer-->
                     <div class="modal-footer">
                         <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Create New Playlist</button>
                         <button id="outside-button" type="button" class="btn btn-outline-primary">Add</button>
@@ -133,6 +133,7 @@
                 </div>
                 <button class="btn btn-outline-success" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Add to Playlist</button>
 
+                <!-- Quick add watch later functionality -->
                 {% if entity in watchlater.entities.all %}
                     <a href="{% url 'delete_from_watchlater' entity.id %}" style="text-decoration: none;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
@@ -146,7 +147,8 @@
                         </svg>
                     </a>
                 {% endif %}
-
+        
+        <!-- If user is not logged in, route them to login page-->
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
         {% endif %}
@@ -176,7 +178,6 @@
     </br>
 </br>
 {% endif %}
-
 
 <!-- Entity Actors -->
 {% if entity_actors %}

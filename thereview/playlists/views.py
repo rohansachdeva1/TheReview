@@ -6,7 +6,7 @@ from content.models import Entity
 from playlists.models import Playlist
 from django.contrib import messages
 
-# Create your views here.
+# View all entities in existing playlist
 def view_playlist(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id)
     playlist_entities = playlist.entities.all()
@@ -22,9 +22,9 @@ def view_playlist(request, playlist_id):
 
     return render(request, 'playlists/playlist_detail.html', context)
 
+# Add to existing playlist by user selection, entity id parameter, playlist id from POST request form
 def add_to_playlist(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    #playlist = get_object_or_404(Playlist, id=playlist_id)
 
     if request.method == "POST":
             playlist_id = request.POST.get("playlist")
@@ -42,6 +42,7 @@ def add_to_playlist(request, entity_id):
     # Handle GET request or any other cases if needed
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+# create new playlist and add entity to it, entity id parameter
 def add_to_new_playlist(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
 
@@ -56,6 +57,7 @@ def add_to_new_playlist(request, entity_id):
     # Handle GET request or any other cases if needed
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+# Delete from existing playlist, entity id and playlist id parameter
 def delete_from_playlist(request, entity_id, playlist_id):
     entity = get_object_or_404(Entity, id=entity_id)
     playlist = get_object_or_404(Playlist, id=playlist_id)
@@ -65,6 +67,7 @@ def delete_from_playlist(request, entity_id, playlist_id):
     messages.success(request, "Entity Removed From Playlist Successfully!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+# Add to watch later auto generated playlist, entity id parameter, implemented in entity detail page
 def add_to_watchlater(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     name = entity.medium.name + " For Later"
@@ -80,6 +83,7 @@ def add_to_watchlater(request, entity_id):
     messages.success(request, entity.title + " Added to " + watchlater.name + " Successfully!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+# Delete from watch later auto generated playlist, entity id parameter, implemented in entity detail page
 def delete_from_watchlater(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     user = get_object_or_404(User, id=request.user.id)

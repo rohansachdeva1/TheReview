@@ -103,7 +103,7 @@ def write_review(request, entity_id):
     else:
         return redirect('homepage')
 
-# View a review in detail
+# View review in review detail page, review id parameter
 def view_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
     full_stars = int(review.final_score)
@@ -119,7 +119,7 @@ def view_review(request, review_id):
 
     return render(request, 'reviews/review_detail.html', context)
 
-# Delete a review from profile
+# Delete a review from profile, review id parameter
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
     review.delete()
@@ -130,7 +130,7 @@ def delete_review(request, review_id):
     view_profile_url = reverse('view_profile', args=[review.user.username])
     return redirect(view_profile_url)
 
-# Like or unlike review
+# Like or unlike review, review id parameter
 def like_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
     review_user = get_object_or_404(User, id=review.user.id)

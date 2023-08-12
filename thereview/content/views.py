@@ -11,6 +11,8 @@ from .tasks import fetch_actor_info
 import random
 from django.db.models import Avg
 
+# Main search function, can search entities and users right now
+# future plans to divide into many functions instead of one big one
 def search_entities(request):
     if request.method == "POST":
         request.session['search_page_url'] = request.get_full_path()
@@ -78,7 +80,8 @@ def search_entities(request):
         
     else:
         return redirect('homepage')
-    
+
+# Get actor information for a singular entity, entity id parameter
 def fetch_actor_info(entity_id):
     
     data = requests.get('https://imdb-api.com/en/API/FullCast/k_28nyce3o/' + entity_id).json()
@@ -118,6 +121,7 @@ def fetch_actor_info(entity_id):
 def update_database(request, data):
     pass
 
+# View entity information (basic info, tags, actors, reviews, locations, etc.) in the entity detail page
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:6]
@@ -160,6 +164,8 @@ def view_entity(request, entity_id):
 
     return render(request, 'content/entity_detail.html', context)
 
+# Get streaming information for a singular entity and establish connections between entity and streaming service
+# NOT YET IMPLEMENTED: severing connection when entity is removed from streaming site
 def get_streaming(entity):
     # testing for streaming availability api
     api_url = 'https://streaming-availability.p.rapidapi.com/v2/get/basic'
