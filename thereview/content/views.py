@@ -125,7 +125,7 @@ def update_database(request, data):
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
     entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:6]
-    entity_actors = EntityActor.objects.filter(entity=entity)[:6]
+    entity_actors = EntityActor.objects.filter(entity=entity)[:18]
     genre_recs = generate_genre_recs(entity_id)
     user = get_object_or_404(User, id=request.user.id)
     reviews = Review.objects.filter(entity=entity)[:3]
