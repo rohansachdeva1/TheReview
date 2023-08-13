@@ -33,6 +33,35 @@
   .nav-tabs .nav-link:not(.active) {
     color: black;
   }
+
+  .metrics-container {
+    display: table;
+    gap: 10px;
+    align-items: center;
+    margin-left: 10px;
+    }
+
+    .metric {
+        text-align: center;
+    }
+
+    .metric-value {
+    font-size: 24px;
+    font-weight: bold;
+    }
+
+    .metric-label {
+    font-size: 16px;
+    color: #888;
+    }
+
+    .outline-box {
+        border: 1px solid lightgrey; /* Add a light grey border */
+        border-radius: 8px;
+        padding: 10px;
+        display: inline-block; /* Keep it as an inline block element */
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    }
 </style>
   
   <div class="header-container">
@@ -46,15 +75,20 @@
 </br>
 <!-- <h1>{{ entity.api_id}}</h1> -->
 
-<!-- Entity Information -->
+<!-- Basic Information -->
 <div class="entity-details">
     <img src="{{ entity.image }}" width="300" height="450" alt="{{ entity.name }} Image">
+    
     <div class="entity-info">
+
+        <!-- Display Entity Title, Year and Director -->
         <h1>{{ entity.title }} {{ entity.year }}</h1>
         <h5>{% if entity.directors.all %}
             Directed by {{ entity.directors.first.name }}
             {% endif %}
         </h5>
+
+        <!-- Display Content Rating, Genres, Runtime and Plot -->
         <h5 style="display: inline-block; margin-right: 10px;">{{ entity.content_rating }} • {% if entity.genres %}
                 {% for genre in entity.genres.all %}
                     <h5 style="display: inline-block; margin-right: 5px;">{{ genre.name }} </h5>
@@ -62,128 +96,206 @@
             {% endif %}</h4>
         <h5 style="display: inline-block; margin-right: 5px;"> • {{ entity.runtime }}</h5>
         <h4>{{ entity.plot }}</h4>
-
-        <h4>Overall Score: {{ entity.overall_score }}</h4>
-        <h4>Number of Reviews: {{ entity.reviewed }}</h4>
         </br>
 
-        <!-- Review/Playlist Interaction Buttons -->
-        {% if user.is_authenticated %}
-            <a href="{% url 'write_review' entity.id %}" class="btn btn-outline-primary">Write a Review</a>
+        <!-- Display Overall Score With Stars-->
+        <h2 class="d-flex justify-content-center align-items-center" style="padding-bottom: 10px;">{{ entity.overall_score }} 
+            {% for _ in "x"|ljust:full_stars %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                </svg>
+            {% endfor %}
+            {% if half_star_value < 0.7 and half_star_value > 0.3 %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-star-half" viewBox="0 0 16 16">
+                    <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"/>
+                </svg>
+            {% endif %}
+            {% if half_star_value > 0.8 %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+            {% endif %}
+        </h2>
 
-            <!-- Select Existing Playlist (Modal Approach) -->
-            <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                    
-                    <!-- Select Existing Playlist Header-->
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Select a Playlist</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <!-- Select Existing Playlist Body-->
-                    <div class="modal-body">
-                        <form method="post" action="{% url 'add_to_playlist' entity.id %}">
-                            {% csrf_token %}
-                            
-                                {% for playlist in playlists %}
-                                    <div>
-                                        <input type="radio" name="playlist" value="{{ playlist.id }}">
-                                        <label>{{ playlist.name }}</label>
-                                    </div>
-                                {% endfor %}
-
-                            <input type="hidden" name="entity_id" value="{{ entity.id }}">
-                            <input type="submit" class="hidden-submit" value="Add to Playlist">
-                        </form>
-                    </div>
-
-                    <!-- Select Existing Playlist Footer-->
-                    <div class="modal-footer">
-                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Create New Playlist</button>
-                        <button id="outside-button" type="button" class="btn btn-outline-primary">Add</button>
-                    </div>
-                    </div>
-                </div>
-                </div>
-
-                <!-- Create New Playlist (Modal Approach)-->
-                <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-
-                    <!-- Create New Playlist Header-->
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Create Playlist</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <!-- Create New Playlist Body-->
-                    <div class="modal-body">
-                        <form method="post" id="addPlaylistForm" action="{% url 'add_to_new_playlist' entity.id %}">
-                            {% csrf_token %}
-
-                            <div class="mb-3">
-                                <!-- <label for="playlist-name" class="col-form-label">Name:</label> -->
-                                <input type="text" name="new_playlist_name" class="form-control" placeholder="Enter a name for your new playlist" id="new_playlist_name">
+        <div class="d-flex justify-content-center">
+            <div class="metrics-container mx-auto">
+    
+                <!-- Initiate Add to Playlist Functionality and Display Playlist Metrics -->
+                <a href="#exampleModalToggle" data-bs-toggle="modal" style="text-decoration: none; color: inherit;">
+                    <div class="outline-box" style="margin-right: 20px;">
+                        <div class="metric d-inline-block" style="padding-left: 50px; padding-right: 50px">
+                            <div class="metric-value">
+                                <!-- Playlist Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                                </svg>
                             </div>
-                        </form>
+                            <div class="metric-label" style="padding-top: 10px;">{{ playlist_count }}
+                                {% if playlist_count.reviewed == 1 %}
+                                    Playlist
+                                {% else %}
+                                    Playlists
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
+                </a>
 
-                    <!-- Create New Playlist Footer-->
-                    <div class="modal-footer">
-                        <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Select Existing Playlist</button>
-                        <button class="btn btn-outline-primary" id="addButton">Add</button>
+                <!-- Initiate Write a Review Functionality and Display Review Metrics -->
+                <a href="{% url 'write_review' entity.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="outline-box">
+                        <div class="metric d-inline-block" style="padding-left: 50px; padding-right: 50px">
+                            <div class="metric-value">
+                                <!-- Review Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
+                                    <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                    <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                            </div>
+                            <div class="metric-label" style="padding-top: 10px;">{{ entity.reviewed }}
+                                {% if entity.reviewed == 1 %}
+                                    Review
+                                {% else %}
+                                    Reviews
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
+                </a>
+
+                <!-- Display seen count for entity -->
+                <div class="outline-box" style="margin-left: 20px;">
+                    <div class="metric d-inline-block" style="padding-left: 50px; padding-right: 50px">
+                        <div class="metric-value">
+                            <!-- Seen Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                            </svg>
+                        </div>
+                        <div class="metric-label" style="padding-top: 10px;">Seen</div>
                     </div>
                 </div>
-                </div>
-                <button class="btn btn-outline-success" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Add to Playlist</button>
+            </div>
+        </div>
 
-                <!-- Quick add watch later functionality -->
-                {% if entity in watchlater.entities.all %}
-                    <a href="{% url 'delete_from_watchlater' entity.id %}" style="text-decoration: none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
-                            <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
-                        </svg>
-                    </a>
-                {% else %}
-                    <a href="{% url 'add_to_watchlater' entity.id %}" style="text-decoration: none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                        </svg>
-                    </a>
-                {% endif %}
+        <!-- Entity Tags (Top 6 Selected) -->
+        {% if entity_tags %}
+            </br>
+            {% for tag in entity.tags.all %}
+                <div style="display: inline-block; background-color: #f2f2f2; padding: 5px 10px; margin-right: 10px; border-radius: 4px;">{{ tag.name }}</div>
+            {% endfor %}
+            </br>
+        {% endif %}
+
+        
+        <!-- Add to Playlist Modal Functionality -->
+
+        <!-- Select Existing Playlist (Modal Approach) -->
+        <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                
+                <!-- Select Existing Playlist Header-->
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Select a Playlist</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Select Existing Playlist Body-->
+                <div class="modal-body">
+                    <form method="post" action="{% url 'add_to_playlist' entity.id %}">
+                        {% csrf_token %}
+                        
+                            {% for playlist in user_playlists %}
+                                <div>
+                                    <input type="radio" name="playlist" value="{{ playlist.id }}">
+                                    <label>{{ playlist.name }}</label>
+                                </div>
+                            {% endfor %}
+
+                        <input type="hidden" name="entity_id" value="{{ entity.id }}">
+                        <input type="submit" class="hidden-submit" value="Add to Playlist">
+                    </form>
+                </div>
+
+                <!-- Select Existing Playlist Footer-->
+                <div class="modal-footer">
+                    <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Create New Playlist</button>
+                    <button id="outside-button" type="button" class="btn btn-outline-primary">Add</button>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Create New Playlist (Modal Approach)-->
+            <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                <!-- Create New Playlist Header-->
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Create Playlist</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Create New Playlist Body-->
+                <div class="modal-body">
+                    <form method="post" id="addPlaylistForm" action="{% url 'add_to_new_playlist' entity.id %}">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <!-- <label for="playlist-name" class="col-form-label">Name:</label> -->
+                            <input type="text" name="new_playlist_name" class="form-control" placeholder="Enter a name for your new playlist" id="new_playlist_name">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Create New Playlist Footer-->
+                <div class="modal-footer">
+                    <button class="btn btn-outline-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Select Existing Playlist</button>
+                    <button class="btn btn-outline-primary" id="addButton">Add</button>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Quick add watch later functionality -->
+            <!-- {% if entity in watchlater.entities.all %}
+                <a href="{% url 'delete_from_watchlater' entity.id %}" style="text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
+                        <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                    </svg>
+                </a>
+            {% else %}
+                <a href="{% url 'add_to_watchlater' entity.id %}" style="text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                    </svg>
+                </a>
+            {% endif %} -->
         
         <!-- If user is not logged in, route them to login page-->
-        {% else %}
+        <!-- {% else %}
             <a href="{% url 'login' %}" class="btn btn-outline-primary">Log In to Review</a>
-        {% endif %}
+        {% endif %} -->
         </br>
         </br>
-
-        <!-- Entity Streaming Service Locations and Links -->
-        {% for item in locations %}
-            <a href="{{ item.link }}" style="text-decoration: none; margin-right: 10px;">
-                {% if item.location.image %}
-                    <img src="{{ item.location.image.url }}" width="50" height="50" alt="{{ item.location }}">
-                {% else %}
-                    {{ item.location }}
-                {% endif %}
-            </a>
-        {% endfor %}
-
     </div>
 </div>
 
-<!-- Entity Tags -->
-{% if entity.tags %}
-    </br>
-    {% for tag in entity.tags.all %}
-        <div style="display: inline-block; background-color: #f2f2f2; padding: 5px 10px; margin-right: 10px; border-radius: 4px;">{{ tag.name }}</div>
+<!-- Entity Streaming Service Locations and Links -->
+{% if data.locations|length > 0 %}
+    {% for item in locations %}
+    <a href="{{ item.link }}" style="text-decoration: none; margin-right: 10px;">
+        {% if item.location.image %}
+            <img src="{{ item.location.image.url }}" width="50" height="50" alt="{{ item.location }}">
+        {% else %}
+            {{ item.location }}
+        {% endif %}
+    </a>
     {% endfor %}
-    </br>
+{% else %}
 </br>
 {% endif %}
 
@@ -220,14 +332,14 @@
     </li>
 </ul>
 
-    <div class="tab-content" id="myTabContent">
-        
-        <!-- Cast Information -->
-        <div class="tab-pane fade show active" id="cast-tab-pane" role="tabpanel" aria-labelledby="cast-tab" tabindex="0">
-        </br>
-            <!-- Entity Actors -->
-            {% if entity_actors %}
-            <!-- <h4>Cast</h4> -->
+<!-- Tab Content -->
+<div class="tab-content" id="myTabContent">
+    
+    <!-- Cast Information -->
+    <div class="tab-pane fade show active" id="cast-tab-pane" role="tabpanel" aria-labelledby="cast-tab" tabindex="0">
+    </br>
+        <!-- Entity Actors -->
+        {% if entity_actors %}
             <div class="row">
                 {% for item in entity_actors %}
                     <div class="col-md-2">
@@ -241,18 +353,18 @@
                 {% endfor %}
             </div>
             </br>
-            {% else %}
-                No cast information at this time.
-            </br>
-            {% endif %}
+        {% else %}
+            No cast information at this time.
         </br>
-        </div>
+        {% endif %}
+    </br>
+    </div>
 
-        <!-- Review Information -->
-        <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
-        </br>
-            <!-- Entity Reviews -->
-            {% if reviews %}
+    <!-- Review Information -->
+    <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
+    </br>
+        <!-- Entity Reviews -->
+        {% if reviews %}
             <div>
                 <!-- <h4 class="profile-heading">Reviews</h4> -->
                 <div class="container-fluid">
@@ -270,41 +382,41 @@
                 </div>
             </div>
             </br>
+        {% else %}
+            No reviews for this entity.
+        </br>
+        {% endif %}
+    </br>
+    </div>
+
+    <!-- Recommendation Information-->
+    <div class="tab-pane fade" id="recommendations-tab-pane" role="tabpanel" aria-labelledby="recommendations-tab" tabindex="0">
+    </br>
+        <!-- Genre Recommendations -->
+        {% if user.is_authenticated %}
+            {% if genre_recs %}
+                <!-- <h4>Similar {{ entity.medium }}...</h4> -->
+                <div class="row">
+                    {% for entity in genre_recs %}
+                        <div class="col-md-2">
+                            <div class="entity-tile">
+                                {% include 'content/entity_tile.html' with entity=entity %}
+                            </div>
+                        </div>
+                        {% if forloop.counter|divisibleby:6 and not forloop.last %}
+                            </div><div class="row">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                </br>
             {% else %}
-                No reviews for this entity.
+                No recommendations at this time.
             </br>
             {% endif %}
-        </br>
-        </div>
-
-        <!-- Recommendation information-->
-        <div class="tab-pane fade" id="recommendations-tab-pane" role="tabpanel" aria-labelledby="recommendations-tab" tabindex="0">
-        </br>
-            <!-- Genre Recommendations -->
-            {% if user.is_authenticated %}
-                {% if genre_recs %}
-                    <!-- <h4>Similar {{ entity.medium }}...</h4> -->
-                    <div class="row">
-                        {% for entity in genre_recs %}
-                            <div class="col-md-2">
-                                <div class="entity-tile">
-                                    {% include 'content/entity_tile.html' with entity=entity %}
-                                </div>
-                            </div>
-                            {% if forloop.counter|divisibleby:6 and not forloop.last %}
-                                </div><div class="row">
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    </br>
-                {% else %}
-                    No recommendations at this time.
-                </br>
-                {% endif %}
-            {% endif %}
-        </br>
-        </div>
+        {% endif %}
+    </br>
     </div>
+</div>
 
 
 </br>

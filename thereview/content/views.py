@@ -130,11 +130,14 @@ def view_entity(request, entity_id):
     user = get_object_or_404(User, id=request.user.id)
     reviews = Review.objects.filter(entity=entity)[:3]
     locations = EntityLocation.objects.filter(entity=entity)
+    full_stars = int(entity.overall_score)
+    half_star_value = entity.overall_score - full_stars
+    playlist_count = Playlist.objects.filter(entities__id=entity_id).count()
     try:
         watchlater = Playlist.objects.get(user=user, medium=entity.medium, auto_generated=True)
     except Playlist.DoesNotExist:
         watchlater = None
-    playlists = Playlist.objects.filter(user=user, medium=entity.medium)
+    user_playlists = Playlist.objects.filter(user=user, medium=entity.medium)
 
     #print(watchlater)
 
@@ -158,7 +161,10 @@ def view_entity(request, entity_id):
         'watchlater': watchlater,
         'reviews': reviews,
         'locations': locations,
-        'playlists': playlists,
+        'playlist_count': playlist_count,
+        'user_playlists': user_playlists,
+        'full_stars': full_stars,
+        'half_star_value': half_star_value,
         # ... other context data ...
     }
 

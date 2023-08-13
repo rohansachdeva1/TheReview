@@ -1,6 +1,46 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
 
+<style>
+    .entity-tile .card {
+    border: none; /* Remove the border */
+    box-shadow: none; /* Remove any box shadow */
+}
+
+.entity-tile .card-img-top {
+    width: 100%; /* Use the full width of the card */
+    height: 175; /* Maintain aspect ratio */
+}
+
+.entity-tile .card-body {
+    padding: 0.5rem; /* Adjust the padding as needed */
+}
+
+.entity-tile .card-title,
+.entity-tile .card-text {
+    margin: 0; /* Remove default margins */
+}
+</style>
+
+<div class="entity-tile">
+    <div class="card h-100">
+        <img src="{{ entity_actor.actor.image }}" width="30" height="175" class="card-img-top" alt="Actor Image">
+        <div class="card-body">
+            <h5 class="card-title">{{ entity_actor.actor.name }}</h5>
+            <p class="card-text">
+                <script>
+                    var asCharacter = "{{ entity_actor.as_character }}";
+                    var index = asCharacter.indexOf('(');
+                    if (index !== -1) {
+                        asCharacter = asCharacter.substring(0, index);
+                    }
+                    document.write(asCharacter);
+                </script>
+            </p>
+        </div>
+    </div>
+</div>
+
 <!-- <div class="actor-tile" style="width: 18rem;">
     <div class="image-container">
         <img src="{{ entity_actor.actor.image }}" class="card-img-top" alt="..." width="100" height="100">
@@ -10,16 +50,6 @@
         <p class="card-text">{{ entity_actor.as_character }}</p>
     </div>
 </div> -->
-
-<div class="entity-tile">
-    <div class="card h-150">
-        <img src="{{ entity_actor.actor.image }}" class="card-img-top" alt="Actor Image">
-        <div class="card-body">
-            <h5 class="card-title">{{ entity_actor.actor.name }}</h5>
-        <p class="card-text">{{ entity_actor.as_character }}</p>
-        </div>
-    </div>
-</div>
 
 <!-- profile tile approach -->
 <!-- {% load static %}
