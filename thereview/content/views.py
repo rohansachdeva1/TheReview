@@ -124,7 +124,7 @@ def update_database(request, data):
 # View entity information (basic info, tags, actors, reviews, locations, etc.) in the entity detail page
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:6]
+    entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:4]
     entity_actors = EntityActor.objects.filter(entity=entity)[:18]
     genre_recs = generate_genre_recs(entity_id)
     user = get_object_or_404(User, id=request.user.id)
@@ -139,7 +139,7 @@ def view_entity(request, entity_id):
         watchlater = None
     user_playlists = Playlist.objects.filter(user=user, medium=entity.medium)
 
-    #print(watchlater)
+    print(locations)
 
     update_entity(entity.id) # update entity information before displaying
     

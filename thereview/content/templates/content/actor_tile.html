@@ -24,7 +24,12 @@
 
 <div class="entity-tile">
     <div class="card h-100">
-        <img src="{{ entity_actor.actor.image }}" width="30" height="175" class="card-img-top" alt="Actor Image">
+        <div style="position: relative; width: 130px; height: 175px; overflow: hidden;">
+            <div style="position: absolute; bottom: 0; width: 100%; height: 100%; display: flex; justify-content: center;">
+                <img src="{{ entity_actor.actor.image }}" class="card-img-top" style="width: auto; height: 100%; border-radius: 10px;">
+            </div>
+        </div>
+        
         <div class="card-body">
             <h5 class="card-title">{{ entity_actor.actor.name }}</h5>
             <p class="card-text">
