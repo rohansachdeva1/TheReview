@@ -31,7 +31,7 @@
         </div>
         
         <div class="card-body">
-            <h5 class="card-title">{{ entity_actor.actor.name }}</h5>
+            <h6 class="card-title">{{ entity_actor.actor.name }}</h6>
             <p class="card-text">
                 <script>
                     var asCharacter = "{{ entity_actor.as_character }}";
@@ -39,8 +39,13 @@
                     if (index !== -1) {
                         asCharacter = asCharacter.substring(0, index);
                     }
+                    var slashIndex = asCharacter.indexOf('/');
+                    if (slashIndex !== -1) {
+                        asCharacter = asCharacter.substring(0, slashIndex);
+                    }
                     document.write(asCharacter);
                 </script>
+                
             </p>
         </div>
     </div>

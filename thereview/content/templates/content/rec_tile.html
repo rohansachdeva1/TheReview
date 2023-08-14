@@ -1,0 +1,40 @@
+{% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
+
+<style>
+.image-container {
+    width: 130px; /* Set the desired width */
+    height: 175px; /* Set the desired height */
+    overflow: hidden; /* Clip the image to the container dimensions */
+    border-radius: 5px; /* Add rounded corners */
+}
+
+.cropped-image {
+    object-fit: cover; /* Crop the image while maintaining its aspect ratio */
+    width: 100%; /* Ensure the image takes the full width of the container */
+    height: 100%; /* Ensure the image takes the full height of the container */
+}
+
+.overlay-icon {
+    position: absolute;
+    bottom: 10px; /* Adjust the top position of the overlay icon */
+    right: 10px; /* Adjust the right position of the overlay icon */
+    color: white; /* Set the color of the overlay icon */
+    pointer-events: auto; /* Allow click-through to the underlying image */
+    z-index: 1;
+}
+</style>
+
+
+<div class="entity-tile">
+    <div class="card h-100 border-0">
+        <div class="image-container">
+            <a href="{% url 'view_entity' entity.id %}" style="text-decoration: none; color: inherit;">
+                <img src="{{ entity.image }}" class="card-img-top cropped-image" alt="Entity Image">
+            </a>
+        </div>
+        <div class="card-body">
+            <h6 class="card-title">{{ entity.title }}</h6>
+        </div>
+    </div>
+</div>  

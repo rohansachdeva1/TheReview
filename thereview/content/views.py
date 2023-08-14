@@ -124,9 +124,10 @@ def update_database(request, data):
 # View entity information (basic info, tags, actors, reviews, locations, etc.) in the entity detail page
 def view_entity(request, entity_id):
     entity = get_object_or_404(Entity, id=entity_id)
-    entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:4]
+    entity_tags = EntityTag.objects.filter(entity=entity).order_by('-count')[:5]
+    print(entity_tags)
     entity_actors = EntityActor.objects.filter(entity=entity)[:18]
-    genre_recs = generate_genre_recs(entity_id)
+    genre_recs = generate_genre_recs(entity_id)[:12]
     user = get_object_or_404(User, id=request.user.id)
     reviews = Review.objects.filter(entity=entity)[:3]
     locations = EntityLocation.objects.filter(entity=entity)
@@ -271,9 +272,9 @@ def generate_genre_recs(entity_id):
     for genre in genres:
         related_entities = related_entities.filter(genres=genre)
     related_entities = related_entities.distinct()
-    random_entities = random.sample(list(related_entities), min(6, len(related_entities)))
+    #random_entities = random.sample(list(related_entities), min(12, len(related_entities)))
 
-    return random_entities
+    return related_entities
 
 def generate_tag_recs(user_id):
     user = get_object_or_404(User, id=user_id)

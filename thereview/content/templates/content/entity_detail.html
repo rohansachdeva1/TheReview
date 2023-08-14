@@ -188,8 +188,8 @@
         <!-- Entity Tags (Top 6 Selected) -->
         {% if entity_tags %}
             </br>
-            {% for tag in entity.tags.all %}
-                <div style="display: inline-block; background-color: #EFCA08; padding: 5px 10px; margin-right: 10px; border-radius: 4px;">{{ tag.name }}</div>
+            {% for item in entity_tags.all %}
+                <div style="display: inline-block; background-color: #EFCA08; padding: 5px 10px; margin-right: 5px; border-radius: 3px;">{{ item.tag.name }}</div>
             {% endfor %}
         {% endif %}
 
@@ -403,12 +403,14 @@
                     {% for entity in genre_recs %}
                         <div class="col-md-2">
                             <div class="entity-tile">
-                                {% include 'content/entity_tile.html' with entity=entity %}
+                                {% include 'content/rec_tile.html' with entity=entity %}
                             </div>
                         </div>
                         {% if forloop.counter|divisibleby:6 and not forloop.last %}
                             </div><div class="row">
+                            </br>
                         {% endif %}
+                    </br>
                     {% endfor %}
                 </div>
                 </br>
