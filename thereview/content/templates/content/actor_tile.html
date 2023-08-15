@@ -33,7 +33,7 @@
         <div class="card-body">
             <h6 class="card-title">{{ entity_actor.actor.name }}</h6>
             <p class="card-text">
-                <script>
+                <!-- <script>
                     var asCharacter = "{{ entity_actor.as_character }}";
                     var index = asCharacter.indexOf('(');
                     if (index !== -1) {
@@ -44,7 +44,19 @@
                         asCharacter = asCharacter.substring(0, slashIndex);
                     }
                     document.write(asCharacter);
+                </script> -->
+                <script>
+                    var asCharacter = "{{ entity_actor.as_character }}";
+                    var firstSpaceIndex = asCharacter.indexOf(' ');
+                    if (firstSpaceIndex !== -1) {
+                        var secondSpaceIndex = asCharacter.indexOf(' ', firstSpaceIndex + 1);
+                        if (secondSpaceIndex !== -1) {
+                            asCharacter = asCharacter.substring(0, secondSpaceIndex);
+                        }
+                    }
+                    document.write(asCharacter);
                 </script>
+                
                 
             </p>
         </div>

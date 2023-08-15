@@ -129,7 +129,7 @@ def view_entity(request, entity_id):
     entity_actors = EntityActor.objects.filter(entity=entity)[:18]
     genre_recs = generate_genre_recs(entity_id)[:12]
     user = get_object_or_404(User, id=request.user.id)
-    reviews = Review.objects.filter(entity=entity)[:3]
+    reviews = Review.objects.filter(entity=entity)
     locations = EntityLocation.objects.filter(entity=entity)
     full_stars = int(entity.overall_score)
     half_star_value = entity.overall_score - full_stars
@@ -139,8 +139,8 @@ def view_entity(request, entity_id):
     except Playlist.DoesNotExist:
         watchlater = None
     user_playlists = Playlist.objects.filter(user=user, medium=entity.medium)
-
-    print(locations)
+    is_reviewed = reviews.filter(user=request.user).exists()
+    in_playlist = Playlist.objects.filter(user=request.user, entities=entity).exists()
 
     update_entity(entity.id) # update entity information before displaying
     
@@ -166,6 +166,8 @@ def view_entity(request, entity_id):
         'user_playlists': user_playlists,
         'full_stars': full_stars,
         'half_star_value': half_star_value,
+        'is_reviewed': is_reviewed,
+        'in_playlist': in_playlist,
         # ... other context data ...
     }
 

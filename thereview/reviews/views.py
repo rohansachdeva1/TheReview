@@ -143,3 +143,16 @@ def like_review(request, review_id):
         review.likes.add(request_user)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+# Edit review blurb, review id parameter
+def edit_blurb(request, review_id):
+    if request.method == "POST":
+        new_blurb = request.POST.get('new_blurb', '')
+        review = get_object_or_404(Review, id=review_id)
+        review.blurb = new_blurb
+        review.save()
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def comment_review(request, review_id):
+    pass
