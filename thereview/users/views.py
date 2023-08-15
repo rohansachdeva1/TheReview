@@ -148,3 +148,25 @@ def seen(request, entity_id):
         request.user.profile.seen.add(entity)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+# Edit Bio Functionality
+def edit_bio(request):
+    if request.method == "POST":
+        new_bio = request.POST.get('new_bio', '')
+        user = get_object_or_404(User, id=request.user.id)
+        user.profile.bio = new_bio
+        user.profile.save()
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+# Edit Profile Picture Functionality
+def edit_profile_image(request):
+    if request.method == "POST":
+        user = get_object_or_404(User, id=request.user.id)
+        
+        profile_image = request.FILES.get('profile_image')
+        if profile_image:
+            user.profile.profile_image = profile_image
+            user.profile.save()
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

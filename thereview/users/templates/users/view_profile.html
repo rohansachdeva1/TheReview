@@ -11,7 +11,6 @@
     display: table;
     gap: 10px;
     align-items: center;
-    margin-left: 10px;
 }
 
 .metric {
@@ -46,13 +45,45 @@
 <!-- Main Profile Details -->
 <div class="container-fluid">
         <div class="container text-center">
-            <!-- Display user's profile picture -->
+
+            <!-- Display user's profile picture and give option to update -->
             {% if user.profile.profile_image %}
-                <img src="{{ user.profile.profile_image.url }}" width="100" height="100" class="custom-circle">
+                {% if request.user == user %}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#ppModal" style="text-decoration: none; color: inherit;">
+                        <img src="{{ user.profile.profile_image.url }}" width="100" height="100" class="custom-circle">
+                    </a>
+
+                    <div class="modal fade" id="ppModal" tabindex="-1" aria-labelledby="ppModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                    
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="ppModalLabel">Update Profile Picture</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                    
+                            <div class="modal-body">
+                            <form method="post" action="{% url 'edit_profile_image' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <!-- <label for="formFile" class="form-label">Select an image file</label> -->
+                                    <input class="form-control" type="file" id="formFile" name="profile_image">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                                </div>
+                            </form>        
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <img src="{{ user.profile.profile_image.url }}" width="100" height="100" class="custom-circle">
+                {% endif %}
             {% endif %}
 
             <!-- Username -->
-            <h1 class="profile-heading">@{{ user.username }}</h1>
+            <h1 class="profile-heading" style="margin: 10px;">@{{ user.username }}</h1>
 
             <div class="d-flex justify-content-center">
                 <div class="metrics-container mx-auto">
@@ -80,26 +111,43 @@
 
             <!-- Display user's bio -->
             {% if user.profile.bio %}
-                <div class="profile-message" style="padding: 10px;">
-                    <p>{{ user.profile.bio }}</p>
-                </div>
+                {% if request.user == user %}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#bioModal" style="text-decoration: none; color: inherit;">
+                        <div class="profile-message" style="padding: 10px;">
+                            <p>{{ user.profile.bio }}</p>
+                        </div>
+                    </a>
+
+                    <div class="modal fade" id="bioModal" tabindex="-1" aria-labelledby="bioModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                    
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="bioModalLabel">Update Bio</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                    
+                            <div class="modal-body">
+                            <form method="post" action="{% url 'edit_bio' %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="new_bio" name="new_bio">{{ user.profile.bio }}</textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary">Update</button>
+                                </div>
+                            </form>        
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="profile-message" style="padding: 10px;">
+                        <p>{{ user.profile.bio }}</p>
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
-
-        <!-- Check following and followers for testing -->
-        <!-- <p>Following:</p>
-        {% for following in user.profile.follows.all %}
-            <a href="{% url 'view_profile' following %}">
-            <p>{{ following }}</p>
-            </a>
-        {% endfor%}
-
-        <p>Followed by:</p>
-        {% for following in user.profile.followed_by.all %}
-            <a href="{% url 'view_profile' following %}">
-            <p>{{ following }}</p>
-            </a>
-        {% endfor%} -->
 
         <!-- Follow / Unfollow links on other user's profiles -->
         {% if request.user.id != user.id %}
