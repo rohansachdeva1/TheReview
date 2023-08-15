@@ -141,6 +141,8 @@ def view_entity(request, entity_id):
     user_playlists = Playlist.objects.filter(user=user, medium=entity.medium)
     is_reviewed = reviews.filter(user=request.user).exists()
     in_playlist = Playlist.objects.filter(user=request.user, entities=entity).exists()
+    is_seen = entity in request.user.profile.seen.all()
+    # seen_count = entity.profile_set.count()  
 
     update_entity(entity.id) # update entity information before displaying
     
@@ -168,6 +170,8 @@ def view_entity(request, entity_id):
         'half_star_value': half_star_value,
         'is_reviewed': is_reviewed,
         'in_playlist': in_playlist,
+        'is_seen': is_seen,
+        # 'seen_count': seen_count,
         # ... other context data ...
     }
 

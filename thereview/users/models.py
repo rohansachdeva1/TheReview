@@ -11,6 +11,7 @@ class Profile(models.Model):
     profile_image = models.ImageField(null=True, blank=True, upload_to="profile/")
     email = models.EmailField(null=True, blank=True)
     reviewed = models.IntegerField(default=0, null=True, blank=True)
+    seen = models.ManyToManyField(Entity, blank=True, related_name='seen_by')
     avg_rating = models.DecimalField(default=Decimal('0.0'), max_digits=3, decimal_places=2, null=True, blank=True)
     follows = models.ManyToManyField("self",
         related_name="followed_by",

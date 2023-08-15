@@ -1,8 +1,10 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from users.models import UserTag
+from content.models import Entity
 from .forms import RegisterForm
 from reviews.models import Review
 from django.db import models
@@ -134,3 +136,15 @@ def unfollow(request, user_id):
         request.user.profile.follows.remove(profile_user.profile)
 
     return redirect('view_profile', profile_user.username) # redirect to profile page
+
+# Seen Functionality
+def seen(request, entity_id):
+    entity = get_object_or_404(Entity, id=entity_id)
+
+    # Check if the entity is in the user's seen section
+    if entity in request.user.profile.seen.all():
+        request.user.profile.seen.remove(entity)
+    else:
+        request.user.profile.seen.add(entity)
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

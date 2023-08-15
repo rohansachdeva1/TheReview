@@ -88,6 +88,10 @@ def write_review(request, entity_id):
                             user_tag = UserTag(user=user, tag=tag, count=1, sum_scores=review.final_score)
                             user_tag.save()               
             
+            # Auto seen if reviewed
+            if not entity in request.user.profile.seen.all():
+                user.profile.seen.add(entity)
+            
             # Update entity and user metrics
             update_entity(entity.id)
             update_user(user.id)
