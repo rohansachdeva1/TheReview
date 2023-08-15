@@ -137,7 +137,6 @@ def delete_review(request, review_id):
 # Like or unlike review, review id parameter
 def like_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-    review_user = get_object_or_404(User, id=review.user.id)
     request_user = get_object_or_404(User, id=request.user.id)
 
     # check if they already like the post

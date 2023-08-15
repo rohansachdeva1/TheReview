@@ -104,5 +104,22 @@ def delete_playlist(request, playlist_id):
     # return redirect(view_profile_url)
     return redirect('view_profile', playlist.user.username)
 
+# Delete a review from profile
+def like_playlist(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+    request_user = get_object_or_404(User, id=request.user.id)
+
+    # check if they already like the post
+    if playlist.likes.filter(username=request_user.username):
+        playlist.likes.remove(request_user)
+    else:
+        playlist.likes.add(request_user)
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    
+
+    
+
 
     
