@@ -11,19 +11,23 @@
 {% if user.is_authenticated %}
 
   <!-- User Playlists -->
+  <h3>Your Recent Playlists...</h3>
   {% if user.playlists.exists %}
-    <h3>Your Playlists</h3>
-    <div>
-        {% for playlist in user.playlists.all %}
-            <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.name }}</a>
-        {% endfor %}
-    </div>
-  {% endif %}
+  <div class="row">
+      {% for playlist in user.playlists.all|slice:":4" %}
+          <div class="col-md-3 mb-4">
+              <div class="image-grid-card">
+                  {% include 'playlists/playlist_tile.html' with playlist=playlist %}
+              </div>
+          </div>
+      {% endfor %}
+  </div>
+{% endif %}
   </br>
 
 
   <!-- Display Genre Recommendations Based on Search History -->
-  <h3>Recommendations for you...</h3>
+  <h3>Genre Recommendations for you...</h3>
   <div class="scroll-container">
     {% if genre_recs %}
       <div class="row">

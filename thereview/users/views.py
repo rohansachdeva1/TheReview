@@ -35,8 +35,8 @@ def register(request):
             # Check if pic is empty (None) or an empty file
             if not pic:
                 # If no profile picture is uploaded, set it to one of 8 default image paths
-                random_number = random.randint(1, 8)
-                default_profile_pic = f'profile/default_pp_{random_number}.PNG'
+                random_number = random.randint(1, 6)
+                default_profile_pic = f'profile/default_pp_{random_number}.png'
                 user.profile.profile_image = default_profile_pic
             else:
                 # Otherwise, save the uploaded picture
