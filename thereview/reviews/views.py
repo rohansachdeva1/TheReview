@@ -113,7 +113,6 @@ def view_review(request, review_id):
     full_stars = int(review.final_score)
     half_star_value = review.final_score - full_stars
     comments = ReviewComment.objects.filter(review=review)
-    has_commented = review.reviews_comments.filter(user=request.user).exists
 
     # store data to be used in view_review template in context
     context = {

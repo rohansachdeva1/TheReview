@@ -243,23 +243,11 @@
             <div class="tab-pane fade" id="playlists-tab-pane" role="tabpanel" aria-labelledby="playlists-tab" tabindex="0">
             </br>
                     {% if user.playlists.exists %}
-                        <!-- <h1 class="profile-heading">Playlists</h1> -->
-                        <div>
-                            {% for playlist in user.playlists.all %}
-                                <a href="{% url 'view_playlist' playlist.id %}" class="btn btn-outline-primary">{{ playlist.name }}</a>
-                                <!-- call tile here!!!!!!! -->
-                            {% endfor %}
-                        </div>
-
                         <div class="row">
                             {% for playlist in user.playlists.all %}
                                 <div class="col-md-3 mb-4">
                                     <div class="image-grid-card">
-                                        <!-- Display the first entity's image -->
-                                        {% with first_entity=playlist.entities.all|first %}
-                                            {% include 'playlists/playlist_tile.html' with playlist=playlist %}
-                                        {% endwith %}
-                                        <h5 class="card-text">{{ playlist.name }}</h5>
+                                        {% include 'playlists/playlist_tile.html' with playlist=playlist %}
                                     </div>
                                 </div>
                             {% endfor %}

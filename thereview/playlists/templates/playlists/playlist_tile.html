@@ -1,86 +1,80 @@
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Card</title>
+    <style>
+        .custom-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
 
-<style>
-.image-box {
-    margin: 0;
-    padding: 1px; /* Adjust the padding as needed */
-    box-sizing: border-box;
-    text-align: center;
-    border: none;
-    width: 100px; /* Set the desired width */
-    height: 150px; /* Set the desired height */
-    overflow: hidden; /* Clip the image to the container dimensions */
-    border-radius: 1px; /* Add rounded corners */
-}
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 5px;
+        }
 
-.image-box img {
-    max-width: 100%;
-    height: auto;
-}
+        .image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
 
-.cropped-image {
-    object-fit: cover; /* Crop the image while maintaining its aspect ratio */
-    width: 100%; /* Ensure the image takes the full width of the container */
-    height: 100%; /* Ensure the image takes the full height of the container */
-}
-</style>
-
-<a href="{% url 'view_playlist' playlist.id %}" style="text-decoration: none; color: inherit;">
-    <div class="card">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img src="{{ playlist.entities.all.0.image }}" alt="Image 1" class="img-fluid rounded">
-                        </div>
-                        <div class="col-md-6">
-                            <img src="{{ playlist.entities.all.1.image }}" alt="Image 2" class="img-fluid rounded">
-                        </div>
-                    </div>
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <a href=" {% url 'view_playlist' playlist.id %}" style="text-decoration: none; color: inherit;">
+            <div class="custom-card shadow-sm">
+            {% if playlist.entities.count == 1 %}
+                <div class="image-grid">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 1" class="image">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 2" class="image">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 3" class="image">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 4" class="image">
                 </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img src="{{ playlist.entities.all.2.image }}" alt="Image 3" class="img-fluid rounded">
-                        </div>
-                        <div class="col-md-6">
-                            <img src="{{ playlist.entities.all.3.image }}" alt="Image 4" class="img-fluid rounded">
-                        </div>
-                    </div>
+            {% endif %}
+            {% if playlist.entities.count == 2 %}
+                <div class="image-grid">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 1" class="image">
+                    <img src="{{ playlist.entities.all.1.image }}" alt="Image 2" class="image">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 3" class="image">
+                    <img src="{{ playlist.entities.all.1.image }}" alt="Image 4" class="image">
                 </div>
+            {% endif %}
+            {% if playlist.entities.count == 3 %}
+                <div class="image-grid">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 1" class="image">
+                    <img src="{{ playlist.entities.all.1.image }}" alt="Image 2" class="image">
+                    <img src="{{ playlist.entities.all.2.image }}" alt="Image 3" class="image">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 4" class="image">
+                </div>
+            {% endif %}
+            {% if playlist.entities.count > 3 %}
+                <div class="image-grid">
+                    <img src="{{ playlist.entities.all.0.image }}" alt="Image 1" class="image">
+                    <img src="{{ playlist.entities.all.1.image }}" alt="Image 2" class="image">
+                    <img src="{{ playlist.entities.all.2.image }}" alt="Image 3" class="image">
+                    <img src="{{ playlist.entities.all.3.image }}" alt="Image 4" class="image">
+                </div>
+            {% endif %}
+            <div class="footer">
+                <h6>{{ playlist.name }}</h6>
             </div>
         </div>
-        <div class="card-body">
-            <h5 class="card-title">Card Title</h5>
-            <p class="card-text">Some text goes here.</p>
-        </div>
-    </div>
-    
-    <!-- <div class="image-grid-card">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="image-box">
-                    <img src="{{ playlist.entities.all.0.image }}" class="image-box cropped-image" style="margin-right: -23px;" alt="{{ playlist.entities.all.0.name }}">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="image-box">
-                    <img src="{{ playlist.entities.all.1.image }}" class="image-box cropped-image" style="margin-left: -23px;" alt="{{ playlist.entities.all.1.name }}">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="image-box">
-                    <img src="{{ playlist.entities.all.2.image }}" class="image-box cropped-image" style="margin-right: -23px;" alt="{{ playlist.entities.all.2.name }}">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="image-box">
-                    <img src="{{ playlist.entities.all.3.image }}" class="image-box cropped-image" style="margin-left: -23px;" alt="{{ playlist.entities.all.3.name }}">
-                </div>
-            </div>
-        </div>
-    </div> -->
-</a>
+    </a>
+</body>
+</html>
+
+
