@@ -27,8 +27,8 @@ def search_entities(request):
 
             # loop through json object and create variables for needed fields
             for item in data['results']:
-                # only allow entities with imDbRatingVotes above 10k
-                if item['imDbRatingVotes'] is not None and int(item['imDbRatingVotes']) > 20000:
+                # only allow entities with imDbRatingVotes above 20k
+                if item['imDbRatingVotes'] is not None and int(item['imDbRatingVotes']) > 30000:
                     id = item['id']
                     
                     # prevent duplicates by checking if we already have an entity with that id, create new entity object and save

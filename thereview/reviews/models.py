@@ -32,3 +32,9 @@ class Review(models.Model):
 
     def __str__(self):
         return f'{self.entity} review by {self.user}'
+    
+class ReviewComment(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="reviews_comments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews_comments")
+    comment = models.CharField(max_length=999, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)

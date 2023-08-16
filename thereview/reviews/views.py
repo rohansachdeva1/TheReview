@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from content.models import Entity, Tag, Category, EntityTag
 from users.models import UserTag
-from .models import Review
+from .models import Review, ReviewComment
 from django.urls import reverse
 from django.db import models
 from content.views import update_entity
@@ -112,12 +112,15 @@ def view_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
     full_stars = int(review.final_score)
     half_star_value = review.final_score - full_stars
+    comments = ReviewComment.objects.filter(review=review)
+    has_commented = review.reviews_comments.filter(user=request.user).exists
 
     # store data to be used in view_review template in context
     context = {
         'review': review,
         'full_stars': full_stars,
         'half_star_value': half_star_value,
+        'comments': comments,
         # ... other context data ...
     }
 
@@ -158,4 +161,11 @@ def edit_blurb(request, review_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def comment_review(request, review_id):
-    pass
+    if request.method == "POST":
+        comment = request.POST.get('comment_input', '')
+        review = get_object_or_404(Review, id=review_id)
+        review_comment = ReviewComment(review=review, user=request.user, comment=comment)
+        review_comment.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        
