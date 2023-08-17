@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from django.urls import reverse
 from content.models import Entity
-from playlists.models import Playlist
+from playlists.models import Playlist, PlaylistComment
 from django.contrib import messages
 
 # View all entities in existing playlist
@@ -11,12 +11,14 @@ def view_playlist(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id)
     playlist_entities = playlist.entities.all()
     user = playlist.user
+    comments = PlaylistComment.objects.filter(playlist=playlist)
 
     # store data to be used in playlist_detail template in context
     context = {
         'playlist': playlist,
         'playlist_entities': playlist_entities,
         'user': user,
+        'comments': comments,
         # ... other context data ...
     }
 
@@ -114,6 +116,15 @@ def like_playlist(request, playlist_id):
         playlist.likes.remove(request_user)
     else:
         playlist.likes.add(request_user)
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def comment_playlist(request, playlist_id):
+    if request.method == "POST":
+        comment = request.POST.get('comment_input', '')
+        playlist = get_object_or_404(Playlist, id=playlist_id)
+        playlist_comment = PlaylistComment(playlist=playlist, user=request.user, comment=comment)
+        playlist_comment.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 

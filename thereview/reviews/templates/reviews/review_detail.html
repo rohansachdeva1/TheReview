@@ -71,10 +71,10 @@
 <div style="padding-top: 10px; padding-bottom: 10px;">
     {% if request.user == review.user %}
     <a href="#" data-bs-toggle="modal" data-bs-target="#blurbModal" style="text-decoration: none; color: inherit;">
-        <h7 style="padding: 5px;">"{{ review.blurb }}"</h7>
+        <p class="fs-5">"{{ review.blurb }}"</p>
     </a>
     {% else %}
-        <h7 style="padding: 5px;">"{{ review.blurb }}"</h7>
+        <p class="fs-5">"{{ review.blurb }}"</p>
     {% endif %}
 </div>
 
@@ -104,7 +104,7 @@
 </div>
 
 
-<!-- <p style="display: inline;">{{ review.number_of_likes }}</p> -->
+<!-- Like Playlist Functionality, Heart Icon, Like Count -->
 {% if request.user in review.likes.all %}
     <a href=" {% url 'like_review' review.id %}" style="text-decoration: none; color: inherit;">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
@@ -120,64 +120,66 @@
 {% endif %}
 <h7 style="display: inline; text-decoration: none; color: inherit; padding-right: 10px;">{{ review.number_of_likes }}</h7>
 
+<!-- Write Comment Functionality, Comment Icon, Comment Count -->
 <a href="#" style="text-decoration: none; color: inherit;" data-bs-toggle="modal" data-bs-target="#writeCommentModal">
     <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -3px" width="20" height="20" fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
         <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
     </svg>
 </a>
-<h7 style="display: inline; text-decoration: none; color: inherit;">{{ comments.count }}</h7>
-</br></br>
-<!-- <p style="display: inline;">{{ review.number_of_likes }}</p> -->
+<h7 style="display: inline; text-decoration: none; color: inherit; padding-right: 10px;">{{ comments.count }}</h7>
 
-
-<!-- <button type="button" class="btn btn-outline-primary" >
-    Comment
-</button> -->
-
+<!-- Write Comment Modal-->
 <div class="modal fade" id="writeCommentModal" tabindex="-1" aria-labelledby="writeCommentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-  
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="writeCommentModalLabel">Write a Comment</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-  
-        <div class="modal-body">
-          <form method="post" action="{% url 'comment_review' review.id %}">
-              {% csrf_token %}
-              <div class="mb-3">
-                  <textarea class="form-control" id="comment_input" name="comment_input"></textarea>
-              </div>
-              <div class="modal-footer">
-                  <button type="submit" class="btn btn-outline-primary">Publish</button>
-              </div>
-          </form>        
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="modal-content">
 
+            <!-- Write Comment Modal Header-->
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="writeCommentModalLabel">Write a Comment</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Write Comment Modal Body, Form and Footer-->
+            <div class="modal-body">
+                <form method="post" action="{% url 'comment_review' review.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <textarea class="form-control" id="comment_input" name="comment_input"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-primary">Publish</button>
+                    </div>
+                </form>        
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Playlist Functionality (to be implemented soon through notifications) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+</svg>
+<h7 style="display: inline; text-decoration: none; color: inherit; padding-right: 15px;">{{ review.number_of_likes }}</h7>
+</br>
+</br>
+
+<!-- Display Comments as Quotes-->
 {% if comments|length > 0 %}
     {% for item in comments %}
-        <!-- <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-            <label for="floatingTextarea">@{{ item.user.username }} "{{ item.comment }}"</label>
-        </div> -->
-        <!-- <input class="form-control" type="text" value="@{{ item.user.username }}  &quot;{{ item.comment }}&quot;" aria-label="readonly input example" readonly> -->
         <figure>
             <blockquote class="blockquote">
               <p>{{ item.comment }}</p>
             </blockquote>
 
             <figcaption class="blockquote-footer">
-              @{{ item.user.username }} <cite title="Number Seen">({{ item.user.profile.avg_rating }} Avg Rating)</cite>
+              @{{ item.user.username }} <cite title="Number Seen">({{ item.created_at }})</cite>
             </figcaption>
           </figure>
     {% endfor %}
 {% endif %}
-
 </br>
+
+<!-- Delete Review Functionality-->
 {% if review.user == request.user %}
     <a href="{% url 'delete_review' review.id %}" class="btn btn-outline-danger">Delete Review</a>
 {% endif %}
