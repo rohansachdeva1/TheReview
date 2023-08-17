@@ -167,4 +167,11 @@ def comment_review(request, review_id):
         review_comment.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def delete_review_comment(request, review_comment_id):
+    if request.method == "POST":
+        review_comment = get_object_or_404(ReviewComment, id=review_comment_id)
+        review_comment.delete()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         

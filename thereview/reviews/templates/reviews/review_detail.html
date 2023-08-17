@@ -166,15 +166,51 @@
 <!-- Display Comments as Quotes-->
 {% if comments|length > 0 %}
     {% for item in comments %}
-        <figure>
-            <blockquote class="blockquote">
-              <p>{{ item.comment }}</p>
-            </blockquote>
+        {% if item.user == request.user %}
+            <figure>
+                <a href="#" style="text-decoration: none; color: inherit;" data-bs-toggle="modal" data-bs-target="#deleteCommentModal">
+                    <blockquote class="blockquote">
+                    <p>{{ item.comment }}</p>
+                    </blockquote>
+                </a>
 
-            <figcaption class="blockquote-footer">
-              @{{ item.user.username }} <cite title="Number Seen">({{ item.created_at }})</cite>
-            </figcaption>
-          </figure>
+                <figcaption class="blockquote-footer">
+                @{{ item.user.username }} <cite title="Number Seen">({{ item.created_at }})</cite>
+                </figcaption>
+            </figure>
+
+            <!-- Write Comment Modal-->
+            <div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <!-- Write Comment Modal Header-->
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="deleteCommentModalLabel">Do you want to delete your comment?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <!-- Write Comment Modal Body, Form and Footer-->
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'delete_review_comment' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger float-end">Delete</button>
+                            </form>        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <figure>
+                <blockquote class="blockquote">
+                <p>{{ item.comment }}</p>
+                </blockquote>
+
+                <figcaption class="blockquote-footer">
+                @{{ item.user.username }} <cite title="Number Seen">({{ item.created_at }})</cite>
+                </figcaption>
+            </figure>
+        {% endif %}
     {% endfor %}
 {% endif %}
 </br>
