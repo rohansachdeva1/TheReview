@@ -128,6 +128,13 @@ def comment_playlist(request, playlist_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+def delete_playlist_comment(request, playlist_comment_id):
+    if request.method == "POST":
+        playlist_comment = get_object_or_404(PlaylistComment, id=playlist_comment_id)
+        playlist_comment.delete()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
     
 
     

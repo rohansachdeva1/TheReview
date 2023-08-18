@@ -12,4 +12,5 @@ urlpatterns = [
     path('delete_playlist/<int:playlist_id>/', views.delete_playlist, name="delete_playlist"),
     path('like_playlist/<int:playlist_id>/', views.like_playlist, name="like_playlist"),
     path('comment_playlist/<int:playlist_id>/', views.comment_playlist, name="comment_playlist"),
+    path('delete_playlist_comment/<int:playlist_comment_id>/', views.delete_playlist_comment, name="delete_playlist_comment"),
 ]
