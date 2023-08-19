@@ -24,12 +24,12 @@
     
         <!-- Search Bar -->
         <ul class="navbar-nav ">
-            <div class="navbar-center">
-            <form class="d-flex" role="search" method=POST action="{% url 'search_entities' %}">
-                {% csrf_token %}
-                <input class="form-control me-2 outline-input" type="search" placeholder="Search Entities" name="searched" aria-label="Search">
-                <button class="btn btn-outline-light" style="outline-color: #E8F1F2;" type="submit">Search</button>
-            </form>
+            <div class="navbar-center" style="margin-top: 5px;">
+                <form class="d-flex" role="search" method=POST action="{% url 'search_entities' %}">
+                    {% csrf_token %}
+                    <input class="form-control me-2 outline-input" type="search" placeholder="Search Entities" name="searched" aria-label="Search">
+                    <button class="btn btn-outline-light" style="outline-color: #E8F1F2;" type="submit">Search</button>
+                </form>
             </div>
 
             <!-- Profile / Login / Logout Links -->

@@ -1,50 +1,39 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'entity_tile.css' %}">
 
 <style>
-    .entity-tile .card {
-    border: none; /* Remove the border */
-    box-shadow: none; /* Remove any box shadow */
+.image-container {
+    width: 130px; /* Set the desired width */
+    height: 175px; /* Set the desired height */
+    overflow: hidden; /* Clip the image to the container dimensions */
+    border-radius: 5px; /* Add rounded corners */
 }
 
-.entity-tile .card-img-top {
-    width: 100%; /* Use the full width of the card */
-    height: 175; /* Maintain aspect ratio */
+.cropped-image {
+    object-fit: cover; /* Crop the image while maintaining its aspect ratio */
+    width: 100%; /* Ensure the image takes the full width of the container */
+    height: 100%; /* Ensure the image takes the full height of the container */
 }
 
-.entity-tile .card-body {
-    padding: 0.5rem; /* Adjust the padding as needed */
-}
-
-.entity-tile .card-title,
-.entity-tile .card-text {
-    margin: 0; /* Remove default margins */
+.overlay-icon {
+    position: absolute;
+    bottom: 10px; /* Adjust the top position of the overlay icon */
+    right: 10px; /* Adjust the right position of the overlay icon */
+    color: white; /* Set the color of the overlay icon */
+    pointer-events: auto; /* Allow click-through to the underlying image */
+    z-index: 1;
 }
 </style>
 
+
 <div class="entity-tile">
-    <div class="card h-100">
-        <div style="position: relative; width: 130px; height: 175px; overflow: hidden;">
-            <div style="position: absolute; bottom: 0; width: 100%; height: 100%; display: flex; justify-content: center;">
-                <img src="{{ entity_actor.actor.image }}" class="card-img-top" style="width: auto; height: 100%; border-radius: 10px;">
-            </div>
+    <div class="card h-100 border-0">
+        <div class="image-container">
+            <img src="{{ entity_actor.actor.image }}" class="card-img-top cropped-image" alt="Entity Image">
         </div>
-        
         <div class="card-body">
-            <h6 class="card-title">{{ entity_actor.actor.name }}</h6>
-            <p class="card-text">
-                <!-- <script>
-                    var asCharacter = "{{ entity_actor.as_character }}";
-                    var index = asCharacter.indexOf('(');
-                    if (index !== -1) {
-                        asCharacter = asCharacter.substring(0, index);
-                    }
-                    var slashIndex = asCharacter.indexOf('/');
-                    if (slashIndex !== -1) {
-                        asCharacter = asCharacter.substring(0, slashIndex);
-                    }
-                    document.write(asCharacter);
-                </script> -->
+            <h6 class="card-title" style="margin-left: -10px; margin-top: -10px">{{ entity_actor.actor.name }}</h6>
+            <p class="card-text" style="margin-left: -10px; margin-top: -9px">
                 <script>
                     var asCharacter = "{{ entity_actor.as_character }}";
                     var firstSpaceIndex = asCharacter.indexOf(' ');
@@ -56,9 +45,7 @@
                     }
                     document.write(asCharacter);
                 </script>
-                
-                
             </p>
         </div>
     </div>
-</div>
+</div> 

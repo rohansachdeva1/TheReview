@@ -52,4 +52,4 @@ class SearchHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.username} searched for {self.entity.name} at {self.timestamp}'
+        return f'{self.user.username} searched for {self.entity.title} at {self.timestamp}'
