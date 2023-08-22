@@ -23,69 +23,75 @@ def search_entities(request):
 
         # use api if not enough objects in database
         if results.count() < 2:
-            data = requests.get('https://imdb-api.com/API/AdvancedSearch/k_28nyce3o?title=' + user_input).json()
-
-            # loop through json object and create variables for needed fields
-            if data is not None and 'results' in data:
-                for item in data['results']:
-                    # only allow entities with imDbRatingVotes above 20k
-                    if item['imDbRatingVotes'] is not None and int(item['imDbRatingVotes']) > 30000:
-                        id = item['id']
-                        
-                        # prevent duplicates by checking if we already have an entity with that id, create new entity object and save
-                        if (not Entity.objects.filter(api_id=id)):
-                            
-                            title = item['title']
-                            slug = title.replace(' ', '-').lower()
-                            image = item['image']
-                            year = item['description']
-                            plot = item['plot']
-                            runtime = item['runtimeStr']
-                            content_rating = item['contentRating']
-                            medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
-                            
-                            entity = Entity.objects.createentity_obj = Entity.objects.create(
-                                api_id=id, 
-                                slug_field=slug, 
-                                title=title, 
-                                image=image, 
-                                year=year, 
-                                plot = plot,
-                                content_rating = content_rating,
-                                runtime = runtime,
-                                medium=medium)
-                            
-                            # add genres to the entity
-                            for genre in item['genreList']:
-                                try:
-                                    curr_genre = Genre.objects.get(name=genre['key'])
-                                    
-                                except Genre.DoesNotExist:
-                                    curr_genre = Genre(name=genre['key'], medium=medium)
-                                    curr_genre.save()
-                                    curr_genre.entities.add(entity)
-                            
-                                entity.genres.add(curr_genre)
-
-                            # get actor info from full cast api, link them to entity using EntityActor model
-                            fetch_actor_info(entity.api_id)
-            else:
-                print("No Results Found")
-
+            get_imdb_api(user_input)
             results = Entity.objects.filter(title__icontains=user_input)[:12]
         
         context = {
         'results': results,
         'users': users,
-        # ... other context data ...
-    }
+        }
+
         return render(request, 'content/search_tile_results.html', context)
         
     else:
         return redirect('homepage')
 
 # Get actor information for a singular entity, entity id parameter
-def fetch_actor_info(entity_id):
+def get_imdb_api(user_input):
+
+    data = requests.get('https://imdb-api.com/API/AdvancedSearch/k_28nyce3o?title=' + user_input).json()
+
+    # loop through json object and create variables for needed fields
+    if data is not None and 'results' in data:
+        for item in data['results']:
+            # only allow entities with imDbRatingVotes above 30k
+            if item['imDbRatingVotes'] is not None and int(item['imDbRatingVotes']) > 30000:
+                id = item['id']
+                
+                # prevent duplicates by checking if we already have an entity with that id, create new entity object and save
+                if (not Entity.objects.filter(api_id=id)):
+                    
+                    title = item['title']
+                    slug = title.replace(' ', '-').lower()
+                    image = item['image']
+                    year = item['description']
+                    plot = item['plot']
+                    runtime = item['runtimeStr']
+                    content_rating = item['contentRating']
+                    imdbRating = item['imDbRating']
+                    medium = Medium.objects.get(name='Movies')  # Default medium value for cases without resultType
+                    
+                    entity = Entity.objects.createentity_obj = Entity.objects.create(
+                        api_id=id, 
+                        slug_field=slug, 
+                        title=title, 
+                        image=image, 
+                        year=year, 
+                        plot = plot,
+                        content_rating = content_rating,
+                        imdbRating = imdbRating,
+                        runtime = runtime,
+                        medium=medium)
+                    
+                    # add genres to the entity
+                    for genre in item['genreList']:
+                        try:
+                            curr_genre = Genre.objects.get(name=genre['key'])
+                            
+                        except Genre.DoesNotExist:
+                            curr_genre = Genre(name=genre['key'], medium=medium)
+                            curr_genre.save()
+                            curr_genre.entities.add(entity)
+                    
+                        entity.genres.add(curr_genre)
+
+                    # get actor info from full cast api, link them to entity using EntityActor model
+                    get_actor_info(entity.api_id)
+    else:
+        print("No Results Found")
+
+# Get actor information for a singular entity, entity id parameter
+def get_actor_info(entity_id):
     
     data = requests.get('https://imdb-api.com/en/API/FullCast/k_28nyce3o/' + entity_id).json()
     entity = Entity.objects.get(api_id=entity_id)
@@ -174,8 +180,6 @@ def view_entity(request, entity_id):
         'is_reviewed': is_reviewed,
         'in_playlist': in_playlist,
         'is_seen': is_seen,
-        # 'seen_count': seen_count,
-        # ... other context data ...
     }
 
     return render(request, 'content/entity_detail.html', context)
@@ -193,8 +197,8 @@ def get_streaming(entity):
     }
 
     params = {
-        'country': 'us',  # Replace 'us' with desired country code
-        'imdb_id': entity.api_id,    # Replace this with the IMDb ID, or you can fetch it from the IMDb API as shown earlier
+        'country': 'us',
+        'imdb_id': entity.api_id,
         'output_language': 'en'
     }
 

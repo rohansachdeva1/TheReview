@@ -27,6 +27,7 @@ class StreamingService(models.Model):
     
 class Entity(models.Model):
     api_id = models.CharField(max_length=500, null=True, blank=True)
+    imdbRating = models.CharField(max_length=255, null=True, blank=True)
     imDbRatingVotes = models.CharField(max_length=255, null=True, blank=True)
     slug_field = models.CharField(max_length=500, null=True, blank=True)
     image = models.CharField(max_length=500, null=True, blank=True)
